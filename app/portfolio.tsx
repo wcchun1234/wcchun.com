@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import Image from "next/image";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 const assetPath = (path: string) =>
   `${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}${path}`;
@@ -22,7 +23,7 @@ const projects: Project[] = [
     zh: "掃描記憶",
     year: "2024",
     medium: "Photography",
-    image: "/art/art-01.png",
+    image: "/art/art-01.webp",
     alt: "Nine framed monochrome generative images installed in a gallery.",
     featured: true,
     description:
@@ -32,7 +33,7 @@ const projects: Project[] = [
     title: "Digital Echoes",
     year: "2024",
     medium: "Photography",
-    image: "/art/art-02.png",
+    image: "/art/art-02.webp",
     alt: "Three framed blue photographic works installed vertically on a gallery wall.",
     featured: true,
     description:
@@ -42,7 +43,7 @@ const projects: Project[] = [
     title: "MemoryGrid",
     year: "2024",
     medium: "Installation",
-    image: "/art/art-08.jpg",
+    image: "/art/art-08.webp",
     alt: "A visitor viewing a projected network of image fragments in an exhibition space.",
     featured: true,
     description:
@@ -52,7 +53,7 @@ const projects: Project[] = [
     title: "WordView",
     year: "2024",
     medium: "Creative Coding",
-    image: "/art/art-09.jpg",
+    image: "/art/art-09.webp",
     alt: "A room-scale projection filled with interlaced coloured lines and floating words.",
     featured: true,
     description:
@@ -62,7 +63,7 @@ const projects: Project[] = [
     title: "TechCore",
     year: "2024",
     medium: "Creative Coding",
-    image: "/art/art-10.png",
+    image: "/art/art-10.webp",
     alt: "A dense generative composition of coloured lines and layered words.",
     description:
       "A visual excavation of technical vocabulary, exposing the linguistic systems that shape digital life.",
@@ -71,7 +72,7 @@ const projects: Project[] = [
     title: "The Blue Countdown",
     year: "2023",
     medium: "Moving Image",
-    image: "/art/art-07.jpg",
+    image: "/art/art-07.webp",
     alt: "A blue distorted panoramic image glowing against black.",
     description:
       "A moving-image meditation on anticipation, distance and the unstable texture of digital time.",
@@ -80,7 +81,7 @@ const projects: Project[] = [
     title: "EcoSyntax",
     year: "2023",
     medium: "Creative Coding",
-    image: "/art/art-12.png",
+    image: "/art/art-12.webp",
     alt: "Magenta and blue generative lines crossing in a dense abstract field.",
     description:
       "Ecological relationships are translated into an unruly visual grammar of connection, pressure and adaptation.",
@@ -89,7 +90,7 @@ const projects: Project[] = [
     title: "Aware",
     year: "2023",
     medium: "Installation",
-    image: "/art/art-11.png",
+    image: "/art/art-11.webp",
     alt: "Small white polar-bear forms on a blue textured sculptural surface.",
     description:
       "An installation that turns environmental data into an intimate encounter with fragility and scale.",
@@ -102,10 +103,29 @@ type Filter = (typeof filters)[number];
 export default function Portfolio() {
   const [filter, setFilter] = useState<Filter>("All");
   const [selected, setSelected] = useState<Project | null>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const lastTriggerRef = useRef<HTMLElement | null>(null);
   const visible = filter === "All" ? projects : projects.filter((project) => project.medium === filter);
+  const selectedIndex = selected ? projects.findIndex((project) => project.title === selected.title) : -1;
+
+  const openProject = (project: Project) => {
+    lastTriggerRef.current = document.activeElement as HTMLElement;
+    setSelected(project);
+  };
+
+  const closeProject = useCallback(() => {
+    setSelected(null);
+    window.requestAnimationFrame(() => lastTriggerRef.current?.focus());
+  }, []);
+
+  const moveProject = useCallback((direction: -1 | 1) => {
+    const nextIndex = (selectedIndex + direction + projects.length) % projects.length;
+    setSelected(projects[nextIndex]);
+  }, [selectedIndex]);
 
   useEffect(() => {
     document.body.style.overflow = selected ? "hidden" : "";
+    if (selected) window.requestAnimationFrame(() => dialogRef.current?.focus());
     return () => {
       document.body.style.overflow = "";
     };
@@ -113,14 +133,33 @@ export default function Portfolio() {
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setSelected(null);
+      if (event.key === "Escape" && selected) closeProject();
+      if (event.key === "ArrowLeft" && selected) moveProject(-1);
+      if (event.key === "ArrowRight" && selected) moveProject(1);
+      if (event.key === "Tab" && selected && dialogRef.current) {
+        const focusable = dialogRef.current.querySelectorAll<HTMLElement>(
+          'button, a[href], [tabindex]:not([tabindex="-1"])',
+        );
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        if (event.shiftKey && document.activeElement === first) {
+          event.preventDefault();
+          last?.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+          event.preventDefault();
+          first?.focus();
+        }
+      }
     };
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, []);
+  }, [closeProject, moveProject, selected]);
 
   return (
-    <main>
+    <>
+      <a className="skip-link" href="#content">Skip to selected work</a>
+      <div className="scroll-line" aria-hidden="true" />
+      <main id="content">
       <header className="site-header">
         <a className="wordmark" href="#top" aria-label="WCCHUN home">
           WC<span>CHUN</span>
@@ -153,10 +192,19 @@ export default function Portfolio() {
         <button
           className="hero-image"
           type="button"
-          onClick={() => setSelected(projects[0])}
+          onClick={() => openProject(projects[0])}
           aria-label="Open Scanned Memories project"
+          aria-haspopup="dialog"
         >
-          <img src={assetPath("/art/art-01.png")} alt={projects[0].alt} />
+          <Image
+            src={assetPath("/art/art-01.webp")}
+            alt={projects[0].alt}
+            width={1280}
+            height={1280}
+            sizes="(max-width: 900px) 100vw, 55vw"
+            priority
+            unoptimized
+          />
           <span className="image-code">01 / 08</span>
         </button>
         <div className="hero-side-note" aria-hidden="true">
@@ -171,7 +219,7 @@ export default function Portfolio() {
             <p className="eyebrow">Selected archive</p>
             <h2>Work, 2023—2024</h2>
           </div>
-          <p>{String(visible.length).padStart(2, "0")} projects</p>
+          <p aria-live="polite">{String(visible.length).padStart(2, "0")} projects</p>
         </div>
 
         <div className="filter-bar" aria-label="Filter projects">
@@ -194,9 +242,22 @@ export default function Portfolio() {
               className={`project-card ${project.featured ? "featured" : ""}`}
               key={project.title}
             >
-              <button type="button" onClick={() => setSelected(project)}>
+              <button
+                type="button"
+                onClick={() => openProject(project)}
+                aria-label={`Open ${project.title}, ${project.medium}, ${project.year}`}
+                aria-haspopup="dialog"
+              >
                 <span className="project-image">
-                  <img src={assetPath(project.image)} alt={project.alt} loading={index > 2 ? "lazy" : undefined} />
+                  <Image
+                    src={assetPath(project.image)}
+                    alt={project.alt}
+                    width={1280}
+                    height={1280}
+                    sizes="(max-width: 600px) 100vw, (max-width: 900px) 50vw, 42vw"
+                    loading={index > 2 ? "lazy" : undefined}
+                    unoptimized
+                  />
                   <span className="view-project">View project ↗</span>
                 </span>
                 <span className="project-meta">
@@ -277,26 +338,48 @@ export default function Portfolio() {
       </footer>
 
       {selected && (
-        <div className="project-dialog" role="dialog" aria-modal="true" aria-labelledby="dialog-title">
-          <button className="dialog-backdrop" type="button" aria-label="Close project" onClick={() => setSelected(null)} />
+        <div
+          className="project-dialog"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="dialog-title"
+          aria-describedby="dialog-description"
+          ref={dialogRef}
+          tabIndex={-1}
+        >
+          <button className="dialog-backdrop" type="button" aria-label="Close project" onClick={closeProject} />
           <div className="dialog-panel">
-            <button className="dialog-close" type="button" onClick={() => setSelected(null)} aria-label="Close project">
+            <button className="dialog-close" type="button" onClick={closeProject} aria-label="Close project">
               Close ×
             </button>
-            <div className="dialog-image"><img src={assetPath(selected.image)} alt={selected.alt} /></div>
+            <figure className="dialog-image">
+              <Image
+                src={assetPath(selected.image)}
+                alt={selected.alt}
+                width={1280}
+                height={1280}
+                sizes="(max-width: 900px) 95vw, 65vw"
+                unoptimized
+              />
+              <figcaption>{String(selectedIndex + 1).padStart(2, "0")} / {String(projects.length).padStart(2, "0")}</figcaption>
+            </figure>
             <div className="dialog-copy">
               <p>{selected.medium} · {selected.year}</p>
               <h2 id="dialog-title">{selected.title}</h2>
               {selected.zh && <p className="dialog-zh" lang="zh-Hant">{selected.zh}</p>}
-              <p className="dialog-description">{selected.description}</p>
+              <p className="dialog-description" id="dialog-description">{selected.description}</p>
               <p className="dialog-note">
-                Full project documentation, process images, credits and exhibition history will be
-                migrated into the complete archive.
+                Selected work from the WCCHUN archive · Hong Kong
               </p>
+              <div className="dialog-navigation">
+                <button type="button" onClick={() => moveProject(-1)} aria-label="View previous project">← Previous</button>
+                <button type="button" onClick={() => moveProject(1)} aria-label="View next project">Next →</button>
+              </div>
             </div>
           </div>
         </div>
       )}
-    </main>
+      </main>
+    </>
   );
 }

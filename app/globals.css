@@ -16,12 +16,52 @@ html {
   scroll-behavior: smooth;
 }
 
+section,
+footer {
+  scroll-margin-top: 70px;
+}
+
 body {
   margin: 0;
   background: var(--paper);
   color: var(--ink);
   font-family: Arial, "PingFang HK", "Noto Sans TC", sans-serif;
   -webkit-font-smoothing: antialiased;
+}
+
+.skip-link {
+  position: fixed;
+  z-index: 200;
+  top: 10px;
+  left: 10px;
+  padding: 10px 14px;
+  background: var(--acid);
+  color: var(--ink);
+  font-size: 12px;
+  font-weight: 700;
+  transform: translateY(-150%);
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+.scroll-line {
+  position: fixed;
+  z-index: 30;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: var(--acid);
+  transform: scaleX(0);
+  transform-origin: left;
+  animation: reading-progress linear;
+  animation-timeline: scroll();
+}
+
+@keyframes reading-progress {
+  to { transform: scaleX(1); }
 }
 
 button,
@@ -193,6 +233,22 @@ footer h2 em {
   height: 100%;
   object-fit: cover;
   transition: transform 900ms cubic-bezier(0.2, 0.8, 0.2, 1), filter 300ms ease;
+}
+
+.hero-image::after,
+.project-image::after {
+  position: absolute;
+  inset: 0;
+  content: "";
+  pointer-events: none;
+  background: linear-gradient(115deg, transparent 35%, rgba(221, 255, 0, 0.12), transparent 65%);
+  transform: translateX(-100%);
+  transition: transform 700ms ease;
+}
+
+.hero-image:hover::after,
+.project-card:hover .project-image::after {
+  transform: translateX(100%);
 }
 
 .hero-image:hover img {
@@ -543,6 +599,8 @@ footer h2 em {
 }
 
 .dialog-image {
+  position: relative;
+  margin: 0;
   min-height: 70vh;
   background: #111;
 }
@@ -550,6 +608,17 @@ footer h2 em {
 .dialog-image img {
   height: 100%;
   object-fit: cover;
+}
+
+.dialog-image figcaption {
+  position: absolute;
+  bottom: 14px;
+  left: 14px;
+  padding: 7px 9px;
+  background: var(--acid);
+  color: var(--ink);
+  font-family: "Courier New", monospace;
+  font-size: 9px;
 }
 
 .dialog-copy {
@@ -605,6 +674,30 @@ footer h2 em {
   cursor: pointer;
 }
 
+.dialog-navigation {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.dialog-navigation button {
+  min-height: 42px;
+  padding: 10px 12px;
+  border: 1px solid var(--ink);
+  background: transparent;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.dialog-navigation button:hover,
+.dialog-navigation button:focus-visible {
+  background: var(--ink);
+  color: var(--paper);
+}
+
 :focus-visible {
   outline: 3px solid var(--acid);
   outline-offset: 3px;
@@ -623,8 +716,7 @@ footer h2 em {
     gap: 14px;
   }
 
-  nav a:nth-child(2),
-  nav a:nth-child(3) {
+  nav a:nth-child(2) {
     display: none;
   }
 
@@ -762,8 +854,16 @@ footer h2 em {
     padding: 8px;
   }
 
+  .dialog-panel {
+    max-height: calc(100dvh - 16px);
+  }
+
   .dialog-copy {
     padding: 48px 20px 24px;
+  }
+
+  .dialog-description {
+    margin: 24px 0;
   }
 }
 
@@ -776,5 +876,6 @@ footer h2 em {
   *::before,
   *::after {
     transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
   }
 }
