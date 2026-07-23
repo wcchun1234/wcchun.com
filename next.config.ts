@@ -1,7 +1,16 @@
 import type { NextConfig } from "next";
 
+const isGitHubPages = process.env.GITHUB_ACTIONS === "true";
+
 const nextConfig: NextConfig = {
-  /* config options here */
+  ...(isGitHubPages
+    ? {
+        output: "export",
+        basePath: "/wcchun.com",
+        assetPrefix: "/wcchun.com",
+        trailingSlash: true,
+      }
+    : {}),
 };
 
 export default nextConfig;

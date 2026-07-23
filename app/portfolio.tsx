@@ -2,6 +2,9 @@
 
 import { useEffect, useState } from "react";
 
+const assetPath = (path: string) =>
+  `${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}${path}`;
+
 type Project = {
   title: string;
   zh?: string;
@@ -153,7 +156,7 @@ export default function Portfolio() {
           onClick={() => setSelected(projects[0])}
           aria-label="Open Scanned Memories project"
         >
-          <img src="/art/art-01.png" alt={projects[0].alt} />
+          <img src={assetPath("/art/art-01.png")} alt={projects[0].alt} />
           <span className="image-code">01 / 08</span>
         </button>
         <div className="hero-side-note" aria-hidden="true">
@@ -193,7 +196,7 @@ export default function Portfolio() {
             >
               <button type="button" onClick={() => setSelected(project)}>
                 <span className="project-image">
-                  <img src={project.image} alt={project.alt} loading={index > 2 ? "lazy" : undefined} />
+                  <img src={assetPath(project.image)} alt={project.alt} loading={index > 2 ? "lazy" : undefined} />
                   <span className="view-project">View project ↗</span>
                 </span>
                 <span className="project-meta">
@@ -280,7 +283,7 @@ export default function Portfolio() {
             <button className="dialog-close" type="button" onClick={() => setSelected(null)} aria-label="Close project">
               Close ×
             </button>
-            <div className="dialog-image"><img src={selected.image} alt={selected.alt} /></div>
+            <div className="dialog-image"><img src={assetPath(selected.image)} alt={selected.alt} /></div>
             <div className="dialog-copy">
               <p>{selected.medium} · {selected.year}</p>
               <h2 id="dialog-title">{selected.title}</h2>
