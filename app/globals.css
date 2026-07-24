@@ -986,6 +986,468 @@ footer h2 em {
   }
 }
 
+/* Figma editorial portfolio implementation */
+.site-header {
+  position: relative;
+  height: 78px;
+  margin: 0 3.33vw;
+  padding: 0;
+  background: var(--paper);
+  backdrop-filter: none;
+}
+
+.wordmark {
+  font-size: 15px;
+  font-weight: 900;
+  letter-spacing: -0.055em;
+}
+
+.wordmark span {
+  color: var(--ink);
+  -webkit-text-stroke: 0;
+}
+
+.site-header nav {
+  gap: 22px;
+  font-size: 9px;
+  letter-spacing: 0.09em;
+}
+
+.figma-hero {
+  position: relative;
+  min-height: 1300px;
+  padding: 54px 3.33vw 0;
+}
+
+.hero-title {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  width: min(78vw, 1100px);
+  font-size: clamp(78px, 10.4vw, 150px);
+  font-weight: 900;
+  line-height: 0.81;
+  letter-spacing: -0.075em;
+  text-transform: uppercase;
+}
+
+.hero-title span {
+  opacity: 0;
+  transform: translateY(24px);
+  animation: intro-rise 520ms cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+.hero-title span:nth-child(2) { animation-delay: 80ms; }
+.hero-title span:nth-child(3) { animation-delay: 160ms; }
+
+.intro-motion {
+  opacity: 0;
+  transform: translateY(24px) scale(0.985);
+  animation: intro-rise 620ms cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+.delay-4 { animation-delay: 300ms; }
+.delay-5 { animation-delay: 380ms; }
+.delay-6 { animation-delay: 520ms; }
+
+@keyframes intro-rise {
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.hero-thumbnail,
+.hero-artwork {
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid #c8c6bc;
+  background: var(--paper);
+  cursor: pointer;
+}
+
+.hero-thumbnail {
+  position: absolute;
+  z-index: 3;
+  top: 60px;
+  right: 3.33vw;
+  width: min(19.25vw, 277px);
+  height: 360px;
+}
+
+.hero-artwork {
+  position: absolute;
+  top: 492px;
+  left: 3.33vw;
+  width: 59.72vw;
+  height: 690px;
+}
+
+.hero-thumbnail img,
+.hero-artwork img,
+.project-image img,
+.dialog-image img {
+  height: 100%;
+  background: var(--paper);
+  object-fit: contain;
+}
+
+.hero-thumbnail img,
+.hero-artwork img {
+  transition: transform 700ms cubic-bezier(0.2, 0.8, 0.2, 1), filter 250ms ease;
+}
+
+.hero-thumbnail:hover img,
+.hero-artwork:hover img,
+.hero-thumbnail:focus-visible img,
+.hero-artwork:focus-visible img {
+  filter: contrast(1.035);
+  transform: scale(1.012);
+}
+
+.hero-intro {
+  position: absolute;
+  top: 512px;
+  right: 6.67vw;
+  width: min(28vw, 400px);
+}
+
+.hero-intro > p:not(.eyebrow) {
+  margin: 42px 0 0;
+  font-size: clamp(18px, 1.75vw, 25px);
+  line-height: 1.35;
+  letter-spacing: -0.025em;
+}
+
+.archive-cta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 90%;
+  margin-top: 280px;
+  padding: 17px 22px;
+  background: var(--acid);
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.archive-cta span {
+  transition: transform 180ms ease;
+}
+
+.archive-cta:hover span,
+.archive-cta:focus-visible span {
+  transform: translate(4px, 4px);
+}
+
+.hero-scroll {
+  position: absolute;
+  bottom: 6px;
+  left: 3.33vw;
+  margin: 0;
+  color: #77766f;
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.work-section,
+.exhibitions {
+  padding-right: 3.33vw;
+  padding-left: 3.33vw;
+}
+
+.work-section {
+  padding-top: 100px;
+}
+
+.section-heading h2 {
+  font-size: clamp(58px, 7vw, 100px);
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.filter-bar {
+  padding-bottom: 62px;
+}
+
+.project-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 74px 28px;
+}
+
+.project-card,
+.project-card.featured:nth-of-type(n) {
+  grid-column: span 1;
+}
+
+.project-card.featured:nth-of-type(1) {
+  grid-column: span 2;
+}
+
+.project-card.featured:nth-of-type(1) .project-image {
+  aspect-ratio: 1.65 / 1;
+}
+
+.project-card.featured:nth-of-type(2) {
+  grid-column: span 1;
+}
+
+.project-image {
+  border: 1px solid #d3d1c8;
+  background: var(--paper);
+  aspect-ratio: 0.94 / 1;
+}
+
+.project-card:nth-child(3n + 2) .project-image {
+  aspect-ratio: 0.94 / 1;
+}
+
+.project-image img {
+  padding: 0;
+  object-fit: contain;
+}
+
+.project-card:hover img,
+.project-card button:focus-visible img {
+  opacity: 1;
+  transform: scale(1.012);
+}
+
+.project-meta {
+  grid-template-columns: 1fr;
+  gap: 5px;
+  padding-top: 11px;
+  border-top: 0;
+}
+
+.project-meta > span:nth-child(2),
+.project-meta > span:nth-child(3) {
+  color: #77766f;
+  font-family: "Courier New", monospace;
+  font-size: 8px;
+}
+
+.project-meta > span:nth-child(2) {
+  order: -1;
+}
+
+.project-meta strong {
+  font-size: 15px;
+  font-weight: 900;
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(22px) scale(0.985);
+  transition:
+    opacity 520ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    transform 620ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.project-card:nth-child(4n + 2) { transition-delay: 45ms; }
+.project-card:nth-child(4n + 3) { transition-delay: 90ms; }
+.project-card:nth-child(4n + 4) { transition-delay: 135ms; }
+
+.practice {
+  min-height: 760px;
+  align-items: start;
+  grid-template-columns: 0.25fr 1.45fr 0.6fr;
+  padding: 70px 3.33vw;
+}
+
+.practice-copy p:first-child {
+  max-width: 920px;
+  font-size: clamp(58px, 6.8vw, 98px);
+  font-weight: 900;
+  line-height: 0.88;
+  text-transform: uppercase;
+}
+
+.practice-copy p:first-child em {
+  color: var(--paper);
+  font-family: inherit;
+  font-style: normal;
+  font-weight: 900;
+}
+
+.dialog-panel {
+  background: var(--paper);
+}
+
+.dialog-image {
+  background: var(--paper);
+}
+
+@media (max-width: 900px) {
+  .figma-hero {
+    min-height: 1250px;
+  }
+
+  .hero-title {
+    width: 100%;
+    font-size: clamp(60px, 15vw, 110px);
+  }
+
+  .hero-thumbnail {
+    display: none;
+  }
+
+  .hero-artwork {
+    top: 390px;
+    width: 62vw;
+    height: 600px;
+  }
+
+  .hero-intro {
+    top: 430px;
+    right: 3.33vw;
+    width: 29vw;
+  }
+
+  .archive-cta {
+    width: 100%;
+    margin-top: 180px;
+  }
+
+  .project-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .project-card,
+  .project-card.featured:nth-of-type(n) {
+    grid-column: span 1;
+  }
+}
+
+@media (max-width: 600px) {
+  .site-header {
+    margin: 0 20px;
+  }
+
+  .site-header nav a:not(:first-child) {
+    display: none;
+  }
+
+  .site-header nav a:first-child::before {
+    content: "Menu +";
+    font-size: 9px;
+  }
+
+  .site-header nav a:first-child {
+    font-size: 0;
+  }
+
+  .figma-hero {
+    min-height: 1120px;
+    padding: 42px 20px 0;
+  }
+
+  .hero-title {
+    font-size: 57px;
+    line-height: 0.82;
+    letter-spacing: -0.07em;
+  }
+
+  .hero-artwork {
+    top: 270px;
+    left: 20px;
+    width: calc(100% - 40px);
+    height: 420px;
+  }
+
+  .hero-intro {
+    top: 725px;
+    right: 20px;
+    left: 20px;
+    width: auto;
+  }
+
+  .hero-intro > p:not(.eyebrow) {
+    margin-top: 24px;
+    font-size: 18px;
+  }
+
+  .archive-cta {
+    margin-top: 38px;
+  }
+
+  .hero-scroll {
+    left: 20px;
+  }
+
+  .work-section,
+  .exhibitions {
+    padding-right: 20px;
+    padding-left: 20px;
+  }
+
+  .section-heading {
+    display: block;
+  }
+
+  .section-heading h2 {
+    font-size: 54px;
+  }
+
+  .section-heading > p {
+    margin-top: 18px;
+  }
+
+  .filter-bar {
+    gap: 6px;
+    padding-bottom: 42px;
+  }
+
+  .project-grid {
+    grid-template-columns: 1fr;
+    gap: 54px;
+  }
+
+  .project-card.featured:nth-of-type(1) .project-image,
+  .project-image,
+  .project-card:nth-child(3n + 2) .project-image {
+    aspect-ratio: 1 / 1;
+  }
+
+  .practice {
+    grid-template-columns: 1fr;
+    min-height: 650px;
+    padding: 56px 20px;
+  }
+
+  .practice-copy p:first-child {
+    font-size: 46px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+  }
+
+  .reveal,
+  .intro-motion,
+  .hero-title span {
+    opacity: 1;
+    transform: none;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;

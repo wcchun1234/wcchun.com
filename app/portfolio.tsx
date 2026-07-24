@@ -10,7 +10,7 @@ type Project = {
   title: string;
   zh?: string;
   year: string;
-  medium: "Photography" | "Installation" | "Creative Coding" | "Moving Image";
+  medium: string;
   image: string;
   alt: string;
   featured?: boolean;
@@ -22,6 +22,57 @@ type Project = {
   exhibition?: string;
   codeUrl?: string;
 };
+
+type LegacyProjectInput = {
+  title: string;
+  year: string;
+  medium: string;
+  image: string;
+  description: string;
+  codeUrl?: string;
+  zh?: string;
+};
+
+const legacyProject = ({
+  title,
+  year,
+  medium,
+  image,
+  description,
+  codeUrl,
+  zh,
+}: LegacyProjectInput): Project => ({
+  title,
+  zh,
+  year,
+  medium,
+  image,
+  alt: `${title}, an artwork by Wong Chun Sunny.`,
+  description,
+  statement: `${title} belongs to WCCHUN’s continuing investigation of memory, perception and technology. The project uses ${medium.toLowerCase()} as a way to translate an idea into an encounter—retaining the visual and conceptual identity of the original work while making its documentation accessible as part of this complete archive.`,
+  details: [
+    { label: "Artist", value: "Wong Chun Sunny / WCCHUN" },
+    { label: "Medium", value: medium },
+    { label: "Year", value: year },
+    { label: "Status", value: "Legacy archive entry" },
+  ],
+  process: [
+    {
+      title: "Concept",
+      text: "The project begins with a specific observation, memory or social question and develops it through visual research.",
+    },
+    {
+      title: "Making",
+      text: `Material and technical tests shape the final ${medium.toLowerCase()} work through an iterative studio process.`,
+    },
+    {
+      title: "Archive",
+      text: "The surviving image and project metadata are retained here so the work remains part of the artist’s complete practice.",
+    },
+  ],
+  themes: ["Archive", "Memory", "Technology", "Visual culture"],
+  codeUrl,
+});
 
 const projects: Project[] = [
   {
@@ -225,9 +276,180 @@ const projects: Project[] = [
     exhibition: "Aware · Exhibition version",
     codeUrl: "https://github.com/wcchun1234/Aware",
   },
+  legacyProject({
+    title: "ArtSense",
+    year: "2024",
+    medium: "Installation",
+    image: "/art/legacy/artsense.webp",
+    description:
+      "The exhibition framework bringing MemoryGrid, WordView and TechCore together as an interconnected portrait of four years of creative-media study.",
+    codeUrl: "https://github.com/wcchun1234/ArtSense",
+  }),
+  legacyProject({
+    title: "MindPixel",
+    year: "2023",
+    medium: "Creative Coding",
+    image: "/art/legacy/mindpixel.webp",
+    description:
+      "An immersive computational image environment exploring how fragments of thought can be recomposed into a luminous architectural memory.",
+    codeUrl: "https://github.com/wcchun1234/MindPixel",
+  }),
+  legacyProject({
+    title: "MindScape",
+    year: "2023",
+    medium: "Installation",
+    image: "/art/legacy/mindscape.webp",
+    description:
+      "A sculptural installation that externalises an internal landscape through suspended structure, shadow and technological material.",
+  }),
+  legacyProject({
+    title: "Aware (Exhibition)",
+    year: "2023",
+    medium: "Installation",
+    image: "/art/legacy/aware-exhibition.webp",
+    description:
+      "The exhibition configuration of Aware, extending the interactive system into a shared spatial encounter.",
+    codeUrl: "https://github.com/wcchun1234/Aware",
+  }),
+  legacyProject({
+    title: "布達佩斯 / Budapest",
+    year: "2022",
+    medium: "Moving Image",
+    image: "/art/legacy/budapest.webp",
+    description:
+      "A moving-image study of Budapest shaped through travel, observation and the unstable persistence of place in memory.",
+  }),
+  legacyProject({
+    title: "CAR",
+    year: "2022",
+    medium: "Creative Coding",
+    image: "/art/legacy/car.webp",
+    description:
+      "A concise computational experiment using the visual language of digital counters, symbols and responsive systems.",
+  }),
+  legacyProject({
+    title: "I Am the Son of the Sun",
+    year: "2022",
+    medium: "Moving Image",
+    image: "/art/legacy/son-of-the-sun.webp",
+    description:
+      "A performative moving-image work examining identity, exposure and the symbolic relationship between the body and light.",
+  }),
+  legacyProject({
+    title: "ownvalue",
+    year: "2021",
+    medium: "Creative Coding",
+    image: "/art/legacy/ownvalue.webp",
+    description:
+      "An interactive work asking viewers to confront how personal worth is measured, entered and displayed by digital interfaces.",
+  }),
+  legacyProject({
+    title: "正確揀釘 營唔會飛",
+    year: "2021",
+    medium: "Graphic",
+    image: "/art/legacy/correct-nail.webp",
+    description:
+      "A Cantonese-language graphic campaign using humour and direct visual communication to engage a local audience.",
+  }),
+  legacyProject({
+    title: "Dictionary of Colour",
+    year: "2020",
+    medium: "Graphic",
+    image: "/art/legacy/dictionary-colour.webp",
+    description:
+      "A graphic system treating colour as a navigable language of association, location and personal interpretation.",
+  }),
+  legacyProject({
+    title: "Who Am I?",
+    year: "2020",
+    medium: "Graphic",
+    image: "/art/legacy/who-am-i.webp",
+    description:
+      "A typographic identity study that turns a direct personal question into a layered visual composition.",
+  }),
+  legacyProject({
+    title: "60HKG Promotion Campaign",
+    year: "2020",
+    medium: "Graphic",
+    image: "/art/legacy/60hkg.webp",
+    description:
+      "A promotional identity developed for a Hong Kong-focused campaign across compact digital and graphic formats.",
+  }),
+  legacyProject({
+    title: "Spaghetti",
+    year: "2021",
+    medium: "Moving Image",
+    image: "/art/legacy/spaghetti.webp",
+    description:
+      "A short moving-image experiment turning an ordinary material and familiar word into a cinematic visual study.",
+  }),
+  legacyProject({
+    title: "Enchanted Landscape",
+    year: "2022",
+    medium: "Photography",
+    image: "/art/legacy/enchanted-landscape.webp",
+    description:
+      "A photographic exploration of landscape as an imagined, remembered and emotionally reconstructed place.",
+  }),
+  legacyProject({
+    title: "Indecisive Moment",
+    year: "2022",
+    medium: "Photography",
+    image: "/art/legacy/indecisive-moment.webp",
+    description:
+      "A photographic series concerned with hesitation, timing and the visual tension immediately before a decision.",
+  }),
+  legacyProject({
+    title: "Film",
+    year: "2022",
+    medium: "Photography",
+    image: "/art/legacy/film.webp",
+    description:
+      "A stripped-back photographic study reflecting on the material and conceptual language of film.",
+  }),
+  legacyProject({
+    title: "Night City",
+    year: "2022",
+    medium: "Photography",
+    image: "/art/legacy/night-city.webp",
+    description:
+      "A nocturnal photographic observation of artificial light, urban movement and the city as an image-making machine.",
+  }),
+  legacyProject({
+    title: "Digitdeath",
+    year: "2022",
+    medium: "Creative Coding",
+    image: "/art/legacy/digitdeath.webp",
+    description:
+      "A computational work reflecting on disappearance, obsolescence and mortality inside digital culture.",
+  }),
+  legacyProject({
+    title: "sweeTabot",
+    year: "2021",
+    medium: "Creative Coding",
+    image: "/art/legacy/sweetabot.webp",
+    description:
+      "A friendly networked-object concept combining communication, play and a deliberately approachable technological identity.",
+  }),
+  legacyProject({
+    title: "Capturing Time",
+    year: "2021",
+    medium: "Other",
+    image: "/art/legacy/capturing-time.webp",
+    description:
+      "An early experimental work considering how a fleeting duration can be represented, stored and revisited.",
+  }),
+  legacyProject({
+    title: "Protect Hongkonger",
+    year: "2021",
+    medium: "Other",
+    image: "/art/legacy/protect-hongkonger.webp",
+    description:
+      "A concise visual statement shaped by care, civic identity and the desire to protect a local community.",
+  }),
 ];
 
-const filters = ["All", "Photography", "Installation", "Creative Coding", "Moving Image"] as const;
+const filters = ["All", "Photography", "Installation", "Creative Coding", "Moving Image", "Graphic", "Other"] as const;
 type Filter = (typeof filters)[number];
 
 export default function Portfolio() {
@@ -260,6 +482,23 @@ export default function Portfolio() {
       document.body.style.overflow = "";
     };
   }, [selected]);
+
+  useEffect(() => {
+    const nodes = Array.from(document.querySelectorAll<HTMLElement>(".reveal"));
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-visible");
+            observer.unobserve(entry.target);
+          }
+        }
+      },
+      { rootMargin: "0px 0px -8% 0px", threshold: 0.08 },
+    );
+    nodes.forEach((node) => observer.observe(node));
+    return () => observer.disconnect();
+  }, [filter]);
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
@@ -303,53 +542,63 @@ export default function Portfolio() {
         <div className="header-index">HK — 22.3193° N</div>
       </header>
 
-      <section className="hero" id="top">
-        <div className="hero-copy">
-          <p className="eyebrow">Artist &amp; creative technologist · Hong Kong</p>
-          <h1>
-            Memory becomes
-            <br />
-            <em>material.</em>
-          </h1>
-          <p className="hero-statement">
-            WCCHUN works across computational image-making, photography and installation—tracing how
-            technology reshapes memory, language and perception.
-          </p>
-          <a className="text-link" href="#work">
-            Enter selected work <span aria-hidden="true">↘</span>
-          </a>
+      <section className="figma-hero" id="top">
+        <div className="hero-title" aria-label="Memory becomes material">
+          <span>Memory</span>
+          <span>Becomes</span>
+          <span>Material</span>
         </div>
         <button
-          className="hero-image"
+          className="hero-thumbnail intro-motion delay-4"
           type="button"
-          onClick={() => openProject(projects[0])}
-          aria-label="Open Scanned Memories project"
+          onClick={() => openProject(projects[1])}
+          aria-label="Open Digital Echoes project"
           aria-haspopup="dialog"
         >
           <Image
-            src={assetPath("/art/art-01.webp")}
-            alt={projects[0].alt}
-            width={1280}
-            height={1280}
-            sizes="(max-width: 900px) 100vw, 55vw"
+            src={assetPath(projects[1].image)}
+            alt={projects[1].alt}
+            width={720}
+            height={960}
             priority
             unoptimized
           />
-          <span className="image-code">01 / 08</span>
         </button>
-        <div className="hero-side-note" aria-hidden="true">
-          <span>BEYONDESIGN</span>
-          <span>ART × SYSTEMS × MEMORY</span>
+        <button
+          className="hero-artwork intro-motion delay-5"
+          type="button"
+          onClick={() => openProject(projects[1])}
+          aria-label="Open Digital Echoes project"
+          aria-haspopup="dialog"
+        >
+          <Image
+            src={assetPath(projects[1].image)}
+            alt={projects[1].alt}
+            width={1280}
+            height={1280}
+            sizes="(max-width: 700px) 100vw, 64vw"
+            priority
+            unoptimized
+          />
+        </button>
+        <div className="hero-intro intro-motion delay-6">
+          <p className="eyebrow">Art × technology × memory</p>
+          <p>
+            Wong Chun Sunny is a Hong Kong artist and creative technologist working with
+            computational images, photography and installation.
+          </p>
+          <a className="archive-cta" href="#work">Enter the archive <span>↘</span></a>
         </div>
+        <p className="hero-scroll">Scroll / 01—06</p>
       </section>
 
       <section className="work-section" id="work">
         <div className="section-heading">
           <div>
-            <p className="eyebrow">Selected archive</p>
-            <h2>Work, 2023—2024</h2>
+            <p className="eyebrow">Complete visual archive</p>
+            <h2>Selected work</h2>
           </div>
-          <p aria-live="polite">{String(visible.length).padStart(2, "0")} projects</p>
+          <p aria-live="polite">{String(visible.length).padStart(2, "0")} works retained</p>
         </div>
 
         <div className="filter-bar" aria-label="Filter projects">
@@ -369,7 +618,7 @@ export default function Portfolio() {
         <div className="project-grid">
           {visible.map((project, index) => (
             <article
-              className={`project-card ${project.featured ? "featured" : ""}`}
+              className={`project-card reveal ${project.featured ? "featured" : ""}`}
               key={project.title}
             >
               <button
