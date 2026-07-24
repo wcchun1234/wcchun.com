@@ -449,6 +449,51 @@ const projects: Project[] = [
   }),
 ];
 
+const galleryByTitle: Record<string, string[]> = {
+  "Scanned Memories": [
+    "/art/art-01.webp",
+    "/art/details/art-03.webp",
+    "/art/details/scanned-installation.webp",
+    "/art/details/scanned-alternate.webp",
+  ],
+  "Digital Echoes": [
+    "/art/art-02.webp",
+    "/art/details/art-04.webp",
+    "/art/details/digital-installation.webp",
+  ],
+  MemoryGrid: [
+    "/art/art-08.webp",
+    "/art/legacy/artsense.webp",
+    "/art/art-09.webp",
+  ],
+  WordView: [
+    "/art/art-09.webp",
+    "/art/art-10.webp",
+    "/art/legacy/artsense.webp",
+  ],
+  TechCore: [
+    "/art/art-10.webp",
+    "/art/details/art-05.webp",
+    "/art/legacy/artsense.webp",
+  ],
+  Aware: [
+    "/art/art-07.webp",
+    "/art/details/art-06.webp",
+    "/art/legacy/aware-exhibition.webp",
+  ],
+  "Aware (Exhibition)": [
+    "/art/legacy/aware-exhibition.webp",
+    "/art/details/art-06.webp",
+    "/art/art-07.webp",
+  ],
+  ArtSense: [
+    "/art/legacy/artsense.webp",
+    "/art/art-08.webp",
+    "/art/art-09.webp",
+    "/art/details/art-05.webp",
+  ],
+};
+
 const filters = ["All", "Photography", "Installation", "Creative Coding", "Moving Image", "Graphic", "Other"] as const;
 type Filter = (typeof filters)[number];
 
@@ -459,6 +504,9 @@ export default function Portfolio() {
   const lastTriggerRef = useRef<HTMLElement | null>(null);
   const visible = filter === "All" ? projects : projects.filter((project) => project.medium === filter);
   const selectedIndex = selected ? projects.findIndex((project) => project.title === selected.title) : -1;
+  const selectedGallery = selected
+    ? galleryByTitle[selected.title] ?? [selected.image, selected.image, selected.image]
+    : [];
 
   const openProject = (project: Project) => {
     lastTriggerRef.current = document.activeElement as HTMLElement;
@@ -755,6 +803,37 @@ export default function Portfolio() {
                   </div>
                 ))}
               </dl>
+              <section className="dialog-section project-gallery-section">
+                <div className="gallery-heading">
+                  <p className="dialog-section-label">Artwork preview</p>
+                  <span>{String(selectedGallery.length).padStart(2, "0")} views</span>
+                </div>
+                <div className="project-gallery">
+                  {selectedGallery.map((image, index) => {
+                    const isDetailCrop = image === selectedGallery[0] && index > 0;
+                    return (
+                      <figure
+                        className={`gallery-item ${isDetailCrop ? `detail-crop detail-crop-${index}` : ""}`}
+                        key={`${image}-${index}`}
+                      >
+                        <div className="gallery-image">
+                          <Image
+                            src={assetPath(image)}
+                            alt={`${selected.title} — ${isDetailCrop ? `detail view ${index}` : `documentation view ${index + 1}`}`}
+                            width={1280}
+                            height={960}
+                            sizes="(max-width: 900px) 88vw, 38vw"
+                            unoptimized
+                          />
+                        </div>
+                        <figcaption>
+                          {isDetailCrop ? `Detail study ${String(index).padStart(2, "0")}` : `Documentation ${String(index + 1).padStart(2, "0")}`}
+                        </figcaption>
+                      </figure>
+                    );
+                  })}
+                </div>
+              </section>
               <section className="dialog-section">
                 <p className="dialog-section-label">Introduction</p>
                 <p>{selected.statement}</p>
