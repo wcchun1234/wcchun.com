@@ -590,8 +590,9 @@ footer h2 em {
 .dialog-panel {
   position: relative;
   display: grid;
-  grid-template-columns: minmax(0, 1.25fr) minmax(300px, 0.75fr);
-  width: min(1180px, 95vw);
+  grid-template-columns: minmax(0, 1.05fr) minmax(420px, 0.95fr);
+  align-items: start;
+  width: min(1360px, 96vw);
   max-height: 90vh;
   overflow: auto;
   background: var(--paper);
@@ -599,9 +600,10 @@ footer h2 em {
 }
 
 .dialog-image {
-  position: relative;
+  position: sticky;
+  top: 0;
   margin: 0;
-  min-height: 70vh;
+  height: 90vh;
   background: #111;
 }
 
@@ -624,15 +626,17 @@ footer h2 em {
 .dialog-copy {
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
-  padding: 60px 36px 36px;
+  padding: 72px 42px 36px;
 }
 
-.dialog-copy > p:first-child,
-.dialog-note {
+.dialog-kicker,
+.dialog-section-label,
+.dialog-details dt {
   font-family: "Courier New", monospace;
   font-size: 9px;
+  font-weight: 700;
   text-transform: uppercase;
+  letter-spacing: 0.08em;
   line-height: 1.5;
 }
 
@@ -650,14 +654,123 @@ footer h2 em {
 
 .dialog-description {
   margin: 36px 0;
-  font-size: 17px;
+  font-size: clamp(19px, 1.55vw, 24px);
+  line-height: 1.45;
+  letter-spacing: -0.025em;
+}
+
+.dialog-details {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin: 0 0 42px;
+  border-top: 1px solid var(--ink);
+}
+
+.dialog-details div {
+  min-height: 92px;
+  padding: 14px 14px 14px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.dialog-details div:nth-child(odd) {
+  border-right: 1px solid var(--line);
+}
+
+.dialog-details div:nth-child(even) {
+  padding-left: 14px;
+}
+
+.dialog-details dt {
+  margin-bottom: 8px;
+  color: #666;
+}
+
+.dialog-details dd {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.dialog-section {
+  padding: 32px 0;
+  border-top: 1px solid var(--ink);
+}
+
+.dialog-section-label {
+  margin: 0 0 18px;
+}
+
+.dialog-section > p:last-child {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.65;
+}
+
+.process-list article {
+  display: grid;
+  grid-template-columns: 34px 1fr;
+  gap: 12px;
+  padding: 18px 0;
+  border-top: 1px solid var(--line);
+}
+
+.process-list article > span {
+  font-family: "Courier New", monospace;
+  font-size: 9px;
+}
+
+.process-list h3 {
+  margin: 0 0 7px;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.process-list p {
+  margin: 0;
+  color: #444;
+  font-size: 13px;
   line-height: 1.55;
 }
 
-.dialog-note {
-  padding-top: 20px;
-  border-top: 1px solid var(--line);
-  color: #585858;
+.theme-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.theme-list li {
+  padding: 8px 11px;
+  border: 1px solid var(--ink);
+  border-radius: 999px;
+  font-size: 10px;
+  text-transform: uppercase;
+}
+
+.exhibition-context {
+  background: var(--acid);
+  margin: 0 -42px;
+  padding: 28px 42px;
+  border-top: 0;
+}
+
+.dialog-source {
+  display: block;
+  padding: 22px 0;
+  border-top: 1px solid var(--ink);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.dialog-source:hover,
+.dialog-source:focus-visible {
+  text-decoration: underline;
+  text-underline-offset: 5px;
 }
 
 .dialog-close {
@@ -767,7 +880,8 @@ footer h2 em {
   }
 
   .dialog-image {
-    min-height: 44vh;
+    position: relative;
+    height: 52vh;
   }
 }
 
@@ -860,6 +974,11 @@ footer h2 em {
 
   .dialog-copy {
     padding: 48px 20px 24px;
+  }
+
+  .exhibition-context {
+    margin: 0 -20px;
+    padding: 24px 20px;
   }
 
   .dialog-description {

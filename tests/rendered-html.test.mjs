@@ -23,6 +23,13 @@ test("renders the finished WCCHUN portfolio", async () => {
   assert.match(html, /Memory becomes/);
   assert.match(html, /Selected archive/);
   assert.match(html, /Scanned Memories/);
+  assert.match(html, /Digital Echoes/);
+  assert.match(html, /MemoryGrid/);
+  assert.match(html, /WordView/);
+  assert.match(html, /TechCore/);
+  assert.match(html, /The Blue Countdown/);
+  assert.match(html, /EcoSyntax/);
+  assert.match(html, /Aware/);
   assert.match(html, /Exhibitions/);
   assert.match(html, /Skip to selected work/);
   assert.match(html, /aria-haspopup="dialog"/);
