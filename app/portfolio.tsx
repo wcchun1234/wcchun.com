@@ -20,7 +20,7 @@ type Project = {
   process: { title: string; text: string }[];
   themes: string[];
   exhibition?: string;
-  sourceUrl?: string;
+  codeUrl?: string;
 };
 
 const projects: Project[] = [
@@ -49,7 +49,7 @@ const projects: Project[] = [
     ],
     themes: ["Memory", "Identity", "Cameraless photography", "Digital preservation"],
     exhibition: "The Unseen Realm, SCM Cameraless Photography Exhibition 2024 · Light Trace, Collect Hong Kong Art Fair 2026",
-    sourceUrl: "https://www.wcchun.com/Light-Trace-Scanned-Memories",
+    codeUrl: "https://github.com/wcchun1234/Aware",
   },
   {
     title: "Digital Echoes",
@@ -75,7 +75,7 @@ const projects: Project[] = [
     ],
     themes: ["Memory and perception", "AI authorship", "Authenticity", "Cameraless image-making"],
     exhibition: "The Unseen Realm, SCM Cameraless Photography Exhibition 2024 · Collect Hong Kong Art Fair 2025",
-    sourceUrl: "https://www.wcchun.com/work/photography/digital-echoes",
+    codeUrl: "https://github.com/wcchun1234/MindPixel",
   },
   {
     title: "MemoryGrid",
@@ -101,7 +101,7 @@ const projects: Project[] = [
     ],
     themes: ["Travel archive", "Machine vision", "Learning", "Associative memory"],
     exhibition: "ArtSense · CityU School of Creative Media Annual Show 2024",
-    sourceUrl: "https://www.wcchun.com/ArtSense_annual_show/artsense-memorygrid",
+    codeUrl: "https://github.com/wcchun1234/ArtSense",
   },
   {
     title: "WordView",
@@ -127,7 +127,7 @@ const projects: Project[] = [
     ],
     themes: ["Embodied data", "Education", "Language", "Self-tracking"],
     exhibition: "ArtSense · CityU School of Creative Media Annual Show 2024",
-    sourceUrl: "https://www.wcchun.com/ArtSense_annual_show/artsense-wordview",
+    codeUrl: "https://github.com/wcchun1234/ArtSense",
   },
   {
     title: "TechCore",
@@ -152,7 +152,7 @@ const projects: Project[] = [
     ],
     themes: ["Material technology", "Learning archive", "Creative process", "Electronic sculpture"],
     exhibition: "ArtSense · CityU School of Creative Media Annual Show 2024",
-    sourceUrl: "https://www.wcchun.com/ArtSense_annual_show/artsense-techcore",
+    codeUrl: "https://github.com/wcchun1234/ArtSense",
   },
   {
     title: "The Blue Countdown",
@@ -176,7 +176,6 @@ const projects: Project[] = [
       { title: "Countdown", text: "Melting wax and dripping water create a ticking rhythm, linking irreversible material change to diminishing time." },
     ],
     themes: ["Climate crisis", "Arctic warming", "Fragility", "Time"],
-    sourceUrl: "https://www.wcchun.com/work/other/The-Blue-Countdown",
   },
   {
     title: "EcoSyntax",
@@ -200,7 +199,6 @@ const projects: Project[] = [
       { title: "Ecological reading", text: "The evolving network becomes a metaphor for systems sustained by interdependence and continual adaptation." },
     ],
     themes: ["Ecology", "Generative systems", "Interdependence", "Emergence"],
-    sourceUrl: "https://wcchun.notion.site/EcoSyntax-5cf1ab2e21af47daab6dbac64dcf5be1",
   },
   {
     title: "Aware",
@@ -225,7 +223,7 @@ const projects: Project[] = [
     ],
     themes: ["Awareness", "Human–computer interaction", "Collective participation", "Perception"],
     exhibition: "Aware · Exhibition version",
-    sourceUrl: "https://www.wcchun.com/work/coding/aware_exhibition",
+    codeUrl: "https://github.com/wcchun1234/Aware",
   },
 ];
 
@@ -538,9 +536,9 @@ export default function Portfolio() {
                   <p>{selected.exhibition}</p>
                 </section>
               )}
-              {selected.sourceUrl && (
-                <a className="dialog-source" href={selected.sourceUrl} target="_blank" rel="noreferrer">
-                  View original project documentation ↗
+              {selected.codeUrl && (
+                <a className="dialog-source" href={selected.codeUrl} target="_blank" rel="noreferrer">
+                  Explore this project&apos;s code on GitHub ↗
                 </a>
               )}
               <div className="dialog-navigation">
