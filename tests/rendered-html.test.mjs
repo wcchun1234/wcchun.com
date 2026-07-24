@@ -21,7 +21,8 @@ test("renders the finished WCCHUN portfolio", async () => {
   const html = await response.text();
   assert.match(html, /<title>WCCHUN — Artist &amp; Creative Technologist<\/title>/i);
   assert.match(html, /Memory becomes/);
-  assert.match(html, /Selected archive/);
+  assert.match(html, /Complete visual archive/);
+  assert.match(html, /29<!-- --> works retained/);
   assert.match(html, /Scanned Memories/);
   assert.match(html, /Digital Echoes/);
   assert.match(html, /MemoryGrid/);
@@ -30,6 +31,9 @@ test("renders the finished WCCHUN portfolio", async () => {
   assert.match(html, /The Blue Countdown/);
   assert.match(html, /EcoSyntax/);
   assert.match(html, /Aware/);
+  assert.match(html, /MindPixel/);
+  assert.match(html, /Dictionary of Colour/);
+  assert.match(html, /Protect Hongkonger/);
   assert.match(html, /Exhibitions/);
   assert.match(html, /Skip to selected work/);
   assert.match(html, /aria-haspopup="dialog"/);
