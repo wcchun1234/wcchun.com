@@ -1336,6 +1336,19 @@ export default function Portfolio() {
           <div><dt>Recurring ideas</dt><dd>Memory · Attention · Language · Ecology</dd></div>
           <div><dt>Based in</dt><dd>Hong Kong</dd></div>
         </dl>
+        <aside className="curator-tools" aria-label="Professional information">
+          <p>For curators, galleries and collaborators</p>
+          <div>
+            <a href="mailto:wcchun1234@gmail.com">
+              <span>Email</span>
+              <strong>wcchun1234@gmail.com ↗</strong>
+            </a>
+            <a href={assetPath("/Wong-Chun-Sunny-CV.pdf")} download>
+              <span>Artist CV</span>
+              <strong>Download PDF ↓</strong>
+            </a>
+          </div>
+        </aside>
       </section>
 
       <section className="exhibitions" id="exhibitions">
@@ -1349,8 +1362,8 @@ export default function Portfolio() {
           {[
             ["2026", "Collect Hong Kong Art Fair", "Light Trace: Scanned Memories", "Hong Kong"],
             ["2025", "Collect Hong Kong Art Fair", "Digital Echoes", "Hong Kong"],
-            ["2024", "The Unseen Realm", "SCM Cameraless Photography Exhibition", "Hong Kong"],
-            ["2024", "CityU SCM Annual Show", "ArtSense", "Hong Kong"],
+            ["2024", "The Unseen Realm", "Digital Echoes · CityU SCM Cameraless Photography Exhibition", "Hong Kong"],
+            ["2024", "CityU SCM Annual Show", "Scanned Memories", "Hong Kong"],
           ].map(([year, event, work, place]) => (
             <article key={`${year}-${event}`}>
               <span>{year}</span>
@@ -1366,10 +1379,12 @@ export default function Portfolio() {
         <p className="eyebrow">Commissions · exhibitions · collaborations</p>
         <h2>Let&apos;s make the unseen <em>visible.</em></h2>
         <div className="footer-links">
-          <a href="https://www.instagram.com/wongchunsunny/" target="_blank" rel="noreferrer">
+          <a href="mailto:wcchun1234@gmail.com">
             Start a conversation ↗
           </a>
           <div>
+            <a href="mailto:wcchun1234@gmail.com">Email</a>
+            <a href={assetPath("/Wong-Chun-Sunny-CV.pdf")} download>CV</a>
             <a href="https://www.instagram.com/wongchunsunny/" target="_blank" rel="noreferrer">Instagram</a>
             <a href="https://www.behance.net/wongchun" target="_blank" rel="noreferrer">Behance</a>
             <a href="https://www.youtube.com/channel/UCK2wPLfi_gLUpipjDqq3pnw" target="_blank" rel="noreferrer">YouTube</a>

@@ -56,6 +56,8 @@ test("includes accessible navigation and real contact destinations", async () =>
   assert.match(html, /behance\.net\/wongchun/);
   assert.match(html, /youtube\.com\/channel\/UCK2wPLfi_gLUpipjDqq3pnw/);
   assert.match(html, /linkedin\.com\/in\/wcchun/);
+  assert.match(html, /mailto:wcchun1234@gmail\.com/);
+  assert.match(html, /Wong-Chun-Sunny-CV\.pdf/);
   assert.doesNotMatch(html, /wcchun\.notion\.site/);
   assert.doesNotMatch(html, /www\.wcchun\.com\/(?:work|ArtSense|Light-Trace)/);
 });
