@@ -86,6 +86,11 @@ test("publishes indexable permanent project pages and current professional timin
   assert.match(portfolio, /Incoming Secondary Robotics ASA Teams Coordinator · From September 2026/);
   assert.match(portfolio, /appointment effective from September 2026/);
   assert.match(sitemap, /projectPages/);
+  assert.match(source, /Role, tools and collaboration/);
+  assert.match(source, /project\.role/);
+  assert.match(source, /project\.tools/);
+  assert.match(source, /project\.status/);
+  assert.match(source, /project\.collaboration/);
 });
 
 test("includes accessible navigation and real contact destinations", async () => {

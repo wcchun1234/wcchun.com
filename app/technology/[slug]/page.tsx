@@ -14,7 +14,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   if (!project) return {};
   const canonical = `https://wcchun.com${projectUrl(project)}`;
   return {
-    title: `${project.title} — ${project.subtitle} | Wong Chun`,
+    title: `${project.title} — ${project.medium}`,
     description: project.description,
     alternates: { canonical },
     openGraph: {

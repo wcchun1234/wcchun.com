@@ -9,10 +9,22 @@ export const metadata: Metadata = {
   alternates: {
     canonical: siteUrl,
   },
-  title: "Wong Chun (Sunny) — Artist & Creative Technologist | WCCHUN",
+  title: {
+    default: "Wong Chun (Sunny) — Artist & Creative Technologist | WCCHUN",
+    template: "%s | Wong Chun (Sunny) · WCCHUN",
+  },
   description:
     "Portfolio of Hong Kong artist and creative technologist Wong Chun (Sunny), spanning computational art, interactive systems, learning technology, robotics and digital fabrication.",
-  keywords: ["WCCHUN", "Wong Chun Sunny", "Hong Kong artist", "creative technology", "new media art"],
+  keywords: [
+    "Wong Chun",
+    "Sunny Wong",
+    "WCCHUN",
+    "Hong Kong artist",
+    "creative technologist",
+    "new media art",
+    "learning technology",
+    "digital fabrication",
+  ],
   openGraph: {
     title: "Wong Chun (Sunny) — Artist & Creative Technologist | WCCHUN",
     description:

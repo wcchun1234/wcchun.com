@@ -41,9 +41,14 @@ public/art/legacy/    Archive imagery from earlier projects
 worker/               Cloudflare worker entry point
 db/                   Optional D1/Drizzle database setup
 tests/                Rendered-output checks
+docs/                 Launch and search-indexing checklists
 ```
 
 The main portfolio content is maintained in `app/portfolio.tsx`, with page composition in `app/page.tsx` and the global visual system in `app/globals.css`.
+
+## Search indexing
+
+Use the [Google Search Console launch checklist](docs/google-search-console-checklist.md) after production updates. The current sitemap is published at `https://wcchun.com/sitemap.xml`.
 
 ## Deployment
 

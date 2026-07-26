@@ -12,6 +12,10 @@ export type ProjectPage = {
   statement: string;
   image: string;
   imageAlt: string;
+  role: string;
+  tools: string[];
+  status: string;
+  collaboration: string;
   facts: Array<[string, string]>;
   process: Array<[string, string]>;
   gallery: Array<{ src: string; alt: string; caption: string }>;
@@ -32,6 +36,10 @@ export const projectPages: ProjectPage[] = [
       "A home document scanner becomes both slit camera and brush of light. Dragged across an iPad mirroring a computer-based digital sculpture process, it compresses screen time, hand movement, software processing and print output into a single image. The resulting bands are visible traces of attention and technological mediation.",
     image: "/art/art-01.webp",
     imageAlt: "Nine framed monochrome generative images installed in a gallery.",
+    role: "Artist · Research, image-making and installation",
+    tools: ["Document scanner", "iPad", "Machine learning", "Digital print"],
+    status: "Completed work · Exhibited 2024 and 2026",
+    collaboration: "Produced as an independent artistic project; installed with exhibition teams.",
     facts: [
       ["Artist", "Wong Chun Sunny / 王浚"],
       ["Medium", "Scanner-generated digital print"],
@@ -61,6 +69,10 @@ export const projectPages: ProjectPage[] = [
       "Digital Echoes asks what happens when personal recollection becomes training material. Photographs from a London study trip are processed into unfamiliar but recognisable visual forms. Printed and framed, the outputs challenge where photography begins when no camera is used to make the final image.",
     image: "/art/art-02.webp",
     imageAlt: "Three framed blue photographic works installed vertically on a gallery wall.",
+    role: "Artist · Dataset construction, model exploration and print production",
+    tools: ["Machine learning", "Personal image archive", "Text processing", "Digital print"],
+    status: "Completed work · Exhibited 2024 and 2025",
+    collaboration: "Independent artistic research presented within curated group exhibitions.",
     facts: [
       ["Source", "Personal photographs and text"],
       ["Presentation", "Machine-learning generated digital prints"],
@@ -90,6 +102,10 @@ export const projectPages: ProjectPage[] = [
       "Rather than presenting the trip chronologically, MemoryGrid uses computational analysis to reveal visual relationships across landmarks, everyday scenes and fleeting observations. Memory becomes a network: associative, layered and continually in motion.",
     image: "/art/art-08.webp",
     imageAlt: "A visitor viewing a projected network of image fragments.",
+    role: "Artist and creative coder · Concept, data preparation and moving image",
+    tools: ["Python", "Machine vision", "Image clustering", "4K video"],
+    status: "Completed work · Five-minute exhibition version",
+    collaboration: "Independent project developed for the ArtSense exhibition context.",
     facts: [
       ["Medium", "Single-channel digital video, colour, silent"],
       ["Duration", "5 minutes"],
@@ -120,6 +136,10 @@ export const projectPages: ProjectPage[] = [
       "WordView bridges technology, health and education by visualising the relationship between learning and the body. Lecture notes describe what was studied; ECG data records the physiological life unfolding alongside it. Together they form an immersive portrait of four years of learning.",
     image: "/art/art-09.webp",
     imageAlt: "A projection filled with interlaced coloured lines and floating words.",
+    role: "Artist and creative coder · Data processing, visual system and installation",
+    tools: ["Python", "TF-IDF", "word2vec", "Apple Watch ECG", "Projection"],
+    status: "Completed interactive installation",
+    collaboration: "Independent project presented as part of the ArtSense exhibition framework.",
     facts: [
       ["Medium", "Digital projection and interactive software"],
       ["Projection", "Approximately 2 × 2 metres"],
@@ -150,6 +170,10 @@ export const projectPages: ProjectPage[] = [
       "ReadyLoop turns workshop feedback into a calm learning cycle: Learn, Check, Submit, Revise and Reflect. AI supports explanations and self-checks, while teachers and technicians retain approval, safety and production decisions.",
     image: "/technology/readyloop/15.webp",
     imageAlt: "ReadyLoop project overview showing its learning platform and fabrication workflow.",
+    role: "Project lead · Product strategy, UX, system design and implementation",
+    tools: ["Google Apps Script", "React", "Responsible AI", "GitHub", "Codex"],
+    status: "Working public demo · School deployment remains gated",
+    collaboration: "Developed from real Design Technology workshop practice with teacher and technician workflows kept human-led.",
     facts: [
       ["Role", "Project lead and system designer"],
       ["Recognition", "Outstanding Innovation and Creativity Award · AIREA 2026"],
@@ -181,6 +205,10 @@ export const projectPages: ProjectPage[] = [
       "The dashboard transforms a request form and spreadsheet workflow into a role-aware operational system. It supports preparation, submission, review, queue management, production tracking and audit history without presenting ReadyLoop’s learning claims as operational evidence.",
     image: "/technology/dashboard/admin.webp",
     imageAlt: "Design Fabrication Dashboard admin view with workshop submission metrics.",
+    role: "System designer and developer · Workflow, interface and operational logic",
+    tools: ["Google Apps Script", "Google Sheets", "JavaScript", "Audit logging"],
+    status: "Live operational system · 1,500+ recorded requests",
+    collaboration: "Designed around student submissions, technician review and teacher visibility within a school workshop.",
     facts: [
       ["Role", "System design and workflow automation"],
       ["Operational record", "1,500+ student fabrication requests supported"],
@@ -211,6 +239,10 @@ export const projectPages: ProjectPage[] = [
       "The practice connects physical prototyping with visible learning support. Demonstrations, troubleshooting posters and student-friendly reference materials help learners move from a fault to a testable next step while retaining ownership of their solution.",
     image: "/technology/robotics/learning-wall.webp",
     imageAlt: "Robotics classroom learning wall with coding and troubleshooting posters.",
+    role: "Technical educator and programme designer · Incoming team coordinator",
+    tools: ["VEX Robotics", "micro:bit", "Arduino", "ESP32", "Raspberry Pi"],
+    status: "Ongoing practice · Coordinator appointment effective September 2026",
+    collaboration: "Developed with students through coached prototyping, testing and competition preparation.",
     facts: [
       ["Appointment", "Incoming Secondary Robotics ASA Teams Coordinator"],
       ["Effective", "From September 2026"],
@@ -245,11 +277,14 @@ export function ProjectDetail({ project }: { project: ProjectPage }) {
     creator: { "@type": "Person", name: "Wong Chun (Sunny)", url: "https://wcchun.com" },
     dateCreated: project.year,
     image: `https://wcchun.com${project.image}`,
+    keywords: project.tools.join(", "),
     url,
   };
 
   return (
-    <main className="project-page">
+    <>
+    <a className="skip-link project-skip-link" href="#project-main">Skip to project content</a>
+    <main className="project-page" id="project-main">
       <header className="project-page-nav">
         <Link href="/" className="project-page-brand">WCCHUN</Link>
         <Link href={project.section === "work" ? "/#work" : "/#technology"}>
@@ -262,7 +297,7 @@ export function ProjectDetail({ project }: { project: ProjectPage }) {
         <h1>{project.title}</h1>
         <h2>{project.subtitle}</h2>
         <div className="project-page-image">
-          <Image src={project.image} alt={project.imageAlt} width={1920} height={1080} priority unoptimized />
+          <Image src={project.image} alt={project.imageAlt} width={1920} height={1080} sizes="100vw" priority unoptimized />
         </div>
       </section>
 
@@ -274,6 +309,19 @@ export function ProjectDetail({ project }: { project: ProjectPage }) {
       <dl className="project-page-facts">
         {project.facts.map(([label, value]) => <div key={label}><dt>{label}</dt><dd>{value}</dd></div>)}
       </dl>
+
+      <section className="project-page-credits" aria-labelledby="project-credits-title">
+        <div>
+          <p className="project-page-kicker">Project framework</p>
+          <h2 id="project-credits-title">Role, tools and collaboration</h2>
+        </div>
+        <dl>
+          <div><dt>Role</dt><dd>{project.role}</dd></div>
+          <div><dt>Tools</dt><dd><ul>{project.tools.map((tool) => <li key={tool}>{tool}</li>)}</ul></dd></div>
+          <div><dt>Status</dt><dd>{project.status}</dd></div>
+          <div><dt>Collaboration</dt><dd>{project.collaboration}</dd></div>
+        </dl>
+      </section>
 
       <section className="project-page-process">
         <p className="project-page-kicker">Process and approach</p>
@@ -291,7 +339,7 @@ export function ProjectDetail({ project }: { project: ProjectPage }) {
       <section className="project-page-gallery" aria-label={`${project.title} image gallery`}>
         {project.gallery.map((item) => (
           <figure key={`${item.src}-${item.caption}`}>
-            <Image src={item.src} alt={item.alt} width={1920} height={1080} unoptimized />
+            <Image src={item.src} alt={item.alt} width={1920} height={1080} sizes="(max-width: 760px) 100vw, 50vw" unoptimized />
             <figcaption>{item.caption}</figcaption>
           </figure>
         ))}
@@ -309,5 +357,6 @@ export function ProjectDetail({ project }: { project: ProjectPage }) {
       </footer>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />
     </main>
+    </>
   );
 }
