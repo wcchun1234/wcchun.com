@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
+import path from "node:path";
 import test from "node:test";
 
 async function render() {
@@ -39,7 +40,10 @@ test("renders the finished WCCHUN portfolio", async () => {
   assert.match(html, /Open the complete ReadyLoop case study/);
   assert.match(html, /Open the complete DT Fabrication Dashboard case study/);
   assert.match(html, /Open the complete Robotics &amp; Physical Computing case study/);
-  assert.match(html, /View process, evidence and interface/);
+  assert.match(html, /Open permanent case-study page/);
+  assert.match(html, /\/technology\/readyloop/);
+  assert.match(html, /\/technology\/dt-fabrication-dashboard/);
+  assert.match(html, /\/technology\/robotics/);
   assert.match(html, /Selected tools &amp;/);
   assert.match(html, /CutCase/);
   assert.match(html, /CardBoxGen/);
@@ -61,6 +65,27 @@ test("renders the finished WCCHUN portfolio", async () => {
   assert.match(html, /apple-touch-icon\.png/);
   assert.match(html, /wc-monogram\.png/);
   assert.doesNotMatch(html, /codex-preview|loading skeleton|react-loading-skeleton/i);
+});
+
+test("publishes indexable permanent project pages and current professional timing", async () => {
+  const source = await readFile(path.join(process.cwd(), "app", "project-pages.tsx"), "utf8");
+  const portfolio = await readFile(path.join(process.cwd(), "app", "portfolio.tsx"), "utf8");
+  const sitemap = await readFile(path.join(process.cwd(), "app", "sitemap.ts"), "utf8");
+
+  for (const slug of [
+    "scanned-memories",
+    "digital-echoes",
+    "memorygrid",
+    "wordview",
+    "readyloop",
+    "dt-fabrication-dashboard",
+    "robotics",
+  ]) {
+    assert.match(source, new RegExp(`slug: "${slug}"`));
+  }
+  assert.match(portfolio, /Incoming Secondary Robotics ASA Teams Coordinator · From September 2026/);
+  assert.match(portfolio, /appointment effective from September 2026/);
+  assert.match(sitemap, /projectPages/);
 });
 
 test("includes accessible navigation and real contact destinations", async () => {
@@ -93,7 +118,7 @@ test("attributes operational evidence to the dashboard rather than ReadyLoop", a
   assert.doesNotMatch(readyLoopEvidence, /1,500|1,543/);
   assert.match(dashboardEvidence, /1,543/);
   assert.match(source, /VSA access required/);
-  assert.match(source, /Outstanding Innovation &amp; Creativity Award/);
+  assert.match(source, /Outstanding Innovation and Creativity Award/);
 });
 
 test("includes the complete robotics learning case-study media", async () => {
