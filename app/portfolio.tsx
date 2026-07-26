@@ -1035,6 +1035,12 @@ export default function Portfolio() {
     window.requestAnimationFrame(() => lastLightboxTriggerRef.current?.focus());
   }, []);
 
+  const jumpToProjectSection = (sectionId: string) => {
+    const section = dialogPanelRef.current?.querySelector<HTMLElement>(`#${sectionId}`);
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    section?.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
+  };
+
   const handlePointerMove = (event: ReactPointerEvent<HTMLElement>) => {
     const x = (event.clientX / window.innerWidth) * 100;
     const y = (event.clientY / window.innerHeight) * 100;
@@ -1430,42 +1436,27 @@ export default function Portfolio() {
                   </div>
                 ))}
               </dl>
-              <section className="dialog-section project-gallery-section">
-                <div className="gallery-heading">
-                  <p className="dialog-section-label">Artwork preview</p>
-                  <span>{String(selectedGallery.length).padStart(2, "0")} views</span>
+              <nav className="dialog-jump-nav" aria-label="Project detail sections">
+                <span>Explore</span>
+                <div>
+                  {selectedVideo && (
+                    <button type="button" onClick={() => jumpToProjectSection("project-film")}>
+                      Film
+                    </button>
+                  )}
+                  <button type="button" onClick={() => jumpToProjectSection("project-images")}>
+                    Images
+                  </button>
+                  <button type="button" onClick={() => jumpToProjectSection("project-introduction")}>
+                    Introduction
+                  </button>
+                  <button type="button" onClick={() => jumpToProjectSection("project-process")}>
+                    Process
+                  </button>
                 </div>
-                <div className="project-gallery">
-                  {selectedGallery.map((image, index) => (
-                      <figure
-                        className="gallery-item"
-                        key={`${image}-${index}`}
-                      >
-                        <button
-                          className="gallery-image gallery-open"
-                          type="button"
-                          onClick={() => openLightbox(index)}
-                          aria-label={`Enlarge ${selected.title} documentation view ${index + 1}`}
-                        >
-                          <Image
-                            src={assetPath(image)}
-                            alt={`${selected.title} — documentation view ${index + 1}`}
-                            width={1280}
-                            height={960}
-                            sizes="(max-width: 900px) 88vw, 38vw"
-                            unoptimized
-                          />
-                          <span className="gallery-expand">Expand ↗</span>
-                        </button>
-                        <figcaption>
-                          Documentation {String(index + 1).padStart(2, "0")}
-                        </figcaption>
-                      </figure>
-                  ))}
-                </div>
-              </section>
+              </nav>
               {selectedVideo && (
-                <section className="dialog-section project-video-section">
+                <section className="dialog-section project-video-section" id="project-film">
                   <div className="video-heading">
                     <div>
                       <p className="dialog-section-label">{selectedVideo.kind}</p>
@@ -1497,7 +1488,41 @@ export default function Portfolio() {
                   </div>
                 </section>
               )}
-              <section className="dialog-section">
+              <section className="dialog-section project-gallery-section" id="project-images">
+                <div className="gallery-heading">
+                  <p className="dialog-section-label">Artwork preview</p>
+                  <span>{String(selectedGallery.length).padStart(2, "0")} views</span>
+                </div>
+                <div className="project-gallery">
+                  {selectedGallery.map((image, index) => (
+                    <figure
+                      className="gallery-item"
+                      key={`${image}-${index}`}
+                    >
+                      <button
+                        className="gallery-image gallery-open"
+                        type="button"
+                        onClick={() => openLightbox(index)}
+                        aria-label={`Enlarge ${selected.title} documentation view ${index + 1}`}
+                      >
+                        <Image
+                          src={assetPath(image)}
+                          alt={`${selected.title} — documentation view ${index + 1}`}
+                          width={1280}
+                          height={960}
+                          sizes="(max-width: 900px) 88vw, 38vw"
+                          unoptimized
+                        />
+                        <span className="gallery-expand">Expand ↗</span>
+                      </button>
+                      <figcaption>
+                        Documentation {String(index + 1).padStart(2, "0")}
+                      </figcaption>
+                    </figure>
+                  ))}
+                </div>
+              </section>
+              <section className="dialog-section" id="project-introduction">
                 <p className="dialog-section-label">Introduction</p>
                 <p>{selected.statement}</p>
               </section>
@@ -1517,7 +1542,7 @@ export default function Portfolio() {
                   </div>
                 </section>
               )}
-              <section className="dialog-section">
+              <section className="dialog-section" id="project-process">
                 <p className="dialog-section-label">Process</p>
                 <div className="process-list">
                   {selected.process.map((step, index) => (
