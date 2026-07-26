@@ -53,6 +53,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     alternateName: "WCCHUN",
     url: siteUrl,
     image: `${siteUrl}/og.png`,
+    email: "mailto:wcchun1234@gmail.com",
     jobTitle: "Artist and Creative Technologist",
     homeLocation: {
       "@type": "Place",
