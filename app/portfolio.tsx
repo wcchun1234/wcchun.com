@@ -1012,6 +1012,7 @@ export default function Portfolio() {
   const [selected, setSelected] = useState<Project | null>(null);
   const [readyLoopOpen, setReadyLoopOpen] = useState(false);
   const [dashboardOpen, setDashboardOpen] = useState(false);
+  const [roboticsOpen, setRoboticsOpen] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const [isScrolled, setIsScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -1020,6 +1021,7 @@ export default function Portfolio() {
   const dialogPanelRef = useRef<HTMLDivElement>(null);
   const readyLoopDialogRef = useRef<HTMLDivElement>(null);
   const dashboardDialogRef = useRef<HTMLDivElement>(null);
+  const roboticsDialogRef = useRef<HTMLDivElement>(null);
   const lightboxRef = useRef<HTMLDivElement>(null);
   const lastTriggerRef = useRef<HTMLElement | null>(null);
   const lastLightboxTriggerRef = useRef<HTMLElement | null>(null);
@@ -1071,6 +1073,17 @@ export default function Portfolio() {
     window.requestAnimationFrame(() => lastTriggerRef.current?.focus());
   }, []);
 
+  const openRobotics = () => {
+    lastTriggerRef.current = document.activeElement as HTMLElement;
+    setMenuOpen(false);
+    setRoboticsOpen(true);
+  };
+
+  const closeRobotics = useCallback(() => {
+    setRoboticsOpen(false);
+    window.requestAnimationFrame(() => lastTriggerRef.current?.focus());
+  }, []);
+
   const moveProject = useCallback((direction: -1 | 1) => {
     const nextIndex = (selectedIndex + direction + projects.length) % projects.length;
     setLightboxIndex(null);
@@ -1111,7 +1124,7 @@ export default function Portfolio() {
   };
 
   useEffect(() => {
-    document.body.style.overflow = selected || readyLoopOpen || dashboardOpen ? "hidden" : "";
+    document.body.style.overflow = selected || readyLoopOpen || dashboardOpen || roboticsOpen ? "hidden" : "";
     if (selected) {
       window.requestAnimationFrame(() => {
         dialogPanelRef.current?.scrollTo({ top: 0 });
@@ -1124,10 +1137,13 @@ export default function Portfolio() {
     if (dashboardOpen) {
       window.requestAnimationFrame(() => dashboardDialogRef.current?.focus({ preventScroll: true }));
     }
+    if (roboticsOpen) {
+      window.requestAnimationFrame(() => roboticsDialogRef.current?.focus({ preventScroll: true }));
+    }
     return () => {
       document.body.style.overflow = "";
     };
-  }, [dashboardOpen, readyLoopOpen, selected]);
+  }, [dashboardOpen, readyLoopOpen, roboticsOpen, selected]);
 
   useEffect(() => {
     let frame = 0;
@@ -1205,6 +1221,7 @@ export default function Portfolio() {
         return;
       }
       if (event.key === "Escape" && menuOpen) setMenuOpen(false);
+      if (event.key === "Escape" && roboticsOpen) closeRobotics();
       if (event.key === "Escape" && dashboardOpen) closeDashboard();
       if (event.key === "Escape" && readyLoopOpen) closeReadyLoop();
       if (event.key === "Escape" && selected) closeProject();
@@ -1227,7 +1244,7 @@ export default function Portfolio() {
     };
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, [closeDashboard, closeLightbox, closeProject, closeReadyLoop, dashboardOpen, lightboxIndex, menuOpen, moveLightbox, moveProject, readyLoopOpen, selected]);
+  }, [closeDashboard, closeLightbox, closeProject, closeReadyLoop, closeRobotics, dashboardOpen, lightboxIndex, menuOpen, moveLightbox, moveProject, readyLoopOpen, roboticsOpen, selected]);
 
   return (
     <>
@@ -1450,7 +1467,7 @@ export default function Portfolio() {
                 "Hands-on work spanning VEX Robotics, mechanical design, programming, electronics, testing and competition preparation—supported by calm coaching and iterative engineering practice.",
               meta: ["VEX Robotics", "Arduino", "Micro:bit · Raspberry Pi"],
               impact: "Secondary Robotics ASA Teams Coordinator · 2026",
-              caseStudy: null,
+              caseStudy: "robotics",
             },
           ].map((project) => (
             <article className={`technology-card ${project.caseStudy ? "has-case-study" : ""}`} key={project.title}>
@@ -1462,17 +1479,25 @@ export default function Portfolio() {
                 <button
                   className="technology-preview"
                   type="button"
-                  onClick={project.caseStudy === "readyloop" ? openReadyLoop : openDashboard}
+                  onClick={project.caseStudy === "readyloop" ? openReadyLoop : project.caseStudy === "dashboard" ? openDashboard : openRobotics}
                   aria-label={`Open the complete ${project.title} case study`}
                   aria-haspopup="dialog"
                 >
                   <Image
-                    src={assetPath(project.caseStudy === "readyloop" ? "/technology/readyloop/15.webp" : "/technology/dashboard/admin.webp")}
+                    src={assetPath(
+                      project.caseStudy === "readyloop"
+                        ? "/technology/readyloop/15.webp"
+                        : project.caseStudy === "dashboard"
+                          ? "/technology/dashboard/admin.webp"
+                          : "/technology/robotics/learning-wall.webp",
+                    )}
                     alt={project.caseStudy === "readyloop"
                       ? "ReadyLoop case-study overview showing its learning platform and fabrication workflow."
-                      : "Design Fabrication Dashboard admin view showing 1,543 recorded workshop submissions."}
-                    width={project.caseStudy === "readyloop" ? 1920 : 1338}
-                    height={project.caseStudy === "readyloop" ? 1080 : 912}
+                      : project.caseStudy === "dashboard"
+                        ? "Design Fabrication Dashboard admin view showing 1,543 recorded workshop submissions."
+                        : "A classroom robotics learning wall with student-designed coding and troubleshooting posters."}
+                    width={project.caseStudy === "readyloop" ? 1920 : project.caseStudy === "dashboard" ? 1338 : 1600}
+                    height={project.caseStudy === "readyloop" ? 1080 : project.caseStudy === "dashboard" ? 912 : 1200}
                     sizes="(max-width: 900px) 90vw, 31vw"
                     unoptimized
                   />
@@ -1490,7 +1515,7 @@ export default function Portfolio() {
                 <button
                   className="technology-case-link"
                   type="button"
-                  onClick={project.caseStudy === "readyloop" ? openReadyLoop : openDashboard}
+                  onClick={project.caseStudy === "readyloop" ? openReadyLoop : project.caseStudy === "dashboard" ? openDashboard : openRobotics}
                 >
                   View process, evidence and interface →
                 </button>
@@ -1618,6 +1643,239 @@ export default function Portfolio() {
           <a href="#top">Back to top ↑</a>
         </div>
       </footer>
+
+      {roboticsOpen && (
+        <div
+          className="technology-dialog"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="robotics-case-title"
+          aria-describedby="robotics-case-summary"
+          ref={roboticsDialogRef}
+          tabIndex={-1}
+          onKeyDown={(event) => {
+            if (event.key !== "Tab") return;
+            const focusable = roboticsDialogRef.current?.querySelectorAll<HTMLElement>(
+              'button, a[href], video[controls], [tabindex]:not([tabindex="-1"])',
+            );
+            if (!focusable?.length) return;
+            const first = focusable[0];
+            const last = focusable[focusable.length - 1];
+            if (event.shiftKey && document.activeElement === first) {
+              event.preventDefault();
+              last.focus();
+            } else if (!event.shiftKey && document.activeElement === last) {
+              event.preventDefault();
+              first.focus();
+            }
+          }}
+        >
+          <button
+            className="technology-dialog-backdrop"
+            type="button"
+            tabIndex={-1}
+            aria-label="Close Robotics and Physical Computing case study"
+            onClick={closeRobotics}
+          />
+          <article className="technology-dialog-panel robotics-case">
+            <div className="technology-dialog-bar">
+              <span>Case study 03 / Creative Technology</span>
+              <button type="button" onClick={closeRobotics}>Close ×</button>
+            </div>
+
+            <header className="robotics-case-hero">
+              <div>
+                <p className="eyebrow">Learning environments for making and debugging</p>
+                <h2 id="robotics-case-title">Robotics &amp;<br /><span>Physical Computing</span></h2>
+                <p id="robotics-case-summary">
+                  A hands-on teaching practice connecting robotics, electronics, coding and
+                  student-facing visual communication—designed to help learners test ideas,
+                  diagnose problems and keep moving independently.
+                </p>
+              </div>
+              <figure>
+                <Image
+                  src={assetPath("/technology/robotics/learning-wall.webp")}
+                  alt="Robotics classroom with a wall of student learning posters about micro:bit, motors, line following and block-based coding."
+                  width={1600}
+                  height={1200}
+                  sizes="(max-width: 900px) 100vw, 58vw"
+                  unoptimized
+                />
+                <figcaption>Student learning wall · robotics classroom</figcaption>
+              </figure>
+            </header>
+
+            <dl className="readyloop-metadata">
+              <div><dt>Role</dt><dd>Programme coordination · coaching · technical support</dd></div>
+              <div><dt>Learning design</dt><dd>Poster systems · troubleshooting prompts · demonstrations</dd></div>
+              <div><dt>Platforms</dt><dd>VEX · micro:bit · Makeblock · ESP32 · Arduino</dd></div>
+              <div><dt>Methods</dt><dd>Prototyping · coding · electronics · iterative testing</dd></div>
+            </dl>
+
+            <section className="readyloop-intro robotics-intro">
+              <p className="technology-section-index">01 / Learning approach</p>
+              <div>
+                <h3>Teach students how to get unstuck.</h3>
+                <p>
+                  Robotics learning is strongest when technical support builds independence rather
+                  than simply providing the answer. The environment combines visible reference
+                  material, short demonstrations and structured debugging routines so students can
+                  identify a problem, isolate one variable, test a hypothesis and explain what changed.
+                </p>
+              </div>
+            </section>
+
+            <section className="robotics-principles">
+              {[
+                ["Observe", "Describe what the robot is doing before changing code or hardware."],
+                ["Isolate", "Separate power, connection, sensor, motor and program variables."],
+                ["Test", "Change one part at a time and compare the result with the intended behaviour."],
+                ["Reflect", "Record what worked so the learning transfers to the next prototype."],
+              ].map(([title, text], index) => (
+                <article key={title}>
+                  <span>0{index + 1}</span>
+                  <h3>{title}</h3>
+                  <p>{text}</p>
+                </article>
+              ))}
+            </section>
+
+            <section className="robotics-poster-story">
+              <div className="technology-section-heading">
+                <p className="technology-section-index">02 / Visual learning design</p>
+                <h3>Technical knowledge<br />made visible.</h3>
+                <p>
+                  Large-format posters turn abstract coding and electronics concepts into
+                  references students can use while they are building—not only after they ask for help.
+                </p>
+              </div>
+              <div className="robotics-poster-grid">
+                <figure>
+                  <Image
+                    src={assetPath("/technology/robotics/posters.webp")}
+                    alt="Close view of four coordinated robotics posters covering a micro:bit robot, remote control, line following and block-based coding."
+                    width={1600}
+                    height={1200}
+                    sizes="(max-width: 900px) 94vw, 56vw"
+                    unoptimized
+                  />
+                  <figcaption>Coordinated wall system: hardware, control logic and coding concepts</figcaption>
+                </figure>
+                <figure className="poster-document">
+                  <a
+                    href={assetPath("/technology/robotics/robotics-get-unstuck-wall.pdf")}
+                    target="_blank"
+                    rel="noreferrer"
+                    aria-label="Open the full Robotics Get Unstuck Wall poster PDF"
+                  >
+                    <Image
+                      src={assetPath("/technology/robotics/get-unstuck-wall.webp")}
+                      alt="Tall Robotics Get Unstuck Wall poster guiding students through connections, power, code, sensors and debugging."
+                      width={1200}
+                      height={3000}
+                      sizes="(max-width: 900px) 94vw, 30vw"
+                      unoptimized
+                    />
+                    <span>Open full poster PDF ↗</span>
+                  </a>
+                  <figcaption>“Try 3 before asking me” troubleshooting framework</figcaption>
+                </figure>
+              </div>
+            </section>
+
+            <section className="robotics-video-section">
+              <div className="technology-section-heading">
+                <p className="technology-section-index">03 / Physical computing</p>
+                <h3>Code becomes<br />physical behaviour.</h3>
+                <p>
+                  Short demonstrations connect browser interfaces to electronic outputs,
+                  making input, state and control immediately visible.
+                </p>
+              </div>
+              <div className="robotics-videos">
+                <figure>
+                  <video
+                    controls
+                    playsInline
+                    preload="metadata"
+                    poster={assetPath("/technology/robotics/esp32-led-poster.webp")}
+                  >
+                    <source src={assetPath("/technology/robotics/esp32-led-demo.mp4")} type="video/mp4" />
+                    Your browser does not support embedded video.
+                  </video>
+                  <figcaption><span>Demo 01</span>ESP32 web control driving two LED outputs</figcaption>
+                </figure>
+                <figure>
+                  <video
+                    controls
+                    playsInline
+                    preload="metadata"
+                    poster={assetPath("/technology/robotics/esp32-servo-poster.webp")}
+                  >
+                    <source src={assetPath("/technology/robotics/esp32-servo-demo.mp4")} type="video/mp4" />
+                    Your browser does not support embedded video.
+                  </video>
+                  <figcaption><span>Demo 02</span>Browser-based ESP32 servo control</figcaption>
+                </figure>
+              </div>
+            </section>
+
+            <section className="robotics-gallery-section">
+              <div className="technology-section-heading">
+                <p className="technology-section-index">04 / Material practice</p>
+                <h3>Boards, sensors,<br />motors and signals.</h3>
+              </div>
+              <div className="robotics-gallery">
+                {[
+                  {
+                    image: "/technology/robotics/learning-wall.webp",
+                    width: 1600,
+                    height: 1200,
+                    alt: "Wide classroom view showing the installed robotics learning poster system.",
+                    caption: "Learning environment",
+                  },
+                  {
+                    image: "/technology/robotics/physical-computing.webp",
+                    width: 1200,
+                    height: 900,
+                    alt: "Makeblock controller, LED matrix and micro:bit components arranged for physical-computing experiments.",
+                    caption: "Physical-computing hardware",
+                  },
+                ].map((item, index) => (
+                  <a href={assetPath(item.image)} target="_blank" rel="noreferrer" key={item.image}>
+                    <Image
+                      src={assetPath(item.image)}
+                      alt={item.alt}
+                      width={item.width}
+                      height={item.height}
+                      sizes="(max-width: 900px) 94vw, 46vw"
+                      loading="lazy"
+                      unoptimized
+                    />
+                    <span><b>0{index + 1}</b>{item.caption}<i>Expand ↗</i></span>
+                  </a>
+                ))}
+              </div>
+            </section>
+
+            <footer className="readyloop-footer robotics-footer">
+              <div>
+                <p className="technology-section-index">05 / Educational impact</p>
+                <h3>Confidence through<br />structured iteration.</h3>
+              </div>
+              <p>
+                The posters, demonstrations and coaching routines form one learning system:
+                they make technical concepts available at the moment of need, reduce repeated
+                blockers and help students develop the language and habits of independent debugging.
+              </p>
+              <a href={assetPath("/technology/robotics/robotics-get-unstuck-wall.pdf")} download>
+                Download learning poster ↓
+              </a>
+            </footer>
+          </article>
+        </div>
+      )}
 
       {dashboardOpen && (
         <div

@@ -38,6 +38,7 @@ test("renders the finished WCCHUN portfolio", async () => {
   assert.match(html, /ReadyLoop/);
   assert.match(html, /Open the complete ReadyLoop case study/);
   assert.match(html, /Open the complete DT Fabrication Dashboard case study/);
+  assert.match(html, /Open the complete Robotics &amp; Physical Computing case study/);
   assert.match(html, /View process, evidence and interface/);
   assert.match(html, /1,500\+/);
   assert.match(html, /About \/ Wong Chun \(Sunny\)/);
@@ -68,6 +69,7 @@ test("includes accessible navigation and real contact destinations", async () =>
   assert.match(html, /Wong-Chun-Sunny-CV\.pdf/);
   assert.match(html, /technology\/readyloop\/15\.webp/);
   assert.match(html, /technology\/dashboard\/admin\.webp/);
+  assert.match(html, /technology\/robotics\/learning-wall\.webp/);
   assert.doesNotMatch(html, /wcchun\.notion\.site/);
   assert.doesNotMatch(html, /www\.wcchun\.com\/(?:work|ArtSense|Light-Trace)/);
 });
@@ -81,4 +83,14 @@ test("attributes operational evidence to the dashboard rather than ReadyLoop", a
   assert.match(dashboardEvidence, /1,543/);
   assert.match(source, /VSA access required/);
   assert.match(source, /Outstanding Innovation &amp; Creativity Award/);
+});
+
+test("includes the complete robotics learning case-study media", async () => {
+  const source = await readFile(new URL("../app/portfolio.tsx", import.meta.url), "utf8");
+
+  assert.match(source, /Teach students how to get unstuck/);
+  assert.match(source, /robotics-get-unstuck-wall\.pdf/);
+  assert.match(source, /esp32-led-demo\.mp4/);
+  assert.match(source, /esp32-servo-demo\.mp4/);
+  assert.match(source, /Poster systems · troubleshooting prompts · demonstrations/);
 });
