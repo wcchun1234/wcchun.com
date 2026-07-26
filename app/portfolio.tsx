@@ -990,6 +990,7 @@ const readyLoopGallery = [
   { image: "/technology/readyloop/14.webp", alt: "Diagram showing how the ReadyLoop pattern can extend to six project-based learning disciplines.", caption: "A scalable pattern for project-based learning" },
   { image: "/technology/readyloop/15.webp", alt: "ReadyLoop project summary poster with student, teacher, technician and administrator benefits.", caption: "Project summary and public demo" },
   { image: "/technology/readyloop/16.webp", alt: "ReadyLoop project poster describing AI-guided Design Technology learning before fabrication.", caption: "ReadyLoop: from potential errors to reflective improvement" },
+  { image: "/technology/readyloop/award.webp", alt: "AIREA 2026 Outstanding Innovation and Creativity Award certificate and Z.AI Special Award presented to Wong Chun for ReadyLoop.", caption: "AIREA 2026 and Z.AI award evidence", width: 1800, height: 1350 },
 ];
 
 const filters = ["All", "Photography", "Installation", "Creative Coding", "Moving Image", "Graphic", "Research & Experiments"] as const;
@@ -1010,6 +1011,7 @@ export default function Portfolio() {
   const [showArchive, setShowArchive] = useState(false);
   const [selected, setSelected] = useState<Project | null>(null);
   const [readyLoopOpen, setReadyLoopOpen] = useState(false);
+  const [dashboardOpen, setDashboardOpen] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const [isScrolled, setIsScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -1017,6 +1019,7 @@ export default function Portfolio() {
   const dialogRef = useRef<HTMLDivElement>(null);
   const dialogPanelRef = useRef<HTMLDivElement>(null);
   const readyLoopDialogRef = useRef<HTMLDivElement>(null);
+  const dashboardDialogRef = useRef<HTMLDivElement>(null);
   const lightboxRef = useRef<HTMLDivElement>(null);
   const lastTriggerRef = useRef<HTMLElement | null>(null);
   const lastLightboxTriggerRef = useRef<HTMLElement | null>(null);
@@ -1054,6 +1057,17 @@ export default function Portfolio() {
 
   const closeReadyLoop = useCallback(() => {
     setReadyLoopOpen(false);
+    window.requestAnimationFrame(() => lastTriggerRef.current?.focus());
+  }, []);
+
+  const openDashboard = () => {
+    lastTriggerRef.current = document.activeElement as HTMLElement;
+    setMenuOpen(false);
+    setDashboardOpen(true);
+  };
+
+  const closeDashboard = useCallback(() => {
+    setDashboardOpen(false);
     window.requestAnimationFrame(() => lastTriggerRef.current?.focus());
   }, []);
 
@@ -1097,7 +1111,7 @@ export default function Portfolio() {
   };
 
   useEffect(() => {
-    document.body.style.overflow = selected || readyLoopOpen ? "hidden" : "";
+    document.body.style.overflow = selected || readyLoopOpen || dashboardOpen ? "hidden" : "";
     if (selected) {
       window.requestAnimationFrame(() => {
         dialogPanelRef.current?.scrollTo({ top: 0 });
@@ -1107,10 +1121,13 @@ export default function Portfolio() {
     if (readyLoopOpen) {
       window.requestAnimationFrame(() => readyLoopDialogRef.current?.focus({ preventScroll: true }));
     }
+    if (dashboardOpen) {
+      window.requestAnimationFrame(() => dashboardDialogRef.current?.focus({ preventScroll: true }));
+    }
     return () => {
       document.body.style.overflow = "";
     };
-  }, [readyLoopOpen, selected]);
+  }, [dashboardOpen, readyLoopOpen, selected]);
 
   useEffect(() => {
     let frame = 0;
@@ -1188,6 +1205,7 @@ export default function Portfolio() {
         return;
       }
       if (event.key === "Escape" && menuOpen) setMenuOpen(false);
+      if (event.key === "Escape" && dashboardOpen) closeDashboard();
       if (event.key === "Escape" && readyLoopOpen) closeReadyLoop();
       if (event.key === "Escape" && selected) closeProject();
       if (event.key === "ArrowLeft" && selected) moveProject(-1);
@@ -1209,7 +1227,7 @@ export default function Portfolio() {
     };
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, [closeLightbox, closeProject, closeReadyLoop, lightboxIndex, menuOpen, moveLightbox, moveProject, readyLoopOpen, selected]);
+  }, [closeDashboard, closeLightbox, closeProject, closeReadyLoop, dashboardOpen, lightboxIndex, menuOpen, moveLightbox, moveProject, readyLoopOpen, selected]);
 
   return (
     <>
@@ -1412,7 +1430,7 @@ export default function Portfolio() {
                 "A safe pre-fabrication learning and workflow platform combining student guidance, revision support, bounded file analysis and role-specific views for technicians, teachers and administrators.",
               meta: ["Project lead", "Learning technology", "Responsible AI"],
               impact: "Outstanding Innovation & Creativity Award · AIREA 2026",
-              caseStudy: true,
+              caseStudy: "readyloop",
             },
             {
               index: "02",
@@ -1422,7 +1440,7 @@ export default function Portfolio() {
                 "A live operational system for student submissions, technician review, teacher visibility and fabrication coordination across 3D printing, laser cutting and workshop production.",
               meta: ["System design", "Workflow automation", "Digital fabrication"],
               impact: "1,500+ student fabrication requests supported",
-              caseStudy: false,
+              caseStudy: "dashboard",
             },
             {
               index: "03",
@@ -1432,7 +1450,7 @@ export default function Portfolio() {
                 "Hands-on work spanning VEX Robotics, mechanical design, programming, electronics, testing and competition preparation—supported by calm coaching and iterative engineering practice.",
               meta: ["VEX Robotics", "Arduino", "Micro:bit · Raspberry Pi"],
               impact: "Secondary Robotics ASA Teams Coordinator · 2026",
-              caseStudy: false,
+              caseStudy: null,
             },
           ].map((project) => (
             <article className={`technology-card ${project.caseStudy ? "has-case-study" : ""}`} key={project.title}>
@@ -1444,15 +1462,17 @@ export default function Portfolio() {
                 <button
                   className="technology-preview"
                   type="button"
-                  onClick={openReadyLoop}
-                  aria-label="Open the complete ReadyLoop case study"
+                  onClick={project.caseStudy === "readyloop" ? openReadyLoop : openDashboard}
+                  aria-label={`Open the complete ${project.title} case study`}
                   aria-haspopup="dialog"
                 >
                   <Image
-                    src={assetPath("/technology/readyloop/15.webp")}
-                    alt="ReadyLoop case-study overview showing its learning platform and fabrication workflow."
-                    width={1920}
-                    height={1080}
+                    src={assetPath(project.caseStudy === "readyloop" ? "/technology/readyloop/15.webp" : "/technology/dashboard/admin.webp")}
+                    alt={project.caseStudy === "readyloop"
+                      ? "ReadyLoop case-study overview showing its learning platform and fabrication workflow."
+                      : "Design Fabrication Dashboard admin view showing 1,543 recorded workshop submissions."}
+                    width={project.caseStudy === "readyloop" ? 1920 : 1338}
+                    height={project.caseStudy === "readyloop" ? 1080 : 912}
                     sizes="(max-width: 900px) 90vw, 31vw"
                     unoptimized
                   />
@@ -1467,7 +1487,11 @@ export default function Portfolio() {
               </ul>
               <p className="technology-impact">{project.impact}</p>
               {project.caseStudy && (
-                <button className="technology-case-link" type="button" onClick={openReadyLoop}>
+                <button
+                  className="technology-case-link"
+                  type="button"
+                  onClick={project.caseStudy === "readyloop" ? openReadyLoop : openDashboard}
+                >
                   View process, evidence and interface →
                 </button>
               )}
@@ -1595,6 +1619,178 @@ export default function Portfolio() {
         </div>
       </footer>
 
+      {dashboardOpen && (
+        <div
+          className="technology-dialog"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="dashboard-case-title"
+          aria-describedby="dashboard-case-summary"
+          ref={dashboardDialogRef}
+          tabIndex={-1}
+          onKeyDown={(event) => {
+            if (event.key !== "Tab") return;
+            const focusable = dashboardDialogRef.current?.querySelectorAll<HTMLElement>(
+              'button, a[href], [tabindex]:not([tabindex="-1"])',
+            );
+            if (!focusable?.length) return;
+            const first = focusable[0];
+            const last = focusable[focusable.length - 1];
+            if (event.shiftKey && document.activeElement === first) {
+              event.preventDefault();
+              last.focus();
+            } else if (!event.shiftKey && document.activeElement === last) {
+              event.preventDefault();
+              first.focus();
+            }
+          }}
+        >
+          <button
+            className="technology-dialog-backdrop"
+            type="button"
+            tabIndex={-1}
+            aria-label="Close DT Fabrication Dashboard case study"
+            onClick={closeDashboard}
+          />
+          <article className="technology-dialog-panel dashboard-case">
+            <div className="technology-dialog-bar">
+              <span>Case study 02 / Creative Technology</span>
+              <button type="button" onClick={closeDashboard}>Close ×</button>
+            </div>
+
+            <header className="dashboard-case-hero">
+              <div>
+                <p className="eyebrow">Live school production infrastructure</p>
+                <h2 id="dashboard-case-title">DT Fabrication<br /><span>Dashboard</span></h2>
+                <p id="dashboard-case-summary">
+                  A working submission and operations system coordinating student files,
+                  technician review, machine queues, production status and audit history
+                  across laser cutting and 3D printing.
+                </p>
+              </div>
+              <figure>
+                <Image
+                  src={assetPath("/technology/dashboard/operations.webp")}
+                  alt="Design Fabrication Dashboard showing 1,543 recorded jobs, active workload and queue health."
+                  width={1512}
+                  height={896}
+                  sizes="(max-width: 900px) 100vw, 58vw"
+                  unoptimized
+                />
+                <figcaption>Live operations view · July 2026</figcaption>
+              </figure>
+            </header>
+
+            <dl className="readyloop-metadata">
+              <div><dt>Role</dt><dd>System design, development and workshop operations</dd></div>
+              <div><dt>Users</dt><dd>Students · Teachers · Technicians · Administrators</dd></div>
+              <div><dt>Production</dt><dd>Laser cutting · 3D printing · Special requests</dd></div>
+              <div><dt>Platform</dt><dd>Google Apps Script · Google Workspace</dd></div>
+            </dl>
+
+            <section className="readyloop-intro">
+              <p className="technology-section-index">01 / Operational challenge</p>
+              <div>
+                <h3>One workshop needed one dependable source of truth.</h3>
+                <p>
+                  The dashboard replaces a fragmented request process with a traceable workflow.
+                  Students prepare and submit one working file, technicians review readiness,
+                  teachers gain visibility, and every request receives a status trail before
+                  production. Admin views group queue pressure, machine mix and repeat-submission
+                  signals for day-to-day workshop decisions.
+                </p>
+              </div>
+            </section>
+
+            <div className="readyloop-evidence dashboard-evidence" aria-label="DT Fabrication Dashboard operational evidence">
+              <article><span>Total requests</span><strong>1,543</strong><p>recorded fabrication submissions in the supplied live operations view</p></article>
+              <article><span>Laser workload</span><strong>1,185</strong><p>laser-cutting jobs represented in the underlying production records</p></article>
+              <article><span>3D print workload</span><strong>358</strong><p>3D-print requests represented in the underlying production records</p></article>
+            </div>
+
+            <section className="dashboard-workflow">
+              <div className="technology-section-heading">
+                <p className="technology-section-index">02 / Workflow</p>
+                <h3>Prepare. Submit.<br />Review. Track.</h3>
+              </div>
+              <ol>
+                {[
+                  ["Prepare", "Check file type, dimensions, scale and preview before upload."],
+                  ["Submit", "Upload one working fabrication file for each request."],
+                  ["Review", "Technicians record readiness, issue codes and required fixes."],
+                  ["Track", "Students use a case number or school email to follow progress."],
+                ].map(([title, text], index) => (
+                  <li key={title}>
+                    <span>{String(index + 1).padStart(2, "0")}</span>
+                    <h4>{title}</h4>
+                    <p>{text}</p>
+                  </li>
+                ))}
+              </ol>
+            </section>
+
+            <section className="readyloop-gallery-section dashboard-gallery-section">
+              <div className="technology-section-heading">
+                <p className="technology-section-index">03 / Interface</p>
+                <h3>Student clarity.<br />Operational control.</h3>
+                <p>Open each uncropped interface view to inspect it at full size.</p>
+              </div>
+              <div className="dashboard-gallery">
+                {[
+                  {
+                    image: "/technology/dashboard/submit.webp",
+                    alt: "Student submission screen explaining file requirements, review and tracking.",
+                    caption: "Student submission and guidance",
+                  },
+                  {
+                    image: "/technology/dashboard/admin.webp",
+                    alt: "Administrator dashboard with request totals, production breakdown and queue-health information.",
+                    caption: "Admin submission dashboard",
+                  },
+                  {
+                    image: "/technology/dashboard/operations.webp",
+                    alt: "Wide Design Fabrication Dashboard operations view showing active jobs and workshop queue metrics.",
+                    caption: "Live workshop operations",
+                  },
+                ].map((item, index) => (
+                  <a href={assetPath(item.image)} target="_blank" rel="noreferrer" key={item.image}>
+                    <Image
+                      src={assetPath(item.image)}
+                      alt={item.alt}
+                      width={index === 2 ? 1512 : index === 1 ? 1338 : 1367}
+                      height={index === 2 ? 896 : index === 1 ? 912 : 921}
+                      sizes="(max-width: 900px) 94vw, 46vw"
+                      loading="lazy"
+                      unoptimized
+                    />
+                    <span><b>0{index + 1}</b>{item.caption}<i>Expand ↗</i></span>
+                  </a>
+                ))}
+              </div>
+            </section>
+
+            <footer className="readyloop-footer dashboard-footer">
+              <div>
+                <p className="technology-section-index">04 / Live system</p>
+                <h3>A real workflow,<br />used in practice.</h3>
+              </div>
+              <p>
+                This is the operational system behind the 1,500+ fabrication-request figure.
+                Access is managed through Victoria Shanghai Academy&apos;s Google Workspace,
+                so visitors without an authorised VSA account may be asked to sign in.
+              </p>
+              <a
+                href="https://script.google.com/a/macros/vsa.edu.hk/s/AKfycbwyurVHraoJy8ui23CCQ0bkN6Ade9fmF295XUZZ0IohFY38LjzZMUCmq1bJwJAV_YL8xg/exec"
+                target="_blank"
+                rel="noreferrer"
+              >
+                Open live dashboard ↗<br />VSA access required
+              </a>
+            </footer>
+          </article>
+        </div>
+      )}
+
       {readyLoopOpen && (
         <div
           className="technology-dialog"
@@ -1678,9 +1874,9 @@ export default function Portfolio() {
             </section>
 
             <div className="readyloop-evidence" aria-label="ReadyLoop evidence and recognition">
-              <article><span>Operational evidence</span><strong>1,500+</strong><p>owner-reported student fabrication requests handled by the underlying workflow</p></article>
               <article><span>Release validation</span><strong>497 / 0</strong><p>tests passed / failed in the documented public demo release</p></article>
               <article><span>Recognition</span><strong>AIREA 2026</strong><p>Outstanding Innovation &amp; Creativity Award</p></article>
+              <article><span>Special recognition</span><strong>Z.AI</strong><p>Special Award at the 2nd International Competition on AI in Education</p></article>
             </div>
 
             <section className="readyloop-loop">
@@ -1751,8 +1947,8 @@ export default function Portfolio() {
                     <Image
                       src={assetPath(item.image)}
                       alt={item.alt}
-                      width={1920}
-                      height={1080}
+                      width={"width" in item ? item.width : 1920}
+                      height={"height" in item ? item.height : 1080}
                       sizes="(max-width: 700px) 92vw, (max-width: 1100px) 46vw, 30vw"
                       loading="lazy"
                       unoptimized
