@@ -790,6 +790,17 @@ footer h2 em {
   border-top: 1px solid var(--line);
 }
 
+.archive-provenance {
+  max-width: 48ch;
+  margin: -7px 0 22px;
+  color: #666;
+  font-family: "Courier New", monospace;
+  font-size: 9px;
+  line-height: 1.5;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
 .archive-narrative article {
   padding: 22px 22px 24px 0;
   border-bottom: 1px solid var(--line);
