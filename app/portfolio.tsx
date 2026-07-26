@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } from "react";
 
 const assetPath = (path: string) =>
   `${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}${path}`;
@@ -907,7 +907,10 @@ type Filter = (typeof filters)[number];
 export default function Portfolio() {
   const [filter, setFilter] = useState<Filter>("All");
   const [selected, setSelected] = useState<Project | null>(null);
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+  const [isScrolled, setIsScrolled] = useState(false);
   const dialogRef = useRef<HTMLDivElement>(null);
+  const dialogPanelRef = useRef<HTMLDivElement>(null);
   const lastTriggerRef = useRef<HTMLElement | null>(null);
   const visible = filter === "All" ? projects : projects.filter((project) => project.medium === filter);
   const selectedIndex = selected ? projects.findIndex((project) => project.title === selected.title) : -1;
@@ -920,18 +923,38 @@ export default function Portfolio() {
 
   const openProject = (project: Project) => {
     lastTriggerRef.current = document.activeElement as HTMLElement;
+    setLightboxIndex(null);
     setSelected(project);
   };
 
   const closeProject = useCallback(() => {
+    setLightboxIndex(null);
     setSelected(null);
     window.requestAnimationFrame(() => lastTriggerRef.current?.focus());
   }, []);
 
   const moveProject = useCallback((direction: -1 | 1) => {
     const nextIndex = (selectedIndex + direction + projects.length) % projects.length;
+    setLightboxIndex(null);
     setSelected(projects[nextIndex]);
+    window.requestAnimationFrame(() => dialogPanelRef.current?.scrollTo({ top: 0 }));
   }, [selectedIndex]);
+
+  const moveLightbox = useCallback((direction: -1 | 1) => {
+    setLightboxIndex((current) => {
+      if (current === null || selectedGallery.length === 0) return current;
+      return (current + direction + selectedGallery.length) % selectedGallery.length;
+    });
+  }, [selectedGallery.length]);
+
+  const handlePointerMove = (event: ReactPointerEvent<HTMLElement>) => {
+    const x = (event.clientX / window.innerWidth) * 100;
+    const y = (event.clientY / window.innerHeight) * 100;
+    event.currentTarget.style.setProperty("--pointer-x", `${x}%`);
+    event.currentTarget.style.setProperty("--pointer-y", `${y}%`);
+    event.currentTarget.style.setProperty("--pointer-shift-x", String((x - 50) / 50));
+    event.currentTarget.style.setProperty("--pointer-shift-y", String((y - 50) / 50));
+  };
 
   useEffect(() => {
     document.body.style.overflow = selected ? "hidden" : "";
@@ -940,6 +963,26 @@ export default function Portfolio() {
       document.body.style.overflow = "";
     };
   }, [selected]);
+
+  useEffect(() => {
+    let frame = 0;
+    const onScroll = () => {
+      if (frame) return;
+      frame = window.requestAnimationFrame(() => {
+        setIsScrolled(window.scrollY > 34);
+        const scrollable = document.documentElement.scrollHeight - window.innerHeight;
+        const progress = scrollable > 0 ? window.scrollY / scrollable : 0;
+        document.documentElement.style.setProperty("--page-progress", String(progress));
+        frame = 0;
+      });
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      if (frame) window.cancelAnimationFrame(frame);
+    };
+  }, []);
 
   useEffect(() => {
     const nodes = Array.from(document.querySelectorAll<HTMLElement>(".reveal"));
@@ -960,6 +1003,13 @@ export default function Portfolio() {
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
+      if (lightboxIndex !== null) {
+        if (event.key === "Escape") setLightboxIndex(null);
+        if (event.key === "ArrowLeft") moveLightbox(-1);
+        if (event.key === "ArrowRight") moveLightbox(1);
+        if (["Escape", "ArrowLeft", "ArrowRight"].includes(event.key)) event.preventDefault();
+        return;
+      }
       if (event.key === "Escape" && selected) closeProject();
       if (event.key === "ArrowLeft" && selected) moveProject(-1);
       if (event.key === "ArrowRight" && selected) moveProject(1);
@@ -980,14 +1030,14 @@ export default function Portfolio() {
     };
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, [closeProject, moveProject, selected]);
+  }, [closeProject, lightboxIndex, moveLightbox, moveProject, selected]);
 
   return (
     <>
       <a className="skip-link" href="#content">Skip to selected work</a>
       <div className="scroll-line" aria-hidden="true" />
-      <main id="content">
-      <header className="site-header">
+      <main id="content" onPointerMove={handlePointerMove}>
+      <header className={`site-header ${isScrolled ? "is-scrolled" : ""}`}>
         <a className="wordmark" href="#top" aria-label="WCCHUN home">
           WC<span>CHUN</span>
         </a>
@@ -1095,6 +1145,7 @@ export default function Portfolio() {
                     loading={index > 2 ? "lazy" : undefined}
                     unoptimized
                   />
+                  <span className="project-index">{String(index + 1).padStart(2, "0")}</span>
                   <span className="view-project">View project ↗</span>
                 </span>
                 <span className="project-meta">
@@ -1185,7 +1236,19 @@ export default function Portfolio() {
           tabIndex={-1}
         >
           <button className="dialog-backdrop" type="button" aria-label="Close project" onClick={closeProject} />
-          <div className="dialog-panel">
+          <div
+            className="dialog-panel"
+            ref={dialogPanelRef}
+            onScroll={(event) => {
+              const panel = event.currentTarget;
+              const scrollable = panel.scrollHeight - panel.clientHeight;
+              panel.style.setProperty(
+                "--dialog-progress",
+                String(scrollable > 0 ? panel.scrollTop / scrollable : 0),
+              );
+            }}
+          >
+            <div className="dialog-progress" aria-hidden="true" />
             <button className="dialog-close" type="button" onClick={closeProject} aria-label="Close project">
               Close ×
             </button>
@@ -1224,7 +1287,12 @@ export default function Portfolio() {
                         className="gallery-item"
                         key={`${image}-${index}`}
                       >
-                        <div className="gallery-image">
+                        <button
+                          className="gallery-image gallery-open"
+                          type="button"
+                          onClick={() => setLightboxIndex(index)}
+                          aria-label={`Enlarge ${selected.title} documentation view ${index + 1}`}
+                        >
                           <Image
                             src={assetPath(image)}
                             alt={`${selected.title} — documentation view ${index + 1}`}
@@ -1233,7 +1301,8 @@ export default function Portfolio() {
                             sizes="(max-width: 900px) 88vw, 38vw"
                             unoptimized
                           />
-                        </div>
+                          <span className="gallery-expand">Expand ↗</span>
+                        </button>
                         <figcaption>
                           Documentation {String(index + 1).padStart(2, "0")}
                         </figcaption>
@@ -1296,6 +1365,44 @@ export default function Portfolio() {
                 <button type="button" onClick={() => moveProject(-1)} aria-label="View previous project">← Previous</button>
                 <button type="button" onClick={() => moveProject(1)} aria-label="View next project">Next →</button>
               </div>
+            </div>
+          </div>
+        </div>
+      )}
+      {selected && lightboxIndex !== null && (
+        <div
+          className="artwork-lightbox"
+          role="dialog"
+          aria-modal="true"
+          aria-label={`${selected.title} image viewer`}
+        >
+          <button
+            className="lightbox-backdrop"
+            type="button"
+            aria-label="Close enlarged artwork"
+            onClick={() => setLightboxIndex(null)}
+          />
+          <div className="lightbox-stage">
+            <div className="lightbox-topbar">
+              <span>{selected.title}</span>
+              <span>
+                {String(lightboxIndex + 1).padStart(2, "0")} / {String(selectedGallery.length).padStart(2, "0")}
+              </span>
+              <button type="button" onClick={() => setLightboxIndex(null)}>Close ×</button>
+            </div>
+            <figure>
+              <Image
+                src={assetPath(selectedGallery[lightboxIndex])}
+                alt={`${selected.title} — enlarged documentation view ${lightboxIndex + 1}`}
+                width={1920}
+                height={1440}
+                unoptimized
+              />
+            </figure>
+            <div className="lightbox-navigation">
+              <button type="button" onClick={() => moveLightbox(-1)}>← Previous</button>
+              <span>Use arrow keys to explore</span>
+              <button type="button" onClick={() => moveLightbox(1)}>Next →</button>
             </div>
           </div>
         </div>
