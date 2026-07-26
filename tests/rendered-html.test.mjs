@@ -37,6 +37,10 @@ test("renders the finished WCCHUN portfolio", async () => {
   assert.match(html, /Exhibitions/);
   assert.match(html, /Skip to selected work/);
   assert.match(html, /aria-haspopup="dialog"/);
+  assert.match(html, /application\/ld\+json/);
+  assert.match(html, /Artist and Creative Technologist/);
+  assert.match(html, /rel="canonical"/);
+  assert.match(html, /site\.webmanifest/);
   assert.doesNotMatch(html, /codex-preview|loading skeleton|react-loading-skeleton/i);
 });
 
