@@ -49,8 +49,8 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "Person",
-    name: "Wong Chun Sunny",
-    alternateName: "WCCHUN",
+    name: "Wong Chun (Sunny)",
+    alternateName: ["WCCHUN", "Sunny Wong"],
     url: siteUrl,
     image: `${siteUrl}/og.png`,
     email: "mailto:wcchun1234@gmail.com",

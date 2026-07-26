@@ -973,11 +973,22 @@ const videoByTitle: Record<string, ProjectVideo> = {
   },
 };
 
-const filters = ["All", "Photography", "Installation", "Creative Coding", "Moving Image", "Graphic", "Other"] as const;
+const filters = ["All", "Photography", "Installation", "Creative Coding", "Moving Image", "Graphic", "Research & Experiments"] as const;
 type Filter = (typeof filters)[number];
+const featuredTitles = new Set([
+  "Scanned Memories",
+  "Digital Echoes",
+  "MemoryGrid",
+  "WordView",
+  "TechCore",
+  "The Blue Countdown",
+  "Aware",
+  "ArtSense",
+]);
 
 export default function Portfolio() {
   const [filter, setFilter] = useState<Filter>("All");
+  const [showArchive, setShowArchive] = useState(false);
   const [selected, setSelected] = useState<Project | null>(null);
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -988,7 +999,10 @@ export default function Portfolio() {
   const lightboxRef = useRef<HTMLDivElement>(null);
   const lastTriggerRef = useRef<HTMLElement | null>(null);
   const lastLightboxTriggerRef = useRef<HTMLElement | null>(null);
-  const visible = filter === "All" ? projects : projects.filter((project) => project.medium === filter);
+  const archivePool = showArchive ? projects : projects.filter((project) => featuredTitles.has(project.title));
+  const visible = filter === "All"
+    ? archivePool
+    : archivePool.filter((project) => project.medium === (filter === "Research & Experiments" ? "Other" : filter));
   const selectedIndex = selected ? projects.findIndex((project) => project.title === selected.title) : -1;
   const selectedGallery = selected
     ? galleryByTitle[selected.title] ?? [selected.image]
@@ -1069,7 +1083,7 @@ export default function Portfolio() {
       if (frame) return;
       frame = window.requestAnimationFrame(() => {
         setIsScrolled(window.scrollY > 34);
-        const sectionIds = ["work", "practice", "exhibitions", "contact"];
+        const sectionIds = ["work", "technology", "practice", "exhibitions", "about", "contact"];
         let currentSection = "top";
         for (const id of sectionIds) {
           const section = document.getElementById(id);
@@ -1186,8 +1200,10 @@ export default function Portfolio() {
         >
           {[
             ["work", "Work"],
+            ["technology", "Technology & Education"],
             ["practice", "Practice"],
             ["exhibitions", "Exhibitions"],
+            ["about", "About"],
             ["contact", "Contact"],
           ].map(([id, label]) => (
             <a
@@ -1246,8 +1262,8 @@ export default function Portfolio() {
         <div className="hero-intro intro-motion delay-6">
           <p className="eyebrow">Art × technology × memory</p>
           <p>
-            Wong Chun Sunny is a Hong Kong artist and creative technologist working with
-            computational images, photography and installation.
+            Wong Chun (Sunny) is a Hong Kong artist and creative technologist working across
+            computational images, interactive systems and learning technology.
           </p>
           <a className="archive-cta" href="#work">Enter the archive <span>↘</span></a>
         </div>
@@ -1257,10 +1273,10 @@ export default function Portfolio() {
       <section className="work-section" id="work">
         <div className="section-heading">
           <div>
-            <p className="eyebrow">Complete visual archive</p>
-            <h2>Selected work</h2>
+            <p className="eyebrow">{showArchive ? "Complete visual archive" : "A focused entry point"}</p>
+            <h2>{showArchive ? "Art archive" : "Featured art"}</h2>
           </div>
-          <p aria-live="polite">{String(visible.length).padStart(2, "0")} works retained</p>
+          <p aria-live="polite">{String(visible.length).padStart(2, "0")} works {showArchive ? "retained" : "selected"}</p>
         </div>
 
         <div className="filter-bar" aria-label="Filter projects">
@@ -1317,6 +1333,99 @@ export default function Portfolio() {
             </article>
           ))}
         </div>
+        <div className="archive-switch">
+          <p>
+            {showArchive
+              ? "Showing the complete chronology from current practice to early experiments."
+              : "Continue into the full chronology of 29 artworks, studies and experiments."}
+          </p>
+          <button
+            type="button"
+            onClick={() => {
+              setFilter("All");
+              setShowArchive((current) => !current);
+            }}
+            aria-expanded={showArchive}
+          >
+            {showArchive ? "Return to featured art ↑" : "View complete archive →"}
+          </button>
+        </div>
+      </section>
+
+      <section className="technology" id="technology">
+        <div className="section-heading">
+          <div>
+            <p className="eyebrow">Systems with real-world consequence</p>
+            <h2>Technology &amp;<br />education</h2>
+          </div>
+          <p>03 applied case studies</p>
+        </div>
+        <div className="technology-intro">
+          <p>
+            Alongside the art practice, I design learning systems, fabrication workflows and
+            robotics programmes that connect technical infrastructure with human guidance.
+          </p>
+        </div>
+        <div className="technology-grid">
+          {[
+            {
+              index: "01",
+              title: "ReadyLoop",
+              subtitle: "AI-supported IB Design Technology learning before fabrication",
+              statement:
+                "A safe pre-fabrication learning and workflow platform combining student guidance, revision support, bounded file analysis and role-specific views for technicians, teachers and administrators.",
+              meta: ["Project lead", "Learning technology", "Responsible AI"],
+              impact: "Outstanding Innovation & Creativity Award · AIREA 2026",
+            },
+            {
+              index: "02",
+              title: "DT Fabrication Dashboard",
+              subtitle: "A school-wide production workflow for Years 6–12",
+              statement:
+                "A live operational system for student submissions, technician review, teacher visibility and fabrication coordination across 3D printing, laser cutting and workshop production.",
+              meta: ["System design", "Workflow automation", "Digital fabrication"],
+              impact: "1,500+ student fabrication requests supported",
+            },
+            {
+              index: "03",
+              title: "Robotics & Physical Computing",
+              subtitle: "Team development, prototyping and technical learning",
+              statement:
+                "Hands-on work spanning VEX Robotics, mechanical design, programming, electronics, testing and competition preparation—supported by calm coaching and iterative engineering practice.",
+              meta: ["VEX Robotics", "Arduino", "Micro:bit · Raspberry Pi"],
+              impact: "Secondary Robotics ASA Teams Coordinator · 2026",
+            },
+          ].map((project) => (
+            <article className="technology-card" key={project.title}>
+              <div className="technology-card-top">
+                <span>{project.index}</span>
+                <span>Applied practice</span>
+              </div>
+              <h3>{project.title}</h3>
+              <p className="technology-subtitle">{project.subtitle}</p>
+              <p className="technology-statement">{project.statement}</p>
+              <ul aria-label={`${project.title} capabilities`}>
+                {project.meta.map((item) => <li key={item}>{item}</li>)}
+              </ul>
+              <p className="technology-impact">{project.impact}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="recognition" aria-label="Selected recognition and impact">
+        {[
+          ["Award", "AIREA 2026", "Outstanding Innovation & Creativity"],
+          ["Exhibitions", "2025—2026", "Collect Hong Kong Art Fair"],
+          ["Impact", "1,500+", "Fabrication submissions supported"],
+          ["Education", "CityU SCM", "New Media graduate"],
+        ].map(([label, value, detail]) => (
+          <article key={label}>
+            <span>{label}</span>
+            <strong>{value}</strong>
+            <p>{detail}</p>
+          </article>
+        ))}
       </section>
 
       <section className="practice" id="practice">
@@ -1375,8 +1484,34 @@ export default function Portfolio() {
         </div>
       </section>
 
+      <section className="about" id="about">
+        <div className="about-heading">
+          <p className="eyebrow">About / Wong Chun (Sunny)</p>
+          <h2>Artist, technologist<br />and educator.</h2>
+        </div>
+        <div className="about-body">
+          <p>
+            Wong Chun (Sunny) is a Hong Kong artist and creative technologist working across
+            computational images, interactive installation and learning technology. His practice
+            explores how memory, language and human experience are transformed through digital systems.
+          </p>
+          <p>
+            He is a Design Technology Technician and Secondary Robotics ASA Teams Coordinator at
+            Victoria Shanghai Academy. His applied practice includes ReadyLoop, fabrication workflow
+            systems supporting more than 1,500 student requests, robotics and responsible AI in
+            education. He holds a BAS in New Media from City University of Hong Kong and begins the
+            MSc in Technology, Design and Leadership for Learning at the University of Hong Kong in 2026.
+          </p>
+          <dl>
+            <div><dt>Education</dt><dd>CityU BAS New Media · HKU MSc(TDLL), 2026—2028</dd></div>
+            <div><dt>Capabilities</dt><dd>Creative coding · AI · Robotics · CAD/CAM · Digital fabrication</dd></div>
+            <div><dt>Languages</dt><dd>Cantonese · English · Mandarin</dd></div>
+          </dl>
+        </div>
+      </section>
+
       <footer id="contact">
-        <p className="eyebrow">Commissions · exhibitions · collaborations</p>
+        <p className="eyebrow">Available for exhibitions · creative-technology collaborations · educational projects</p>
         <h2>Let&apos;s make the unseen <em>visible.</em></h2>
         <div className="footer-links">
           <a href="mailto:wcchun1234@gmail.com">
@@ -1392,7 +1527,7 @@ export default function Portfolio() {
           </div>
         </div>
         <div className="footer-base">
-          <span>© {new Date().getFullYear()} Wong Chun Sunny / WCCHUN</span>
+          <span>© {new Date().getFullYear()} Wong Chun (Sunny) / WCCHUN</span>
           <a href="#top">Back to top ↑</a>
         </div>
       </footer>
