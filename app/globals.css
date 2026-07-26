@@ -1498,7 +1498,7 @@ footer h2 em {
   }
 
   .figma-hero {
-    min-height: 1120px;
+    min-height: 1060px;
     padding: 42px 20px 0;
   }
 
@@ -1507,6 +1507,17 @@ footer h2 em {
     line-height: 0.82;
     letter-spacing: -0.07em;
   }
+
+  .hero-title span,
+  .intro-motion {
+    animation-duration: 400ms;
+  }
+
+  .hero-title span:nth-child(2) { animation-delay: 45ms; }
+  .hero-title span:nth-child(3) { animation-delay: 90ms; }
+  .delay-4 { animation-delay: 130ms; }
+  .delay-5 { animation-delay: 170ms; }
+  .delay-6 { animation-delay: 210ms; }
 
   .hero-artwork {
     top: 270px;
@@ -1554,8 +1565,20 @@ footer h2 em {
   }
 
   .filter-bar {
+    flex-wrap: nowrap;
     gap: 6px;
     padding-bottom: 42px;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+  }
+
+  .filter-bar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .filter-bar button {
+    flex: 0 0 auto;
   }
 
   .project-grid {
@@ -1567,6 +1590,12 @@ footer h2 em {
   .project-image,
   .project-card:nth-child(3n + 2) .project-image {
     aspect-ratio: 1 / 1;
+  }
+
+  .view-project,
+  .gallery-expand {
+    opacity: 1;
+    transform: none;
   }
 
   .practice {
