@@ -1,10 +1,18 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useCallback, useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } from "react";
 
 const assetPath = (path: string) =>
   `${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}${path}`;
+
+const permanentProjectUrls: Record<string, string> = {
+  "Scanned Memories": "/work/scanned-memories",
+  "Digital Echoes": "/work/digital-echoes",
+  MemoryGrid: "/work/memorygrid",
+  WordView: "/work/wordview",
+};
 
 type Project = {
   title: string;
@@ -1454,7 +1462,7 @@ export default function Portfolio() {
               statement:
                 "A safe pre-fabrication learning and workflow platform combining student guidance, revision support, bounded file analysis and role-specific views for technicians, teachers and administrators.",
               meta: ["Project lead", "Learning technology", "Responsible AI"],
-              impact: "Outstanding Innovation & Creativity Award · AIREA 2026",
+              impact: "Outstanding Innovation and Creativity Award · AIREA 2026",
               caseStudy: "readyloop",
             },
             {
@@ -1474,7 +1482,7 @@ export default function Portfolio() {
               statement:
                 "Hands-on work spanning VEX Robotics, mechanical design, programming, electronics, testing and competition preparation—supported by calm coaching and iterative engineering practice.",
               meta: ["VEX Robotics", "Arduino", "Micro:bit · Raspberry Pi"],
-              impact: "Secondary Robotics ASA Teams Coordinator · 2026",
+              impact: "Incoming Secondary Robotics ASA Teams Coordinator · From September 2026",
               caseStudy: "robotics",
             },
           ].map((project) => (
@@ -1520,13 +1528,12 @@ export default function Portfolio() {
               </ul>
               <p className="technology-impact">{project.impact}</p>
               {project.caseStudy && (
-                <button
+                <Link
                   className="technology-case-link"
-                  type="button"
-                  onClick={project.caseStudy === "readyloop" ? openReadyLoop : project.caseStudy === "dashboard" ? openDashboard : openRobotics}
+                  href={`/technology/${project.caseStudy === "dashboard" ? "dt-fabrication-dashboard" : project.caseStudy}`}
                 >
-                  View process, evidence and interface →
-                </button>
+                  Open permanent case-study page →
+                </Link>
               )}
             </article>
           ))}
@@ -1618,7 +1625,7 @@ export default function Portfolio() {
 
       <section className="recognition" aria-label="Selected recognition and impact">
         {[
-          ["Award", "AIREA 2026", "Outstanding Innovation & Creativity"],
+          ["Award", "AIREA 2026", "Outstanding Innovation and Creativity Award"],
           ["Exhibitions", "2025—2026", "Collect Hong Kong Art Fair"],
           ["Impact", "1,500+", "Fabrication submissions supported"],
           ["Education", "CityU SCM", "New Media graduate"],
@@ -1699,8 +1706,9 @@ export default function Portfolio() {
             explores how memory, language and human experience are transformed through digital systems.
           </p>
           <p>
-            He is a Design Technology Technician and Secondary Robotics ASA Teams Coordinator at
-            Victoria Shanghai Academy. His applied practice includes ReadyLoop, fabrication workflow
+            He is a Design Technology Technician and incoming Secondary Robotics ASA Teams Coordinator
+            at Victoria Shanghai Academy, with the appointment effective from September 2026. His
+            applied practice includes ReadyLoop, fabrication workflow
             systems supporting more than 1,500 student requests, robotics and responsible AI in
             education. He holds a BAS in New Media from City University of Hong Kong and begins the
             MSc in Technology, Design and Leadership for Learning at the University of Hong Kong in 2026.
@@ -2224,7 +2232,7 @@ export default function Portfolio() {
 
             <div className="readyloop-evidence" aria-label="ReadyLoop evidence and recognition">
               <article><span>Release validation</span><strong>497 / 0</strong><p>tests passed / failed in the documented public demo release</p></article>
-              <article><span>Recognition</span><strong>AIREA 2026</strong><p>Outstanding Innovation &amp; Creativity Award</p></article>
+              <article><span>Recognition</span><strong>AIREA 2026</strong><p>Outstanding Innovation and Creativity Award</p></article>
               <article><span>Special recognition</span><strong>Z.AI</strong><p>Special Award at the 2nd International Competition on AI in Education</p></article>
             </div>
 
@@ -2521,6 +2529,11 @@ export default function Portfolio() {
                 <a className="dialog-source" href={selected.codeUrl} target="_blank" rel="noreferrer">
                   Explore this project&apos;s code on GitHub ↗
                 </a>
+              )}
+              {permanentProjectUrls[selected.title] && (
+                <Link className="dialog-source" href={permanentProjectUrls[selected.title]}>
+                  Open permanent project page ↗
+                </Link>
               )}
               <div className="dialog-navigation">
                 <button type="button" onClick={() => moveProject(-1)} aria-label="View previous project">← Previous</button>
