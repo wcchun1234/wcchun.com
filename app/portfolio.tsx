@@ -511,6 +511,10 @@ const galleryByTitle: Record<string, string[]> = {
     "/art/details/art-05.webp",
     ...archiveSeries("artsense", 3),
   ],
+  MindPixel: [
+    "/art/legacy/mindpixel.webp",
+    "/art/archive/mindpixel/outcome-sample.webp",
+  ],
   "The Blue Countdown": archiveSeries("blue-countdown", 14),
   CAR: archiveSeries("car", 6),
   ownvalue: archiveSeries("ownvalue", 3),
@@ -633,6 +637,42 @@ const archiveNarrativeByTitle: Record<string, ArchiveSection[]> = {
       text: "The works were intentionally distributed across different floors during the CityU School of Creative Media Annual Show 2024. Moving between them allowed visitors to encounter the visual, embodied and technical dimensions of the artist’s education as separate but related experiences.",
     },
   ],
+  MindPixel: [
+    {
+      title: "Text and image memory",
+      text: "MindPixel combines the artist’s lecture-note archive with personal photographs. Text was extracted from PDF documents, cleaned and converted into TF-IDF features; the image collection supplied a parallel visual record. A custom fusion model was then trained to generate new images from those two forms of memory.",
+    },
+    {
+      title: "Machine-learning process",
+      text: "The project uses a PyTorch convolutional network to process image features and join them with a 100-feature textual representation. Training images are resized to a cinematic 16:9 format and augmented through rotation, flipping and colour variation before the model learns to reconstruct and transform their combined information.",
+    },
+    {
+      title: "Topics within the archive",
+      text: "Topic analysis of the lecture material surfaced recurring clusters around data visualisation and Arduino, self and relationships, image systems and noise, convolution and information, and design, learning and space. These themes form a conceptual index of the artist’s studies rather than a manually written prompt.",
+    },
+    {
+      title: "From MindPixel to later works",
+      text: "The generated output became a foundation for later investigations including Digital Echoes. MindPixel established the central method: personal data can be treated as artistic material, and a machine-learning system can reveal unfamiliar visual relationships between knowledge and lived experience.",
+    },
+  ],
+  MindScape: [
+    {
+      title: "Immersive memory environment",
+      text: "MindScape combines artificial intelligence, personal photographs and Microsoft Kinect tracking to produce an interactive three-dimensional visual space. Instead of viewing memory as a fixed image, visitors move through and influence a field built from transformed photographic data.",
+    },
+    {
+      title: "Image intelligence",
+      text: "A convolutional neural network analyses the source photographs and reduces their image embeddings into coordinates suitable for a spatial composition. The resulting dataset becomes the structure of the visual environment, connecting machine interpretation with the emotional associations of the original images.",
+    },
+    {
+      title: "Body-based interaction",
+      text: "The work is built in Processing with KinectPV2, PeasyCam and ControlP5. A Kinect sensor reads the visitor’s body movement and allows them to navigate the particle-based 3D space. Interaction therefore happens through physical presence rather than a conventional mouse or touchscreen.",
+    },
+    {
+      title: "Technical archive",
+      text: "The surviving project record includes the Processing particle-cloud system, reduced image embeddings and data-conversion tools. Together they document how the photographic archive was translated from image files into a responsive spatial experience.",
+    },
+  ],
   "Aware (Exhibition)": [
     {
       title: "Exhibition version",
@@ -651,6 +691,24 @@ const archiveNarrativeByTitle: Record<string, ArchiveSection[]> = {
     {
       title: "Perception and participation",
       text: "The project examines awareness through the intersection of technology, art and human perception. Its evolving image field records successive actions, turning a private gesture into part of a shared spatial encounter.",
+    },
+    {
+      title: "From lecture notes to word cloud",
+      text: "Lecture-note PDFs are converted into text and divided into individual words. Repeated or meaningless terms are filtered before word embedding maps the remaining language into 300-dimensional vectors. Dimensionality reduction then prepares the data for a three-dimensional word cloud in Processing.",
+    },
+    {
+      title: "Infinity-mirror form",
+      text: "The original version places the interactive 3D word cloud inside an infinity-mirror box. Repeated reflections extend the generated language beyond the physical enclosure, turning an academic text database into an apparently limitless environment shaped by colour, scale and movement.",
+    },
+  ],
+  EcoSyntax: [
+    {
+      title: "Image-led archive",
+      text: "EcoSyntax is presented on the original portfolio as a generative creative-coding work from 2023. Its surviving public record is primarily visual: a dense field of coloured paths suggests an ecosystem whose meaning emerges from connection, overlap and continual change.",
+    },
+    {
+      title: "Archive status",
+      text: "The original project card linked to a longer external record that is no longer publicly readable. This portfolio therefore preserves the verified title, year, medium and artwork image while clearly separating surviving documentation from later curatorial interpretation.",
     },
   ],
   "The Blue Countdown": [
@@ -1190,6 +1248,9 @@ export default function Portfolio() {
               {selectedArchiveNarrative.length > 0 && (
                 <section className="dialog-section">
                   <p className="dialog-section-label">From the original archive</p>
+                  <p className="archive-provenance">
+                    Preserved from WCCHUN’s original portfolio and surviving first-party project records.
+                  </p>
                   <div className="archive-narrative">
                     {selectedArchiveNarrative.map((section) => (
                       <article key={section.title}>
