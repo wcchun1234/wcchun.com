@@ -35,6 +35,8 @@ test("renders the finished WCCHUN portfolio", async () => {
   assert.match(html, /Exhibitions/);
   assert.match(html, /Technology &amp; Education/);
   assert.match(html, /ReadyLoop/);
+  assert.match(html, /Open the complete ReadyLoop case study/);
+  assert.match(html, /View process, evidence and interface/);
   assert.match(html, /1,500\+/);
   assert.match(html, /About \/ Wong Chun \(Sunny\)/);
   assert.match(html, /Skip to selected work/);
@@ -62,6 +64,7 @@ test("includes accessible navigation and real contact destinations", async () =>
   assert.match(html, /linkedin\.com\/in\/wcchun/);
   assert.match(html, /mailto:wcchun1234@gmail\.com/);
   assert.match(html, /Wong-Chun-Sunny-CV\.pdf/);
+  assert.match(html, /technology\/readyloop\/15\.webp/);
   assert.doesNotMatch(html, /wcchun\.notion\.site/);
   assert.doesNotMatch(html, /www\.wcchun\.com\/(?:work|ArtSense|Light-Trace)/);
 });

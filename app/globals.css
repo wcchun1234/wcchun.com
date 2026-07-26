@@ -2659,6 +2659,66 @@ main::before {
   transform: translateY(-8px);
 }
 
+.technology-card.has-case-study {
+  min-height: 760px;
+}
+
+.technology-preview {
+  position: relative;
+  display: block;
+  margin: 24px -12px 0;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid rgba(243, 241, 233, 0.24);
+  background: #f4f1ff;
+  cursor: pointer;
+}
+
+.technology-preview img {
+  display: block;
+  width: 100%;
+  height: auto;
+  transition: transform 650ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.technology-preview span {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  padding: 8px 10px;
+  background: var(--ink);
+  color: var(--acid);
+  font-family: "Courier New", monospace;
+  font-size: 8px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.technology-preview:hover img,
+.technology-preview:focus-visible img {
+  transform: scale(1.025);
+}
+
+.technology-card.has-case-study h3 {
+  margin-top: 42px;
+}
+
+.technology-case-link {
+  margin-top: 18px;
+  padding: 14px 0 0;
+  border: 0;
+  border-top: 1px solid currentColor;
+  background: transparent;
+  color: inherit;
+  font-family: "Courier New", monospace;
+  font-size: 9px;
+  font-weight: 700;
+  text-align: left;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+}
+
 .technology-card-top {
   display: flex;
   justify-content: space-between;
@@ -2801,6 +2861,373 @@ main::before {
   line-height: 1.45;
 }
 
+/* ReadyLoop case study */
+.technology-dialog {
+  position: fixed;
+  z-index: 80;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+}
+
+.technology-dialog-backdrop {
+  position: absolute;
+  inset: 0;
+  border: 0;
+  background: rgba(0, 0, 0, 0.86);
+  cursor: zoom-out;
+  animation: dialog-fade 220ms ease both;
+}
+
+.technology-dialog-panel {
+  position: relative;
+  width: min(1460px, 96vw);
+  max-height: calc(100vh - 40px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background: #f4f1e8;
+  color: #121212;
+  box-shadow: 0 40px 120px rgba(0, 0, 0, 0.45);
+  animation: dialog-rise 420ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.technology-dialog-bar {
+  position: sticky;
+  z-index: 5;
+  top: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 20px;
+  border-bottom: 1px solid #121212;
+  background: rgba(244, 241, 232, 0.94);
+  font-family: "Courier New", monospace;
+  font-size: 9px;
+  text-transform: uppercase;
+  backdrop-filter: blur(12px);
+}
+
+.technology-dialog-bar button {
+  padding: 8px 10px;
+  border: 1px solid #121212;
+  background: #121212;
+  color: #f4f1e8;
+  font: inherit;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.readyloop-hero {
+  display: grid;
+  grid-template-columns: 0.72fr 1.28fr;
+  min-height: 720px;
+  border-bottom: 1px solid #121212;
+}
+
+.readyloop-hero > div {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: clamp(30px, 5vw, 78px);
+}
+
+.readyloop-hero h2 {
+  margin: 20px 0 28px;
+  font-size: clamp(72px, 10vw, 150px);
+  line-height: 0.76;
+  letter-spacing: -0.09em;
+}
+
+.readyloop-hero h2 span {
+  color: #5941f2;
+}
+
+.readyloop-hero > div > p:last-child {
+  max-width: 560px;
+  margin: 0;
+  font-size: clamp(18px, 1.5vw, 24px);
+  line-height: 1.4;
+}
+
+.readyloop-hero figure {
+  position: relative;
+  margin: 0;
+  overflow: hidden;
+  border-left: 1px solid #121212;
+  background: #e9e4ff;
+}
+
+.readyloop-hero figure img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.readyloop-hero figcaption {
+  position: absolute;
+  right: 14px;
+  bottom: 14px;
+  padding: 8px 10px;
+  background: #121212;
+  color: #f4f1e8;
+  font-family: "Courier New", monospace;
+  font-size: 8px;
+  text-transform: uppercase;
+}
+
+.readyloop-metadata {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  margin: 0;
+  border-bottom: 1px solid #121212;
+}
+
+.readyloop-metadata div {
+  min-height: 120px;
+  padding: 22px;
+  border-right: 1px solid rgba(18, 18, 18, 0.24);
+}
+
+.readyloop-metadata dt,
+.technology-section-index,
+.readyloop-evidence span,
+.boundary-columns span {
+  font-family: "Courier New", monospace;
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.readyloop-metadata dd {
+  margin: 26px 0 0;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.readyloop-intro,
+.readyloop-boundaries {
+  display: grid;
+  grid-template-columns: 0.38fr 0.62fr;
+  gap: 8vw;
+  padding: clamp(70px, 9vw, 130px) clamp(28px, 6vw, 92px);
+  border-bottom: 1px solid #121212;
+}
+
+.readyloop-intro h3,
+.technology-section-heading h3,
+.readyloop-boundaries h3,
+.readyloop-footer h3 {
+  margin: 0 0 32px;
+  font-size: clamp(45px, 6vw, 92px);
+  line-height: 0.9;
+  letter-spacing: -0.065em;
+}
+
+.readyloop-intro > div > p {
+  max-width: 760px;
+  margin: 0;
+  font-size: clamp(18px, 1.8vw, 27px);
+  line-height: 1.45;
+}
+
+.readyloop-evidence {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  background: #121212;
+  color: #f4f1e8;
+}
+
+.readyloop-evidence article {
+  min-height: 260px;
+  padding: 28px;
+  border-right: 1px solid rgba(244, 241, 232, 0.25);
+}
+
+.readyloop-evidence strong {
+  display: block;
+  margin: 64px 0 14px;
+  color: var(--acid);
+  font-size: clamp(45px, 5vw, 80px);
+  letter-spacing: -0.07em;
+}
+
+.readyloop-evidence p {
+  max-width: 360px;
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.readyloop-loop,
+.readyloop-gallery-section {
+  padding: clamp(70px, 9vw, 130px) clamp(28px, 6vw, 92px);
+  border-bottom: 1px solid #121212;
+}
+
+.technology-section-heading {
+  display: grid;
+  grid-template-columns: 0.34fr 0.66fr;
+  gap: 8vw;
+  margin-bottom: 70px;
+}
+
+.technology-section-heading > p:last-child {
+  grid-column: 2;
+  max-width: 520px;
+  margin: -48px 0 0;
+  font-size: 14px;
+}
+
+.readyloop-loop ol {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid #121212;
+  border-left: 1px solid #121212;
+  list-style: none;
+}
+
+.readyloop-loop li {
+  min-height: 310px;
+  padding: 20px;
+  border-right: 1px solid #121212;
+  border-bottom: 1px solid #121212;
+}
+
+.readyloop-loop li > span {
+  font-family: "Courier New", monospace;
+  font-size: 9px;
+}
+
+.readyloop-loop h4 {
+  margin: 92px 0 16px;
+  color: #5941f2;
+  font-size: clamp(30px, 3vw, 48px);
+  letter-spacing: -0.055em;
+}
+
+.readyloop-loop li:nth-child(3) h4 {
+  color: #f06819;
+}
+
+.readyloop-loop li:nth-child(4) h4 {
+  color: #ee2a89;
+}
+
+.readyloop-loop p {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.readyloop-boundaries {
+  background: #e9e4ff;
+}
+
+.boundary-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border-top: 1px solid #121212;
+  border-left: 1px solid #121212;
+}
+
+.boundary-columns article {
+  padding: 24px;
+  border-right: 1px solid #121212;
+  border-bottom: 1px solid #121212;
+}
+
+.boundary-columns ul {
+  margin: 38px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.boundary-columns li {
+  padding: 14px 0;
+  border-top: 1px solid rgba(18, 18, 18, 0.22);
+  font-size: 14px;
+  line-height: 1.35;
+}
+
+.readyloop-gallery {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px 18px;
+}
+
+.readyloop-gallery a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.readyloop-gallery a.is-wide {
+  grid-column: span 2;
+}
+
+.readyloop-gallery img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid rgba(18, 18, 18, 0.24);
+  background: white;
+  transition: transform 300ms ease, box-shadow 300ms ease;
+}
+
+.readyloop-gallery a:hover img,
+.readyloop-gallery a:focus-visible img {
+  transform: translateY(-5px);
+  box-shadow: 0 18px 40px rgba(31, 16, 88, 0.16);
+}
+
+.readyloop-gallery a > span {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 10px;
+  align-items: start;
+  padding-top: 10px;
+  font-family: "Courier New", monospace;
+  font-size: 8px;
+  line-height: 1.35;
+  text-transform: uppercase;
+}
+
+.readyloop-gallery i {
+  font-style: normal;
+}
+
+.readyloop-footer {
+  display: grid;
+  grid-template-columns: 0.8fr 0.8fr 0.4fr;
+  gap: 6vw;
+  align-items: end;
+  padding: clamp(70px, 9vw, 130px) clamp(28px, 6vw, 92px);
+  background: var(--acid);
+}
+
+.readyloop-footer p {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.55;
+}
+
+.readyloop-footer a {
+  display: inline-block;
+  padding: 18px;
+  border: 1px solid #121212;
+  background: #121212;
+  color: var(--acid);
+  font-family: "Courier New", monospace;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1.3;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
 @media (max-width: 900px) {
   .site-header nav {
     gap: 14px;
@@ -2820,6 +3247,29 @@ main::before {
   }
 
   .about {
+    grid-template-columns: 1fr;
+  }
+
+  .readyloop-hero {
+    grid-template-columns: 1fr;
+  }
+
+  .readyloop-hero figure {
+    min-height: auto;
+    border-top: 1px solid #121212;
+    border-left: 0;
+  }
+
+  .readyloop-metadata,
+  .readyloop-evidence {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .readyloop-loop ol {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .readyloop-footer {
     grid-template-columns: 1fr;
   }
 }
@@ -2857,6 +3307,10 @@ main::before {
     padding: 20px;
   }
 
+  .technology-card.has-case-study {
+    min-height: 720px;
+  }
+
   .technology-card h3 {
     margin-top: 68px;
   }
@@ -2887,5 +3341,71 @@ main::before {
   .about-body dl div {
     grid-template-columns: 1fr;
     gap: 7px;
+  }
+
+  .technology-dialog {
+    padding: 0;
+  }
+
+  .technology-dialog-panel {
+    width: 100vw;
+    max-height: 100vh;
+  }
+
+  .readyloop-hero {
+    min-height: auto;
+  }
+
+  .readyloop-hero > div {
+    min-height: 580px;
+    padding: 32px 20px;
+  }
+
+  .readyloop-hero h2 {
+    font-size: 76px;
+  }
+
+  .readyloop-metadata,
+  .readyloop-evidence,
+  .readyloop-loop ol,
+  .boundary-columns {
+    grid-template-columns: 1fr;
+  }
+
+  .readyloop-metadata div,
+  .readyloop-evidence article {
+    min-height: 150px;
+  }
+
+  .readyloop-evidence strong {
+    margin-top: 36px;
+  }
+
+  .readyloop-intro,
+  .readyloop-boundaries,
+  .technology-section-heading {
+    grid-template-columns: 1fr;
+    gap: 38px;
+  }
+
+  .technology-section-heading > p:last-child {
+    grid-column: 1;
+    margin: -20px 0 0;
+  }
+
+  .readyloop-loop li {
+    min-height: 230px;
+  }
+
+  .readyloop-loop h4 {
+    margin-top: 56px;
+  }
+
+  .readyloop-gallery {
+    grid-template-columns: 1fr;
+  }
+
+  .readyloop-gallery a.is-wide {
+    grid-column: span 1;
   }
 }

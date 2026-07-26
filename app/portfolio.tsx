@@ -973,6 +973,25 @@ const videoByTitle: Record<string, ProjectVideo> = {
   },
 };
 
+const readyLoopGallery = [
+  { image: "/technology/readyloop/1.webp", alt: "ReadyLoop presentation cover introducing AI-supported IB Design Technology learning before fabrication.", caption: "Project identity and AIREA 2026 presentation" },
+  { image: "/technology/readyloop/2.webp", alt: "Workshop scene surrounded by examples of common laser-cutting and fabrication file problems.", caption: "The workshop problem: errors surface too late" },
+  { image: "/technology/readyloop/3.webp", alt: "Student using a laptop with a fabrication dashboard during an independent learning moment.", caption: "The hidden learning moment before fabrication" },
+  { image: "/technology/readyloop/4.webp", alt: "Three-stage workflow showing a Google Form, spreadsheet and AI-assisted Design Technology jobs dashboard.", caption: "Evolution from request form to learning system" },
+  { image: "/technology/readyloop/5.webp", alt: "Diagram showing how ReadyLoop integrates learning tools, teaching methods, curriculum concepts, online learning, submissions and reflection.", caption: "AI integrated into pedagogy—not added as a chatbot" },
+  { image: "/technology/readyloop/6.webp", alt: "Five-step ReadyLoop learning cycle: Learn, Check, Submit, Revise and Reflect.", caption: "The core learning loop" },
+  { image: "/technology/readyloop/7.webp", alt: "ReadyLoop student interface showing one clear next move and a five-stage learning path.", caption: "A calm, student-facing learning path" },
+  { image: "/technology/readyloop/8.webp", alt: "ReadyLoop AI Coach interface with short questions and quick concept checks.", caption: "Short questions become revision moments" },
+  { image: "/technology/readyloop/9.webp", alt: "ReadyLoop AI Coach explaining open paths while refusing to approve a fabrication file.", caption: "AI explains; humans approve" },
+  { image: "/technology/readyloop/10.webp", alt: "ReadyLoop system diagram connecting student, teacher, technician and administrator roles.", caption: "One learning loop, four coordinated roles" },
+  { image: "/technology/readyloop/11.webp", alt: "Responsible AI diagram listing what the AI Coach can support and what remains a human decision.", caption: "Bounded AI with human oversight" },
+  { image: "/technology/readyloop/12.webp", alt: "ReadyLoop development workflow using ChatGPT, Codex, Google Apps Script and GitHub.", caption: "AI-assisted development and open-source delivery" },
+  { image: "/technology/readyloop/13.webp", alt: "ReadyLoop release status showing a working public demo and school deployment gates.", caption: "Working demo with responsible deployment gates" },
+  { image: "/technology/readyloop/14.webp", alt: "Diagram showing how the ReadyLoop pattern can extend to six project-based learning disciplines.", caption: "A scalable pattern for project-based learning" },
+  { image: "/technology/readyloop/15.webp", alt: "ReadyLoop project summary poster with student, teacher, technician and administrator benefits.", caption: "Project summary and public demo" },
+  { image: "/technology/readyloop/16.webp", alt: "ReadyLoop project poster describing AI-guided Design Technology learning before fabrication.", caption: "ReadyLoop: from potential errors to reflective improvement" },
+];
+
 const filters = ["All", "Photography", "Installation", "Creative Coding", "Moving Image", "Graphic", "Research & Experiments"] as const;
 type Filter = (typeof filters)[number];
 const featuredTitles = new Set([
@@ -990,12 +1009,14 @@ export default function Portfolio() {
   const [filter, setFilter] = useState<Filter>("All");
   const [showArchive, setShowArchive] = useState(false);
   const [selected, setSelected] = useState<Project | null>(null);
+  const [readyLoopOpen, setReadyLoopOpen] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const [isScrolled, setIsScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("top");
   const dialogRef = useRef<HTMLDivElement>(null);
   const dialogPanelRef = useRef<HTMLDivElement>(null);
+  const readyLoopDialogRef = useRef<HTMLDivElement>(null);
   const lightboxRef = useRef<HTMLDivElement>(null);
   const lastTriggerRef = useRef<HTMLElement | null>(null);
   const lastLightboxTriggerRef = useRef<HTMLElement | null>(null);
@@ -1022,6 +1043,17 @@ export default function Portfolio() {
   const closeProject = useCallback(() => {
     setLightboxIndex(null);
     setSelected(null);
+    window.requestAnimationFrame(() => lastTriggerRef.current?.focus());
+  }, []);
+
+  const openReadyLoop = () => {
+    lastTriggerRef.current = document.activeElement as HTMLElement;
+    setMenuOpen(false);
+    setReadyLoopOpen(true);
+  };
+
+  const closeReadyLoop = useCallback(() => {
+    setReadyLoopOpen(false);
     window.requestAnimationFrame(() => lastTriggerRef.current?.focus());
   }, []);
 
@@ -1065,17 +1097,20 @@ export default function Portfolio() {
   };
 
   useEffect(() => {
-    document.body.style.overflow = selected ? "hidden" : "";
+    document.body.style.overflow = selected || readyLoopOpen ? "hidden" : "";
     if (selected) {
       window.requestAnimationFrame(() => {
         dialogPanelRef.current?.scrollTo({ top: 0 });
         dialogRef.current?.focus({ preventScroll: true });
       });
     }
+    if (readyLoopOpen) {
+      window.requestAnimationFrame(() => readyLoopDialogRef.current?.focus({ preventScroll: true }));
+    }
     return () => {
       document.body.style.overflow = "";
     };
-  }, [selected]);
+  }, [readyLoopOpen, selected]);
 
   useEffect(() => {
     let frame = 0;
@@ -1153,6 +1188,7 @@ export default function Portfolio() {
         return;
       }
       if (event.key === "Escape" && menuOpen) setMenuOpen(false);
+      if (event.key === "Escape" && readyLoopOpen) closeReadyLoop();
       if (event.key === "Escape" && selected) closeProject();
       if (event.key === "ArrowLeft" && selected) moveProject(-1);
       if (event.key === "ArrowRight" && selected) moveProject(1);
@@ -1173,7 +1209,7 @@ export default function Portfolio() {
     };
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, [closeLightbox, closeProject, lightboxIndex, menuOpen, moveLightbox, moveProject, selected]);
+  }, [closeLightbox, closeProject, closeReadyLoop, lightboxIndex, menuOpen, moveLightbox, moveProject, readyLoopOpen, selected]);
 
   return (
     <>
@@ -1376,6 +1412,7 @@ export default function Portfolio() {
                 "A safe pre-fabrication learning and workflow platform combining student guidance, revision support, bounded file analysis and role-specific views for technicians, teachers and administrators.",
               meta: ["Project lead", "Learning technology", "Responsible AI"],
               impact: "Outstanding Innovation & Creativity Award · AIREA 2026",
+              caseStudy: true,
             },
             {
               index: "02",
@@ -1385,6 +1422,7 @@ export default function Portfolio() {
                 "A live operational system for student submissions, technician review, teacher visibility and fabrication coordination across 3D printing, laser cutting and workshop production.",
               meta: ["System design", "Workflow automation", "Digital fabrication"],
               impact: "1,500+ student fabrication requests supported",
+              caseStudy: false,
             },
             {
               index: "03",
@@ -1394,13 +1432,33 @@ export default function Portfolio() {
                 "Hands-on work spanning VEX Robotics, mechanical design, programming, electronics, testing and competition preparation—supported by calm coaching and iterative engineering practice.",
               meta: ["VEX Robotics", "Arduino", "Micro:bit · Raspberry Pi"],
               impact: "Secondary Robotics ASA Teams Coordinator · 2026",
+              caseStudy: false,
             },
           ].map((project) => (
-            <article className="technology-card" key={project.title}>
+            <article className={`technology-card ${project.caseStudy ? "has-case-study" : ""}`} key={project.title}>
               <div className="technology-card-top">
                 <span>{project.index}</span>
-                <span>Applied practice</span>
+                <span>{project.caseStudy ? "Full case study" : "Applied practice"}</span>
               </div>
+              {project.caseStudy && (
+                <button
+                  className="technology-preview"
+                  type="button"
+                  onClick={openReadyLoop}
+                  aria-label="Open the complete ReadyLoop case study"
+                  aria-haspopup="dialog"
+                >
+                  <Image
+                    src={assetPath("/technology/readyloop/15.webp")}
+                    alt="ReadyLoop case-study overview showing its learning platform and fabrication workflow."
+                    width={1920}
+                    height={1080}
+                    sizes="(max-width: 900px) 90vw, 31vw"
+                    unoptimized
+                  />
+                  <span>Open case study ↗</span>
+                </button>
+              )}
               <h3>{project.title}</h3>
               <p className="technology-subtitle">{project.subtitle}</p>
               <p className="technology-statement">{project.statement}</p>
@@ -1408,6 +1466,11 @@ export default function Portfolio() {
                 {project.meta.map((item) => <li key={item}>{item}</li>)}
               </ul>
               <p className="technology-impact">{project.impact}</p>
+              {project.caseStudy && (
+                <button className="technology-case-link" type="button" onClick={openReadyLoop}>
+                  View process, evidence and interface →
+                </button>
+              )}
             </article>
           ))}
         </div>
@@ -1531,6 +1594,192 @@ export default function Portfolio() {
           <a href="#top">Back to top ↑</a>
         </div>
       </footer>
+
+      {readyLoopOpen && (
+        <div
+          className="technology-dialog"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="readyloop-title"
+          aria-describedby="readyloop-summary"
+          ref={readyLoopDialogRef}
+          tabIndex={-1}
+          onKeyDown={(event) => {
+            if (event.key !== "Tab") return;
+            const focusable = readyLoopDialogRef.current?.querySelectorAll<HTMLElement>(
+              'button, a[href], [tabindex]:not([tabindex="-1"])',
+            );
+            if (!focusable?.length) return;
+            const first = focusable[0];
+            const last = focusable[focusable.length - 1];
+            if (event.shiftKey && document.activeElement === first) {
+              event.preventDefault();
+              last.focus();
+            } else if (!event.shiftKey && document.activeElement === last) {
+              event.preventDefault();
+              first.focus();
+            }
+          }}
+        >
+          <button
+            className="technology-dialog-backdrop"
+            type="button"
+            tabIndex={-1}
+            aria-label="Close ReadyLoop case study"
+            onClick={closeReadyLoop}
+          />
+          <article className="technology-dialog-panel">
+            <div className="technology-dialog-bar">
+              <span>Case study 01 / Creative Technology</span>
+              <button type="button" onClick={closeReadyLoop}>Close ×</button>
+            </div>
+
+            <header className="readyloop-hero">
+              <div>
+                <p className="eyebrow">AI-supported learning before fabrication</p>
+                <h2 id="readyloop-title">Ready<span>Loop</span></h2>
+                <p id="readyloop-summary">
+                  A school-based learning system that turns workshop feedback into a calm cycle:
+                  learn, check, submit, revise and reflect—while keeping approval, safety and
+                  judgement firmly human-led.
+                </p>
+              </div>
+              <figure>
+                <Image
+                  src={assetPath("/technology/readyloop/1.webp")}
+                  alt={readyLoopGallery[0].alt}
+                  width={1920}
+                  height={1080}
+                  sizes="(max-width: 900px) 100vw, 58vw"
+                  unoptimized
+                />
+                <figcaption>ReadyLoop · AIREA 2026 presentation</figcaption>
+              </figure>
+            </header>
+
+            <dl className="readyloop-metadata">
+              <div><dt>Year</dt><dd>2026</dd></div>
+              <div><dt>Role</dt><dd>Concept, UX, system design and implementation</dd></div>
+              <div><dt>Context</dt><dd>IB Design Technology · Victoria Shanghai Academy</dd></div>
+              <div><dt>Stack</dt><dd>Google Apps Script · Workspace · ChatGPT · Codex</dd></div>
+            </dl>
+
+            <section className="readyloop-intro">
+              <p className="technology-section-index">01 / Challenge</p>
+              <div>
+                <h3>Learning was happening after the mistake.</h3>
+                <p>
+                  Students submitted fabrication requests through a form, while statuses and feedback
+                  were managed manually in a spreadsheet. The workflow moved jobs, but it did not
+                  consistently help students understand open paths, vector files, dimensions, scale,
+                  materials or design intention before machine time began.
+                </p>
+              </div>
+            </section>
+
+            <div className="readyloop-evidence" aria-label="ReadyLoop evidence and recognition">
+              <article><span>Operational evidence</span><strong>1,500+</strong><p>owner-reported student fabrication requests handled by the underlying workflow</p></article>
+              <article><span>Release validation</span><strong>497 / 0</strong><p>tests passed / failed in the documented public demo release</p></article>
+              <article><span>Recognition</span><strong>AIREA 2026</strong><p>Outstanding Innovation &amp; Creativity Award</p></article>
+            </div>
+
+            <section className="readyloop-loop">
+              <div className="technology-section-heading">
+                <p className="technology-section-index">02 / System</p>
+                <h3>One learning loop.<br />Four coordinated roles.</h3>
+              </div>
+              <ol>
+                {[
+                  ["Learn", "Short Design Technology concepts at the moment they become useful."],
+                  ["Check", "Calm pre-submission checks reveal likely issues before fabrication."],
+                  ["Submit", "Guided evidence makes requirements and design intention explicit."],
+                  ["Revise", "Returned work becomes a structured opportunity for improvement."],
+                  ["Reflect", "Learning transfers from one build into the next."],
+                ].map(([title, text], index) => (
+                  <li key={title}>
+                    <span>{String(index + 1).padStart(2, "0")}</span>
+                    <h4>{title}</h4>
+                    <p>{text}</p>
+                  </li>
+                ))}
+              </ol>
+            </section>
+
+            <section className="readyloop-boundaries">
+              <div>
+                <p className="technology-section-index">03 / Responsible AI</p>
+                <h3>AI supports.<br />Humans decide.</h3>
+              </div>
+              <div className="boundary-columns">
+                <article>
+                  <span>AI Coach can</span>
+                  <ul>
+                    <li>Explain Design Technology concepts</li>
+                    <li>Suggest one clear check</li>
+                    <li>Support revision and reflection</li>
+                    <li>Help students ask better questions</li>
+                  </ul>
+                </article>
+                <article>
+                  <span>Humans retain</span>
+                  <ul>
+                    <li>File approval and grading</li>
+                    <li>Production and workshop safety</li>
+                    <li>Access to private school files</li>
+                    <li>Teaching, technical review and final judgement</li>
+                  </ul>
+                </article>
+              </div>
+            </section>
+
+            <section className="readyloop-gallery-section">
+              <div className="technology-section-heading">
+                <p className="technology-section-index">04 / Visual record</p>
+                <h3>From workshop problem<br />to working system.</h3>
+                <p>Open any frame to inspect the full presentation image.</p>
+              </div>
+              <div className="readyloop-gallery">
+                {readyLoopGallery.map((item, index) => (
+                  <a
+                    href={assetPath(item.image)}
+                    target="_blank"
+                    rel="noreferrer"
+                    key={item.image}
+                    className={index === 0 || index === 3 || index === 6 || index === 9 ? "is-wide" : ""}
+                    aria-label={`Open full ReadyLoop image ${index + 1}: ${item.caption}`}
+                  >
+                    <Image
+                      src={assetPath(item.image)}
+                      alt={item.alt}
+                      width={1920}
+                      height={1080}
+                      sizes="(max-width: 700px) 92vw, (max-width: 1100px) 46vw, 30vw"
+                      loading="lazy"
+                      unoptimized
+                    />
+                    <span><b>{String(index + 1).padStart(2, "0")}</b>{item.caption}<i>Expand ↗</i></span>
+                  </a>
+                ))}
+              </div>
+            </section>
+
+            <footer className="readyloop-footer">
+              <div>
+                <p className="technology-section-index">05 / Open project</p>
+                <h3>Built for schools,<br />open to collaboration.</h3>
+              </div>
+              <p>
+                ReadyLoop was ideated with ChatGPT, generated and refined with Codex, deployed through
+                Google Apps Script and published openly on GitHub. The public version is a bounded,
+                session-only demonstration—not a live student deployment.
+              </p>
+              <a href="https://github.com/sunnydesigntech/ReadyLoop" target="_blank" rel="noreferrer">
+                Explore ReadyLoop on GitHub ↗
+              </a>
+            </footer>
+          </article>
+        </div>
+      )}
 
       {selected && (
         <div
