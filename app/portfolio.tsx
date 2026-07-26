@@ -105,7 +105,6 @@ const projects: Project[] = [
     ],
     themes: ["Memory", "Identity", "Cameraless photography", "Digital preservation"],
     exhibition: "The Unseen Realm, SCM Cameraless Photography Exhibition 2024 · Light Trace, Collect Hong Kong Art Fair 2026",
-    codeUrl: "https://github.com/wcchun1234/Aware",
   },
   {
     title: "Digital Echoes",
@@ -131,7 +130,6 @@ const projects: Project[] = [
     ],
     themes: ["Memory and perception", "AI authorship", "Authenticity", "Cameraless image-making"],
     exhibition: "The Unseen Realm, SCM Cameraless Photography Exhibition 2024 · Collect Hong Kong Art Fair 2025",
-    codeUrl: "https://github.com/wcchun1234/MindPixel",
   },
   {
     title: "MemoryGrid",
@@ -909,9 +907,13 @@ export default function Portfolio() {
   const [selected, setSelected] = useState<Project | null>(null);
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState("top");
   const dialogRef = useRef<HTMLDivElement>(null);
   const dialogPanelRef = useRef<HTMLDivElement>(null);
+  const lightboxRef = useRef<HTMLDivElement>(null);
   const lastTriggerRef = useRef<HTMLElement | null>(null);
+  const lastLightboxTriggerRef = useRef<HTMLElement | null>(null);
   const visible = filter === "All" ? projects : projects.filter((project) => project.medium === filter);
   const selectedIndex = selected ? projects.findIndex((project) => project.title === selected.title) : -1;
   const selectedGallery = selected
@@ -923,6 +925,7 @@ export default function Portfolio() {
 
   const openProject = (project: Project) => {
     lastTriggerRef.current = document.activeElement as HTMLElement;
+    setMenuOpen(false);
     setLightboxIndex(null);
     setSelected(project);
   };
@@ -947,6 +950,16 @@ export default function Portfolio() {
     });
   }, [selectedGallery.length]);
 
+  const openLightbox = (index: number) => {
+    lastLightboxTriggerRef.current = document.activeElement as HTMLElement;
+    setLightboxIndex(index);
+  };
+
+  const closeLightbox = useCallback(() => {
+    setLightboxIndex(null);
+    window.requestAnimationFrame(() => lastLightboxTriggerRef.current?.focus());
+  }, []);
+
   const handlePointerMove = (event: ReactPointerEvent<HTMLElement>) => {
     const x = (event.clientX / window.innerWidth) * 100;
     const y = (event.clientY / window.innerHeight) * 100;
@@ -970,6 +983,15 @@ export default function Portfolio() {
       if (frame) return;
       frame = window.requestAnimationFrame(() => {
         setIsScrolled(window.scrollY > 34);
+        const sectionIds = ["work", "practice", "exhibitions", "contact"];
+        let currentSection = "top";
+        for (const id of sectionIds) {
+          const section = document.getElementById(id);
+          if (section && section.getBoundingClientRect().top <= window.innerHeight * 0.42) {
+            currentSection = id;
+          }
+        }
+        setActiveSection(currentSection);
         const scrollable = document.documentElement.scrollHeight - window.innerHeight;
         const progress = scrollable > 0 ? window.scrollY / scrollable : 0;
         document.documentElement.style.setProperty("--page-progress", String(progress));
@@ -1002,14 +1024,35 @@ export default function Portfolio() {
   }, [filter]);
 
   useEffect(() => {
+    if (lightboxIndex !== null) {
+      window.requestAnimationFrame(() => lightboxRef.current?.focus());
+    }
+  }, [lightboxIndex]);
+
+  useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
       if (lightboxIndex !== null) {
-        if (event.key === "Escape") setLightboxIndex(null);
+        if (event.key === "Escape") closeLightbox();
         if (event.key === "ArrowLeft") moveLightbox(-1);
         if (event.key === "ArrowRight") moveLightbox(1);
+        if (event.key === "Tab" && lightboxRef.current) {
+          const focusable = lightboxRef.current.querySelectorAll<HTMLElement>(
+            'button, a[href], [tabindex]:not([tabindex="-1"])',
+          );
+          const first = focusable[0];
+          const last = focusable[focusable.length - 1];
+          if (event.shiftKey && document.activeElement === first) {
+            event.preventDefault();
+            last?.focus();
+          } else if (!event.shiftKey && document.activeElement === last) {
+            event.preventDefault();
+            first?.focus();
+          }
+        }
         if (["Escape", "ArrowLeft", "ArrowRight"].includes(event.key)) event.preventDefault();
         return;
       }
+      if (event.key === "Escape" && menuOpen) setMenuOpen(false);
       if (event.key === "Escape" && selected) closeProject();
       if (event.key === "ArrowLeft" && selected) moveProject(-1);
       if (event.key === "ArrowRight" && selected) moveProject(1);
@@ -1030,22 +1073,47 @@ export default function Portfolio() {
     };
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, [closeProject, lightboxIndex, moveLightbox, moveProject, selected]);
+  }, [closeLightbox, closeProject, lightboxIndex, menuOpen, moveLightbox, moveProject, selected]);
 
   return (
     <>
-      <a className="skip-link" href="#content">Skip to selected work</a>
+      <a className="skip-link" href="#work">Skip to selected work</a>
       <div className="scroll-line" aria-hidden="true" />
       <main id="content" onPointerMove={handlePointerMove}>
       <header className={`site-header ${isScrolled ? "is-scrolled" : ""}`}>
         <a className="wordmark" href="#top" aria-label="WCCHUN home">
           WC<span>CHUN</span>
         </a>
-        <nav aria-label="Main navigation">
-          <a href="#work">Work</a>
-          <a href="#practice">Practice</a>
-          <a href="#exhibitions">Exhibitions</a>
-          <a href="#contact">Contact</a>
+        <button
+          className="mobile-menu-toggle"
+          type="button"
+          aria-expanded={menuOpen}
+          aria-controls="main-navigation"
+          onClick={() => setMenuOpen((open) => !open)}
+        >
+          Menu <span aria-hidden="true">{menuOpen ? "×" : "+"}</span>
+        </button>
+        <nav
+          id="main-navigation"
+          className={menuOpen ? "is-open" : ""}
+          aria-label="Main navigation"
+        >
+          {[
+            ["work", "Work"],
+            ["practice", "Practice"],
+            ["exhibitions", "Exhibitions"],
+            ["contact", "Contact"],
+          ].map(([id, label]) => (
+            <a
+              href={`#${id}`}
+              key={id}
+              className={activeSection === id ? "is-active" : ""}
+              aria-current={activeSection === id ? "location" : undefined}
+              onClick={() => setMenuOpen(false)}
+            >
+              {label}
+            </a>
+          ))}
         </nav>
         <div className="header-index">HK — 22.3193° N</div>
       </header>
@@ -1165,10 +1233,10 @@ export default function Portfolio() {
       <section className="practice" id="practice">
         <p className="section-number">02 — Practice</p>
         <div className="practice-copy">
-          <p>
+          <h2>
             I treat images as <em>living systems</em>—not fixed records. Photographs are scanned,
             classified, connected and reassembled until new emotional structures appear.
-          </p>
+          </h2>
           <p>
             The work moves between intimate memory and public technology, asking what remains human
             when experience is translated into data.
@@ -1232,10 +1300,18 @@ export default function Portfolio() {
           aria-modal="true"
           aria-labelledby="dialog-title"
           aria-describedby="dialog-description"
+          aria-hidden={lightboxIndex !== null ? true : undefined}
+          inert={lightboxIndex !== null}
           ref={dialogRef}
           tabIndex={-1}
         >
-          <button className="dialog-backdrop" type="button" aria-label="Close project" onClick={closeProject} />
+          <button
+            className="dialog-backdrop"
+            type="button"
+            tabIndex={-1}
+            aria-label="Close project"
+            onClick={closeProject}
+          />
           <div
             className="dialog-panel"
             ref={dialogPanelRef}
@@ -1290,7 +1366,7 @@ export default function Portfolio() {
                         <button
                           className="gallery-image gallery-open"
                           type="button"
-                          onClick={() => setLightboxIndex(index)}
+                          onClick={() => openLightbox(index)}
                           aria-label={`Enlarge ${selected.title} documentation view ${index + 1}`}
                         >
                           <Image
@@ -1375,12 +1451,15 @@ export default function Portfolio() {
           role="dialog"
           aria-modal="true"
           aria-label={`${selected.title} image viewer`}
+          ref={lightboxRef}
+          tabIndex={-1}
         >
           <button
             className="lightbox-backdrop"
             type="button"
+            tabIndex={-1}
             aria-label="Close enlarged artwork"
-            onClick={() => setLightboxIndex(null)}
+            onClick={closeLightbox}
           />
           <div className="lightbox-stage">
             <div className="lightbox-topbar">
@@ -1388,7 +1467,7 @@ export default function Portfolio() {
               <span>
                 {String(lightboxIndex + 1).padStart(2, "0")} / {String(selectedGallery.length).padStart(2, "0")}
               </span>
-              <button type="button" onClick={() => setLightboxIndex(null)}>Close ×</button>
+              <button type="button" onClick={closeLightbox}>Close ×</button>
             </div>
             <figure>
               <Image

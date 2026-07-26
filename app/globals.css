@@ -1401,15 +1401,17 @@ footer h2 em {
   padding: 70px 3.33vw;
 }
 
-.practice-copy p:first-child {
+.practice-copy h2 {
   max-width: 920px;
+  margin: 0 0 34px;
   font-size: clamp(58px, 6.8vw, 98px);
   font-weight: 900;
   line-height: 0.88;
+  letter-spacing: -0.055em;
   text-transform: uppercase;
 }
 
-.practice-copy p:first-child em {
+.practice-copy h2 em {
   color: var(--paper);
   font-family: inherit;
   font-style: normal;
@@ -1561,7 +1563,7 @@ footer h2 em {
     padding: 56px 20px;
   }
 
-  .practice-copy p:first-child {
+  .practice-copy h2 {
     font-size: 46px;
   }
 
@@ -2063,5 +2065,143 @@ main::before {
   .hero-thumbnail img,
   .hero-artwork img {
     transform: none !important;
+  }
+}
+
+/* Navigation and accessibility refinement */
+.site-header {
+  position: sticky;
+  z-index: 50;
+  top: 0;
+}
+
+.mobile-menu-toggle {
+  display: none;
+}
+
+.site-header nav a.is-active::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+.artwork-lightbox:focus-visible {
+  outline: none;
+}
+
+@media (max-width: 900px) {
+  .site-header nav a:nth-child(2) {
+    display: block;
+  }
+}
+
+@media (max-width: 600px) {
+  .site-header,
+  .site-header.is-scrolled {
+    grid-template-columns: 1fr auto;
+    width: 100%;
+    height: 60px;
+    margin: 0;
+    padding: 0 20px;
+  }
+
+  .mobile-menu-toggle {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 0;
+    border: 0;
+    background: transparent;
+    font-family: "Courier New", monospace;
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+  }
+
+  .mobile-menu-toggle span {
+    display: inline-block;
+    width: 12px;
+    font-size: 13px;
+    line-height: 1;
+    text-align: center;
+    transition: transform 220ms ease;
+  }
+
+  .mobile-menu-toggle[aria-expanded="true"] span {
+    transform: rotate(90deg);
+  }
+
+  .site-header nav {
+    position: absolute;
+    z-index: 1;
+    top: 100%;
+    right: 0;
+    left: 0;
+    display: grid;
+    gap: 0;
+    max-height: 0;
+    padding: 0 20px;
+    overflow: hidden;
+    border-bottom: 1px solid transparent;
+    background: color-mix(in srgb, var(--paper) 96%, transparent);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    backdrop-filter: blur(22px) saturate(1.2);
+    transition:
+      max-height 360ms cubic-bezier(0.2, 0.8, 0.2, 1),
+      padding 280ms ease,
+      opacity 180ms ease,
+      transform 280ms cubic-bezier(0.2, 0.8, 0.2, 1),
+      visibility 0s linear 360ms;
+  }
+
+  .site-header nav.is-open {
+    max-height: 360px;
+    padding-top: 8px;
+    padding-bottom: 14px;
+    border-bottom-color: var(--line);
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    transition-delay: 0s;
+  }
+
+  .site-header nav a,
+  .site-header nav a:first-child,
+  .site-header nav a:not(:first-child) {
+    display: flex;
+    justify-content: space-between;
+    min-height: 52px;
+    padding: 16px 0 12px;
+    border-top: 1px solid var(--line);
+    font-family: Arial, "PingFang HK", "Noto Sans TC", sans-serif;
+    font-size: 24px;
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -0.04em;
+  }
+
+  .site-header nav a::before,
+  .site-header nav a:first-child::before {
+    content: none;
+  }
+
+  .site-header nav a::after {
+    position: static;
+    width: 7px;
+    height: 7px;
+    margin-top: 7px;
+    border-radius: 50%;
+    background: transparent;
+    transform: none;
+  }
+
+  .site-header nav a.is-active::after {
+    background: var(--acid);
+    box-shadow: 0 0 0 1px var(--ink);
   }
 }
