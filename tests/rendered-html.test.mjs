@@ -56,6 +56,10 @@ test("renders the finished WCCHUN portfolio", async () => {
   assert.match(html, /rel="canonical"/);
   assert.match(html, /https:\/\/wcchun\.com/);
   assert.match(html, /site\.webmanifest/);
+  assert.match(html, /favicon\.ico/);
+  assert.match(html, /favicon-32\.png/);
+  assert.match(html, /apple-touch-icon\.png/);
+  assert.match(html, /wc-monogram\.png/);
   assert.doesNotMatch(html, /codex-preview|loading skeleton|react-loading-skeleton/i);
 });
 
