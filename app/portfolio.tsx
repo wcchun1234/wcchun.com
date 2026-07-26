@@ -449,49 +449,78 @@ const projects: Project[] = [
   }),
 ];
 
+const archiveSeries = (slug: string, count: number, exclude: number[] = []) =>
+  Array.from({ length: count }, (_, index) => index + 1)
+    .filter((index) => !exclude.includes(index))
+    .map((index) => `/art/archive/${slug}/${String(index).padStart(2, "0")}.webp`);
+
 const galleryByTitle: Record<string, string[]> = {
   "Scanned Memories": [
     "/art/art-01.webp",
     "/art/details/art-03.webp",
     "/art/details/scanned-installation.webp",
     "/art/details/scanned-alternate.webp",
+    ...archiveSeries("scanned-memories", 7),
+    ...archiveSeries("light-trace-scanned-memories", 5),
   ],
   "Digital Echoes": [
     "/art/art-02.webp",
     "/art/details/art-04.webp",
     "/art/details/digital-installation.webp",
+    ...archiveSeries("digital-echoes", 8),
   ],
   MemoryGrid: [
     "/art/art-08.webp",
     "/art/legacy/artsense.webp",
     "/art/art-09.webp",
+    ...archiveSeries("memorygrid", 1),
   ],
   WordView: [
     "/art/art-09.webp",
     "/art/art-10.webp",
     "/art/legacy/artsense.webp",
+    ...archiveSeries("wordview", 1),
   ],
   TechCore: [
     "/art/art-10.webp",
     "/art/details/art-05.webp",
     "/art/legacy/artsense.webp",
+    ...archiveSeries("techcore", 1),
   ],
   Aware: [
     "/art/art-07.webp",
     "/art/details/art-06.webp",
     "/art/legacy/aware-exhibition.webp",
+    ...archiveSeries("aware-exhibition", 11),
   ],
   "Aware (Exhibition)": [
     "/art/legacy/aware-exhibition.webp",
     "/art/details/art-06.webp",
     "/art/art-07.webp",
+    ...archiveSeries("aware-exhibition", 11),
   ],
   ArtSense: [
     "/art/legacy/artsense.webp",
     "/art/art-08.webp",
     "/art/art-09.webp",
     "/art/details/art-05.webp",
+    ...archiveSeries("artsense", 3),
   ],
+  "The Blue Countdown": archiveSeries("blue-countdown", 14),
+  CAR: archiveSeries("car", 6),
+  ownvalue: archiveSeries("ownvalue", 3),
+  "正確揀釘 營唔會飛": archiveSeries("correct-nail", 14),
+  "Dictionary of Colour": archiveSeries("dictionary-colour", 4),
+  "Who Am I?": archiveSeries("who-am-i", 1),
+  "60HKG Promotion Campaign": archiveSeries("60hkg", 9, [4]),
+  "Enchanted Landscape": archiveSeries("enchanted-landscape", 5),
+  "Indecisive Moment": archiveSeries("indecisive-moment", 7),
+  Film: archiveSeries("film", 24),
+  "Night City": archiveSeries("night-city", 18),
+  Digitdeath: archiveSeries("digitdeath", 5),
+  sweeTabot: archiveSeries("sweetabot", 4),
+  "Capturing Time": archiveSeries("capturing-time", 11),
+  "Protect Hongkonger": archiveSeries("protect-hongkonger", 4),
 };
 
 const filters = ["All", "Photography", "Installation", "Creative Coding", "Moving Image", "Graphic", "Other"] as const;
@@ -505,7 +534,7 @@ export default function Portfolio() {
   const visible = filter === "All" ? projects : projects.filter((project) => project.medium === filter);
   const selectedIndex = selected ? projects.findIndex((project) => project.title === selected.title) : -1;
   const selectedGallery = selected
-    ? galleryByTitle[selected.title] ?? [selected.image, selected.image, selected.image]
+    ? galleryByTitle[selected.title] ?? [selected.image]
     : [];
 
   const openProject = (project: Project) => {
@@ -809,17 +838,15 @@ export default function Portfolio() {
                   <span>{String(selectedGallery.length).padStart(2, "0")} views</span>
                 </div>
                 <div className="project-gallery">
-                  {selectedGallery.map((image, index) => {
-                    const isDetailCrop = image === selectedGallery[0] && index > 0;
-                    return (
+                  {selectedGallery.map((image, index) => (
                       <figure
-                        className={`gallery-item ${isDetailCrop ? `detail-crop detail-crop-${index}` : ""}`}
+                        className="gallery-item"
                         key={`${image}-${index}`}
                       >
                         <div className="gallery-image">
                           <Image
                             src={assetPath(image)}
-                            alt={`${selected.title} — ${isDetailCrop ? `detail view ${index}` : `documentation view ${index + 1}`}`}
+                            alt={`${selected.title} — documentation view ${index + 1}`}
                             width={1280}
                             height={960}
                             sizes="(max-width: 900px) 88vw, 38vw"
@@ -827,11 +854,10 @@ export default function Portfolio() {
                           />
                         </div>
                         <figcaption>
-                          {isDetailCrop ? `Detail study ${String(index).padStart(2, "0")}` : `Documentation ${String(index + 1).padStart(2, "0")}`}
+                          Documentation {String(index + 1).padStart(2, "0")}
                         </figcaption>
                       </figure>
-                    );
-                  })}
+                  ))}
                 </div>
               </section>
               <section className="dialog-section">
