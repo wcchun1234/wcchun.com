@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useCallback, useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 const assetPath = (path: string) =>
   `${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}${path}`;
@@ -1122,15 +1122,6 @@ export default function Portfolio() {
     section?.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
   };
 
-  const handlePointerMove = (event: ReactPointerEvent<HTMLElement>) => {
-    const x = (event.clientX / window.innerWidth) * 100;
-    const y = (event.clientY / window.innerHeight) * 100;
-    event.currentTarget.style.setProperty("--pointer-x", `${x}%`);
-    event.currentTarget.style.setProperty("--pointer-y", `${y}%`);
-    event.currentTarget.style.setProperty("--pointer-shift-x", String((x - 50) / 50));
-    event.currentTarget.style.setProperty("--pointer-shift-y", String((y - 50) / 50));
-  };
-
   useEffect(() => {
     document.body.style.overflow = selected || readyLoopOpen || dashboardOpen || roboticsOpen ? "hidden" : "";
     if (selected) {
@@ -1258,7 +1249,7 @@ export default function Portfolio() {
     <>
       <a className="skip-link" href="#work">Skip to selected work</a>
       <div className="scroll-line" aria-hidden="true" />
-      <main id="content" onPointerMove={handlePointerMove}>
+      <main id="content">
       <header className={`site-header ${isScrolled ? "is-scrolled" : ""}`}>
         <a className="wordmark" href="#top" aria-label="WCCHUN home">
           <Image
@@ -1313,28 +1304,24 @@ export default function Portfolio() {
           <span>Becomes</span>
           <span>Material</span>
         </div>
-        <button
+        <a
           className="hero-thumbnail intro-motion delay-4"
-          type="button"
-          onClick={() => openProject(projects[1])}
-          aria-label="Open Digital Echoes project"
-          aria-haspopup="dialog"
+          href="#technology"
+          aria-label="View technology systems"
         >
           <Image
-            src={assetPath(projects[1].image)}
-            alt={projects[1].alt}
-            width={720}
-            height={960}
+            src={assetPath("/technology/dashboard/admin.webp")}
+            alt="DT Fabrication Dashboard interface"
+            width={1338}
+            height={912}
             priority
             unoptimized
           />
-        </button>
-        <button
+        </a>
+        <Link
           className="hero-artwork intro-motion delay-5"
-          type="button"
-          onClick={() => openProject(projects[1])}
-          aria-label="Open Digital Echoes project"
-          aria-haspopup="dialog"
+          href="/work/digital-echoes"
+          aria-label="View Digital Echoes project"
         >
           <Image
             src={assetPath(projects[1].image)}
@@ -1345,14 +1332,17 @@ export default function Portfolio() {
             priority
             unoptimized
           />
-        </button>
+        </Link>
         <div className="hero-intro intro-motion delay-6">
           <p className="eyebrow">Art × technology × memory</p>
           <p>
             Wong Chun (Sunny) is a Hong Kong artist and creative technologist working across
             computational images, interactive systems and learning technology.
           </p>
-          <a className="archive-cta" href="#work">Enter the archive <span>↘</span></a>
+          <div className="hero-actions">
+            <a className="archive-cta" href="#work">Explore selected art <span>↘</span></a>
+            <a className="archive-cta hero-tech-cta" href="#technology">View technology systems <span>↘</span></a>
+          </div>
         </div>
         <p className="hero-scroll">Scroll / 01—06</p>
       </section>
@@ -1366,7 +1356,7 @@ export default function Portfolio() {
           <p aria-live="polite">{String(visible.length).padStart(2, "0")} works {showArchive ? "retained" : "selected"}</p>
         </div>
 
-        <div className="filter-bar" aria-label="Filter projects">
+        {showArchive && <div className="filter-bar" aria-label="Filter projects">
           {filters.map((item) => (
             <button
               type="button"
@@ -1378,7 +1368,7 @@ export default function Portfolio() {
               {item}
             </button>
           ))}
-        </div>
+        </div>}
 
         <div className="project-grid">
           {visible.map((project, index) => (
@@ -1386,11 +1376,9 @@ export default function Portfolio() {
               className={`project-card reveal ${project.featured ? "featured" : ""}`}
               key={project.title}
             >
-              <button
-                type="button"
-                onClick={() => openProject(project)}
-                aria-label={`Open ${project.title}, ${project.medium}, ${project.year}`}
-                aria-haspopup="dialog"
+              <Link
+                href={permanentProjectUrls[project.title] ?? "#work"}
+                aria-label={`View ${project.title}, ${project.medium}, ${project.year}`}
               >
                 <span className="project-image">
                   <Image
@@ -1416,6 +1404,9 @@ export default function Portfolio() {
                   <span>{project.medium}</span>
                   <span>{project.year}</span>
                 </span>
+              </Link>
+              <button className="project-quick-view" type="button" onClick={() => openProject(project)} aria-haspopup="dialog">
+                Quick view
               </button>
             </article>
           ))}

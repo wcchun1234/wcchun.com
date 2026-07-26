@@ -4,14 +4,20 @@ import { projectPages, projectUrl } from "./project-pages";
 export const dynamic = "force-static";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const now = new Date();
+  const updated: Record<string, string> = {
+    "scanned-memories": "2026-07-26",
+    "digital-echoes": "2026-07-26",
+    memorygrid: "2026-07-26",
+    wordview: "2026-07-26",
+    readyloop: "2026-07-26",
+    "dt-fabrication-dashboard": "2026-07-26",
+    robotics: "2026-07-26",
+  };
   return [
-    { url: "https://wcchun.com", lastModified: now, changeFrequency: "monthly", priority: 1 },
+    { url: "https://wcchun.com", lastModified: new Date("2026-07-27") },
     ...projectPages.map((project) => ({
       url: `https://wcchun.com${projectUrl(project)}`,
-      lastModified: now,
-      changeFrequency: "yearly" as const,
-      priority: project.section === "technology" ? 0.9 : 0.8,
+      lastModified: new Date(updated[project.slug]),
       images: [`https://wcchun.com${project.image}`],
     })),
   ];

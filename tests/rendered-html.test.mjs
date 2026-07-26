@@ -91,6 +91,20 @@ test("publishes indexable permanent project pages and current professional timin
   assert.match(source, /project\.tools/);
   assert.match(source, /project\.status/);
   assert.match(source, /project\.collaboration/);
+  assert.match(source, /BreadcrumbList/);
+  assert.match(source, /Previous project/);
+  assert.match(source, /Next project/);
+  assert.match(sitemap, /2026-07-26/);
+});
+
+test("uses permanent pages as the primary artwork path and keeps motion restrained", async () => {
+  const html = await (await render()).text();
+  const source = await readFile(path.join(process.cwd(), "app", "portfolio.tsx"), "utf8");
+  assert.match(html, /href="\/work\/scanned-memories"/);
+  assert.match(html, /Explore selected art/);
+  assert.match(html, /View technology systems/);
+  assert.match(html, /Quick view/);
+  assert.doesNotMatch(source, /handlePointerMove/);
 });
 
 test("includes accessible navigation and real contact destinations", async () => {

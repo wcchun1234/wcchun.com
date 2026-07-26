@@ -364,13 +364,12 @@ footer h2 em {
   grid-column: span 6;
 }
 
-.project-card button {
+.project-card > a {
+  display: block;
   width: 100%;
-  padding: 0;
-  border: 0;
-  background: none;
+  color: inherit;
+  text-decoration: none;
   text-align: left;
-  cursor: pointer;
 }
 
 .project-image {
@@ -392,7 +391,7 @@ footer h2 em {
 }
 
 .project-card:hover img,
-.project-card button:focus-visible img {
+.project-card > a:focus-visible img {
   opacity: 0.82;
   transform: scale(1.025);
 }
@@ -413,7 +412,7 @@ footer h2 em {
 }
 
 .project-card:hover .view-project,
-.project-card button:focus-visible .view-project {
+.project-card > a:focus-visible .view-project {
   opacity: 1;
   transform: translateY(0);
 }
@@ -1330,13 +1329,37 @@ footer h2 em {
   align-items: center;
   justify-content: space-between;
   width: 90%;
-  margin-top: 280px;
+  margin-top: 0;
   padding: 17px 22px;
   background: var(--acid);
   font-size: 10px;
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.08em;
+}
+
+.hero-actions {
+  display: grid;
+  gap: 10px;
+  margin-top: 250px;
+}
+
+.hero-tech-cta {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.project-quick-view {
+  margin-top: 12px;
+  padding: 8px 0;
+  border: 0;
+  border-bottom: 1px solid currentColor;
+  background: transparent;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  cursor: pointer;
 }
 
 .archive-cta span {
@@ -2106,22 +2129,12 @@ footer h2 em {
 
 /* Interaction and motion refinement */
 main {
-  --pointer-x: 50%;
-  --pointer-y: 50%;
-  --pointer-shift-x: 0;
-  --pointer-shift-y: 0;
   position: relative;
   isolation: isolate;
 }
 
 main::before {
-  position: fixed;
-  z-index: 40;
-  inset: 0;
-  content: "";
-  pointer-events: none;
-  background: radial-gradient(circle 280px at var(--pointer-x) var(--pointer-y), rgba(221, 255, 0, 0.075), transparent 72%);
-  mix-blend-mode: multiply;
+  content: none;
 }
 
 .site-header {
@@ -2145,27 +2158,14 @@ main::before {
   opacity: 0.58;
 }
 
-.hero-title {
-  transform: translate3d(calc(var(--pointer-shift-x) * -7px), calc(var(--pointer-shift-y) * -5px), 0);
-  transition: transform 900ms cubic-bezier(0.2, 0.8, 0.2, 1);
-}
-
-.hero-thumbnail img {
-  transform: translate3d(calc(var(--pointer-shift-x) * 5px), calc(var(--pointer-shift-y) * 5px), 0);
-}
-
-.hero-artwork img {
-  transform: translate3d(calc(var(--pointer-shift-x) * -7px), calc(var(--pointer-shift-y) * -5px), 0);
-}
-
 .hero-thumbnail:hover img,
 .hero-thumbnail:focus-visible img {
-  transform: translate3d(calc(var(--pointer-shift-x) * 5px), calc(var(--pointer-shift-y) * 5px), 0) scale(1.018);
+  transform: scale(1.012);
 }
 
 .hero-artwork:hover img,
 .hero-artwork:focus-visible img {
-  transform: translate3d(calc(var(--pointer-shift-x) * -7px), calc(var(--pointer-shift-y) * -5px), 0) scale(1.018);
+  transform: scale(1.012);
 }
 
 .archive-cta {
@@ -2221,21 +2221,12 @@ main::before {
   box-shadow: 0 7px 18px rgba(18, 18, 18, 0.12);
 }
 
-.project-card button {
-  transition: transform 500ms cubic-bezier(0.2, 0.8, 0.2, 1);
-}
-
-.project-card:hover button,
-.project-card button:focus-visible {
-  transform: translateY(-7px);
-}
-
 .project-image {
   transition: box-shadow 420ms ease, border-color 260ms ease;
 }
 
 .project-card:hover .project-image,
-.project-card button:focus-visible .project-image {
+.project-card > a:focus-visible .project-image {
   border-color: rgba(18, 18, 18, 0.48);
   box-shadow: 0 24px 48px rgba(18, 18, 18, 0.11);
 }
@@ -2258,7 +2249,7 @@ main::before {
 }
 
 .project-card:hover .project-index,
-.project-card button:focus-visible .project-index {
+.project-card > a:focus-visible .project-index {
   background: var(--acid);
 }
 
@@ -3172,9 +3163,115 @@ main::before {
 
 .tools-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   border-top: 1px solid rgba(243, 241, 233, 0.3);
   border-left: 1px solid rgba(243, 241, 233, 0.2);
+}
+
+@media (min-width: 1500px) {
+  .tools-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.project-breadcrumb {
+  display: flex;
+  gap: 9px;
+  align-items: center;
+  padding: 18px 3.33vw;
+  border-bottom: 1px solid var(--line);
+  color: #66645d;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  text-transform: uppercase;
+}
+
+.project-breadcrumb a:hover,
+.project-breadcrumb a:focus-visible {
+  color: var(--ink);
+  text-decoration: underline;
+}
+
+.project-section-nav {
+  position: sticky;
+  z-index: 20;
+  top: 0;
+  display: flex;
+  gap: 22px;
+  padding: 13px 3.33vw;
+  overflow-x: auto;
+  border-bottom: 1px solid var(--ink);
+  background: color-mix(in srgb, var(--paper) 94%, transparent);
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  backdrop-filter: blur(14px);
+}
+
+.project-section-nav a:hover,
+.project-section-nav a:focus-visible {
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+}
+
+#overview,
+#role,
+#process,
+#gallery {
+  scroll-margin-top: 54px;
+}
+
+.project-pagination {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+}
+
+.project-pagination a {
+  display: grid;
+  gap: 18px;
+  min-height: 180px;
+  padding: 30px 3.33vw;
+}
+
+.project-pagination a + a {
+  border-left: 1px solid var(--ink);
+  text-align: right;
+}
+
+.project-pagination span {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  text-transform: uppercase;
+}
+
+.project-pagination strong {
+  align-self: end;
+  font-size: clamp(28px, 4vw, 62px);
+  line-height: .9;
+  letter-spacing: -.05em;
+}
+
+.project-pagination a:hover,
+.project-pagination a:focus-visible {
+  background: var(--acid);
+}
+
+@media (max-width: 700px) {
+  .project-pagination {
+    grid-template-columns: 1fr;
+  }
+
+  .project-pagination a + a {
+    border-top: 1px solid var(--ink);
+    border-left: 0;
+  }
+
+  .hero-actions {
+    margin-top: 42px;
+  }
 }
 
 .tool-card {

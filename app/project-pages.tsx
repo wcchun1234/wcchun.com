@@ -269,6 +269,9 @@ export function projectUrl(project: ProjectPage) {
 
 export function ProjectDetail({ project }: { project: ProjectPage }) {
   const url = `https://wcchun.com${projectUrl(project)}`;
+  const projectIndex = projectPages.findIndex((item) => item.slug === project.slug);
+  const previous = projectPages[(projectIndex - 1 + projectPages.length) % projectPages.length];
+  const next = projectPages[(projectIndex + 1) % projectPages.length];
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "CreativeWork",
@@ -279,6 +282,15 @@ export function ProjectDetail({ project }: { project: ProjectPage }) {
     image: `https://wcchun.com${project.image}`,
     keywords: project.tools.join(", "),
     url,
+  };
+  const breadcrumbData = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: "https://wcchun.com/" },
+      { "@type": "ListItem", position: 2, name: project.section === "work" ? "Work" : "Technology", item: `https://wcchun.com/#${project.section}` },
+      { "@type": "ListItem", position: 3, name: project.title, item: url },
+    ],
   };
 
   return (
@@ -291,8 +303,16 @@ export function ProjectDetail({ project }: { project: ProjectPage }) {
           Back to {project.section === "work" ? "selected work" : "technology"} ↙
         </Link>
       </header>
+      <nav className="project-breadcrumb" aria-label="Breadcrumb">
+        <Link href="/">Home</Link><span>/</span>
+        <Link href={project.section === "work" ? "/#work" : "/#technology"}>{project.section === "work" ? "Work" : "Technology"}</Link>
+        <span>/</span><span aria-current="page">{project.title}</span>
+      </nav>
+      <nav className="project-section-nav" aria-label="Project sections">
+        <a href="#overview">Overview</a><a href="#role">Role</a><a href="#process">Process</a><a href="#gallery">Gallery</a>
+      </nav>
 
-      <section className="project-page-hero">
+      <section className="project-page-hero" id="overview">
         <p>{project.medium} · {project.year}</p>
         <h1>{project.title}</h1>
         <h2>{project.subtitle}</h2>
@@ -310,7 +330,7 @@ export function ProjectDetail({ project }: { project: ProjectPage }) {
         {project.facts.map(([label, value]) => <div key={label}><dt>{label}</dt><dd>{value}</dd></div>)}
       </dl>
 
-      <section className="project-page-credits" aria-labelledby="project-credits-title">
+      <section className="project-page-credits" id="role" aria-labelledby="project-credits-title">
         <div>
           <p className="project-page-kicker">Project framework</p>
           <h2 id="project-credits-title">Role, tools and collaboration</h2>
@@ -323,7 +343,7 @@ export function ProjectDetail({ project }: { project: ProjectPage }) {
         </dl>
       </section>
 
-      <section className="project-page-process">
+      <section className="project-page-process" id="process">
         <p className="project-page-kicker">Process and approach</p>
         <div>
           {project.process.map(([title, text], index) => (
@@ -336,7 +356,7 @@ export function ProjectDetail({ project }: { project: ProjectPage }) {
         </div>
       </section>
 
-      <section className="project-page-gallery" aria-label={`${project.title} image gallery`}>
+      <section className="project-page-gallery" id="gallery" aria-label={`${project.title} image gallery`}>
         {project.gallery.map((item) => (
           <figure key={`${item.src}-${item.caption}`}>
             <Image src={item.src} alt={item.alt} width={1920} height={1080} sizes="(max-width: 760px) 100vw, 50vw" unoptimized />
@@ -350,12 +370,17 @@ export function ProjectDetail({ project }: { project: ProjectPage }) {
           {project.links.map((link) => <a key={link.href} href={link.href} target="_blank" rel="noreferrer">{link.label}</a>)}
         </nav>
       )}
+      <nav className="project-pagination" aria-label="Adjacent projects">
+        <Link href={projectUrl(previous)}><span>Previous project</span><strong>{previous.title}</strong></Link>
+        <Link href={projectUrl(next)}><span>Next project</span><strong>{next.title}</strong></Link>
+      </nav>
 
       <footer className="project-page-footer">
         <p>Wong Chun (Sunny) · Artist &amp; Creative Technologist</p>
         <Link href="/">Return to portfolio ↑</Link>
       </footer>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbData) }} />
     </main>
     </>
   );
