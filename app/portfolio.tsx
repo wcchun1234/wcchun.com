@@ -1253,7 +1253,15 @@ export default function Portfolio() {
       <main id="content" onPointerMove={handlePointerMove}>
       <header className={`site-header ${isScrolled ? "is-scrolled" : ""}`}>
         <a className="wordmark" href="#top" aria-label="WCCHUN home">
-          WC<span>CHUN</span>
+          <Image
+            src={assetPath("/wc-monogram.png")}
+            alt=""
+            width={1024}
+            height={1024}
+            priority
+            unoptimized
+          />
+          <span>WCCHUN</span>
         </a>
         <button
           className="mobile-menu-toggle"

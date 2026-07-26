@@ -31,11 +31,12 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
-      { url: `${basePath}/favicon.svg`, type: "image/svg+xml" },
-      { url: `${basePath}/favicon.ico`, sizes: "32x32" },
+      { url: `${basePath}/favicon.ico`, sizes: "any" },
+      { url: `${basePath}/favicon-32.png`, type: "image/png", sizes: "32x32" },
+      { url: `${basePath}/favicon-16.png`, type: "image/png", sizes: "16x16" },
     ],
     shortcut: `${basePath}/favicon.ico`,
-    apple: `${basePath}/apple-touch-icon.png`,
+    apple: [{ url: `${basePath}/apple-touch-icon.png`, sizes: "180x180", type: "image/png" }],
   },
   manifest: `${basePath}/site.webmanifest`,
   robots: {

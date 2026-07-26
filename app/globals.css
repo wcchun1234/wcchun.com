@@ -3771,6 +3771,34 @@ main::before {
   color: #dceafd;
 }
 
+.wordmark {
+  display: inline-flex;
+  gap: 10px;
+  align-items: center;
+  width: max-content;
+  letter-spacing: 0.04em;
+}
+
+.wordmark img {
+  width: 42px;
+  height: 42px;
+  object-fit: contain;
+}
+
+.wordmark span {
+  color: var(--ink);
+  font-family: "Courier New", monospace;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  -webkit-text-stroke: 0;
+}
+
+.site-header.is-scrolled .wordmark img {
+  width: 34px;
+  height: 34px;
+}
+
 @media (max-width: 900px) {
   .site-header nav {
     gap: 14px;
@@ -3840,6 +3868,10 @@ main::before {
 
   .robotics-principles {
     grid-template-columns: 1fr 1fr;
+  }
+
+  .wordmark span {
+    display: none;
   }
 
   .readyloop-footer {
