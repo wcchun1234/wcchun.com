@@ -1523,6 +1523,89 @@ export default function Portfolio() {
             </article>
           ))}
         </div>
+        <div className="tools-heading">
+          <div>
+            <p className="eyebrow">Open-source practice</p>
+            <h3>Selected tools &amp;<br />coding experiments</h3>
+          </div>
+          <p>
+            Smaller open-source tools and prototypes developed through workshop practice,
+            creative coding and educational problem-solving.
+          </p>
+        </div>
+        <div className="tools-grid">
+          {[
+            {
+              title: "CutCase",
+              purpose:
+                "Browser-based laser-cut finger-joint box designer with editable panels, real-time SVG output and a rotatable Three.js assembly preview.",
+              stack: ["JavaScript", "Three.js", "SVG", "GitHub Pages"],
+              status: "Open-source tool",
+              repository: "https://github.com/wcchun1234/CutCase",
+              demo: "https://wcchun1234.github.io/CutCase/",
+            },
+            {
+              title: "CardBoxGen",
+              purpose:
+                "Python and Pyodide generator for laser-cut trays, boxes, dispensers, divider racks and calibration files, with deterministic geometry and blocking validation.",
+              stack: ["Python", "Pyodide", "SVG", "CAD/CAM"],
+              status: "Parametric fabrication system",
+              repository: "https://github.com/wcchun1234/CardBoxGen",
+              demo: "https://wcchun1234.github.io/CardBoxGen/",
+            },
+            {
+              title: "D&T QR Inventory System",
+              purpose:
+                "Google Apps Script and Sheets workflow for scanning, locating, updating, labelling and auditing workshop stock.",
+              stack: ["Apps Script", "Google Sheets", "QR", "Inventory"],
+              status: "Workshop operations system",
+              repository: "https://github.com/wcchun1234/dt-qr-inventory-system",
+            },
+            {
+              title: "MOVE Motor Tracker",
+              purpose:
+                "Student-friendly micro:bit extension for Kitronik :MOVE Motor control and estimated wheel-rotation tracking rather than encoder-precise measurement.",
+              stack: ["TypeScript", "MakeCode", "micro:bit", "Robotics"],
+              status: "Educational extension",
+              repository: "https://github.com/wcchun1234/MOVE-Motor-Tracker",
+            },
+            {
+              title: "PDFPeak",
+              purpose:
+                "Experimental local Flask prototype that extracts PDF text, identifies topics with TF-IDF and NMF, and visualises the results.",
+              stack: ["Python", "Flask", "scikit-learn", "NLP"],
+              status: "Local prototype",
+              repository: "https://github.com/wcchun1234/PDFPeak",
+            },
+          ].map((project) => (
+            <article className="tool-card" key={project.title}>
+              <p className="tool-status">{project.status}</p>
+              <h4>{project.title}</h4>
+              <p className="tool-purpose">{project.purpose}</p>
+              <ul aria-label={`${project.title} technology`}>
+                {project.stack.map((item) => <li key={item}>{item}</li>)}
+              </ul>
+              <div className="tool-links">
+                <a href={project.repository} target="_blank" rel="noreferrer">
+                  View project ↗
+                </a>
+                {project.demo && (
+                  <a href={project.demo} target="_blank" rel="noreferrer">
+                    Live demo ↗
+                  </a>
+                )}
+              </div>
+            </article>
+          ))}
+        </div>
+        <a
+          className="tools-github-link"
+          href="https://github.com/wcchun1234?tab=repositories"
+          target="_blank"
+          rel="noreferrer"
+        >
+          Explore all public repositories on GitHub ↗
+        </a>
       </section>
 
       <section className="recognition" aria-label="Selected recognition and impact">

@@ -9,13 +9,14 @@ export const metadata: Metadata = {
   alternates: {
     canonical: siteUrl,
   },
-  title: "WCCHUN — Artist & Creative Technologist",
+  title: "Wong Chun (Sunny) — Artist & Creative Technologist | WCCHUN",
   description:
-    "The portfolio of Hong Kong artist and creative technologist WCCHUN, working across computational image-making, photography and installation.",
+    "Portfolio of Hong Kong artist and creative technologist Wong Chun (Sunny), spanning computational art, interactive systems, learning technology, robotics and digital fabrication.",
   keywords: ["WCCHUN", "Wong Chun Sunny", "Hong Kong artist", "creative technology", "new media art"],
   openGraph: {
-    title: "WCCHUN — Memory becomes material",
-    description: "Art, technology and memory by Hong Kong artist WCCHUN.",
+    title: "Wong Chun (Sunny) — Artist & Creative Technologist | WCCHUN",
+    description:
+      "Portfolio of Hong Kong artist and creative technologist Wong Chun (Sunny), spanning computational art, interactive systems, learning technology, robotics and digital fabrication.",
     type: "website",
     locale: "en_HK",
     url: siteUrl,
@@ -23,13 +24,18 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "WCCHUN — Memory becomes material",
-    description: "Art, technology and memory by Hong Kong artist WCCHUN.",
+    title: "Wong Chun (Sunny) — Artist & Creative Technologist | WCCHUN",
+    description:
+      "Portfolio of Hong Kong artist and creative technologist Wong Chun (Sunny), spanning computational art, interactive systems, learning technology, robotics and digital fabrication.",
     images: [`${siteUrl}/og.png`],
   },
   icons: {
-    icon: `${basePath}/favicon.svg`,
-    shortcut: `${basePath}/favicon.svg`,
+    icon: [
+      { url: `${basePath}/favicon.svg`, type: "image/svg+xml" },
+      { url: `${basePath}/favicon.ico`, sizes: "32x32" },
+    ],
+    shortcut: `${basePath}/favicon.ico`,
+    apple: `${basePath}/apple-touch-icon.png`,
   },
   manifest: `${basePath}/site.webmanifest`,
   robots: {

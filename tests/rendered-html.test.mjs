@@ -20,7 +20,7 @@ test("renders the finished WCCHUN portfolio", async () => {
   assert.match(response.headers.get("content-type") ?? "", /^text\/html\b/i);
 
   const html = await response.text();
-  assert.match(html, /<title>WCCHUN — Artist &amp; Creative Technologist<\/title>/i);
+  assert.match(html, /<title>Wong Chun \(Sunny\) — Artist &amp; Creative Technologist \| WCCHUN<\/title>/i);
   assert.match(html, /Memory becomes/);
   assert.match(html, /A focused entry point/);
   assert.match(html, /08<!-- --> works <!-- -->selected/);
@@ -40,6 +40,13 @@ test("renders the finished WCCHUN portfolio", async () => {
   assert.match(html, /Open the complete DT Fabrication Dashboard case study/);
   assert.match(html, /Open the complete Robotics &amp; Physical Computing case study/);
   assert.match(html, /View process, evidence and interface/);
+  assert.match(html, /Selected tools &amp;/);
+  assert.match(html, /CutCase/);
+  assert.match(html, /CardBoxGen/);
+  assert.match(html, /D&amp;T QR Inventory System/);
+  assert.match(html, /MOVE Motor Tracker/);
+  assert.match(html, /PDFPeak/);
+  assert.match(html, /Explore all public repositories on GitHub/);
   assert.match(html, /1,500\+/);
   assert.match(html, /About \/ Wong Chun \(Sunny\)/);
   assert.match(html, /Skip to selected work/);
