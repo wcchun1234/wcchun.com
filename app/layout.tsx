@@ -2,9 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
-const siteUrl = basePath
-  ? `https://wcchun1234.github.io${basePath}`
-  : "https://www.wcchun.com";
+const siteUrl = "https://wcchun.com";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
