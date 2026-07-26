@@ -28,6 +28,12 @@ type ArchiveSection = {
   text: string;
 };
 
+type ProjectVideo = {
+  youtubeId: string;
+  title: string;
+  kind: "Artwork film" | "Documentation" | "Process film";
+};
+
 type LegacyProjectInput = {
   title: string;
   year: string;
@@ -899,6 +905,74 @@ const archiveNarrativeByTitle: Record<string, ArchiveSection[]> = {
   ],
 };
 
+const videoByTitle: Record<string, ProjectVideo> = {
+  "Scanned Memories": {
+    youtubeId: "AILqiTSOSW4",
+    title: "Scanned Memories process",
+    kind: "Process film",
+  },
+  MemoryGrid: {
+    youtubeId: "zm12B8OHP_Q",
+    title: "ArtSense: MemoryGrid",
+    kind: "Artwork film",
+  },
+  "Aware (Exhibition)": {
+    youtubeId: "cUj9yXOKMcg",
+    title: "Aware — exhibition version",
+    kind: "Documentation",
+  },
+  "布達佩斯 / Budapest": {
+    youtubeId: "KG09yb2sTfc",
+    title: "布達佩斯",
+    kind: "Artwork film",
+  },
+  CAR: {
+    youtubeId: "VWzUvAR9_BI",
+    title: "CAR — demo video",
+    kind: "Documentation",
+  },
+  "I Am the Son of the Sun": {
+    youtubeId: "6bpJPuAMy-c",
+    title: "I Am the Son of the Sun — Ode to the Sun",
+    kind: "Artwork film",
+  },
+  ownvalue: {
+    youtubeId: "kJhXQMtfb-o",
+    title: "ownvalue — full record",
+    kind: "Documentation",
+  },
+  "正確揀釘 營唔會飛": {
+    youtubeId: "joseXNOdMv8",
+    title: "正確揀釘 營唔會飛 — TVC",
+    kind: "Artwork film",
+  },
+  Spaghetti: {
+    youtubeId: "0VDvqKqXYdw",
+    title: "Spaghetti",
+    kind: "Artwork film",
+  },
+  "Night City": {
+    youtubeId: "5LVQepVxgHQ",
+    title: "Night City — slideshow project",
+    kind: "Artwork film",
+  },
+  Digitdeath: {
+    youtubeId: "pxGxF_v1bk4",
+    title: "Digitdeath",
+    kind: "Artwork film",
+  },
+  sweeTabot: {
+    youtubeId: "VRpoQwF1XvY",
+    title: "sweeTabot — demo video",
+    kind: "Documentation",
+  },
+  "Capturing Time": {
+    youtubeId: "ogPW-hIcUao",
+    title: "Capturing Time — making process",
+    kind: "Process film",
+  },
+};
+
 const filters = ["All", "Photography", "Installation", "Creative Coding", "Moving Image", "Graphic", "Other"] as const;
 type Filter = (typeof filters)[number];
 
@@ -922,6 +996,7 @@ export default function Portfolio() {
   const selectedArchiveNarrative = selected
     ? archiveNarrativeByTitle[selected.title] ?? []
     : [];
+  const selectedVideo = selected ? videoByTitle[selected.title] : undefined;
 
   const openProject = (project: Project) => {
     lastTriggerRef.current = document.activeElement as HTMLElement;
@@ -1214,6 +1289,9 @@ export default function Portfolio() {
                     unoptimized
                   />
                   <span className="project-index">{String(index + 1).padStart(2, "0")}</span>
+                  {videoByTitle[project.title] && (
+                    <span className="project-video-badge">Film ▶</span>
+                  )}
                   <span className="view-project">View project ↗</span>
                 </span>
                 <span className="project-meta">
@@ -1386,6 +1464,39 @@ export default function Portfolio() {
                   ))}
                 </div>
               </section>
+              {selectedVideo && (
+                <section className="dialog-section project-video-section">
+                  <div className="video-heading">
+                    <div>
+                      <p className="dialog-section-label">{selectedVideo.kind}</p>
+                      <h3>{selectedVideo.title}</h3>
+                    </div>
+                    <span aria-hidden="true">Play / 16:9</span>
+                  </div>
+                  <div className="video-frame">
+                    <iframe
+                      src={`https://www.youtube-nocookie.com/embed/${selectedVideo.youtubeId}?rel=0`}
+                      title={`${selected.title} — ${selectedVideo.title}`}
+                      loading="lazy"
+                      referrerPolicy="strict-origin-when-cross-origin"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                      allowFullScreen
+                    />
+                  </div>
+                  <div className="video-footer">
+                    <p>
+                      Original moving-image documentation preserved from WCCHUN&apos;s project archive.
+                    </p>
+                    <a
+                      href={`https://www.youtube.com/watch?v=${selectedVideo.youtubeId}`}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      Watch on YouTube ↗
+                    </a>
+                  </div>
+                </section>
+              )}
               <section className="dialog-section">
                 <p className="dialog-section-label">Introduction</p>
                 <p>{selected.statement}</p>
