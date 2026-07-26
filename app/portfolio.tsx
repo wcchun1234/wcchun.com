@@ -1052,7 +1052,12 @@ export default function Portfolio() {
 
   useEffect(() => {
     document.body.style.overflow = selected ? "hidden" : "";
-    if (selected) window.requestAnimationFrame(() => dialogRef.current?.focus());
+    if (selected) {
+      window.requestAnimationFrame(() => {
+        dialogPanelRef.current?.scrollTo({ top: 0 });
+        dialogRef.current?.focus({ preventScroll: true });
+      });
+    }
     return () => {
       document.body.style.overflow = "";
     };
