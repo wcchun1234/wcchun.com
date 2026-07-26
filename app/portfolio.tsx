@@ -23,6 +23,11 @@ type Project = {
   codeUrl?: string;
 };
 
+type ArchiveSection = {
+  title: string;
+  text: string;
+};
+
 type LegacyProjectInput = {
   title: string;
   year: string;
@@ -523,6 +528,321 @@ const galleryByTitle: Record<string, string[]> = {
   "Protect Hongkonger": archiveSeries("protect-hongkonger", 4),
 };
 
+const archiveNarrativeByTitle: Record<string, ArchiveSection[]> = {
+  "Scanned Memories": [
+    {
+      title: "Original project context",
+      text: "Scanned Memories explores the interplay between technology, identity and memory. A scanner records shifting digital images displayed on an iPad, creating physical traces of images that are simultaneously tangible and ephemeral. The lines and distortions stand for the way experience is fragmented, preserved and reconstructed in the digital age.",
+    },
+    {
+      title: "Capturing digital memory",
+      text: "The scanner does not capture a stable picture. It records movement, delay and distortion across a changing screen. This process reflects a contemporary identity mediated by devices: memories may persist, but their form changes as they move between a hand, an interface, a machine and a print.",
+    },
+    {
+      title: "Exhibition presentation",
+      text: "The scans are presented as framed images in a grid. Each work remains an individual fragment while contributing to a collective narrative. The tactile prints and their digital origin create a dialogue between physical permanence and technological instability.",
+    },
+    {
+      title: "Light Trace, 2026",
+      text: "The later presentation, Light Trace: Scanned Memories, uses a home document scanner as both slit-camera and brush of light. It compresses screen time, hand movement, software processing and print output into one image. Machine-learning visual scores derived from digitised lecture notes and ECG traces guide the image bands, connecting learning, bodily data and computational translation.",
+    },
+  ],
+  "Digital Echoes": [
+    {
+      title: "Technology, memory and creativity",
+      text: "Digital Echoes transforms personal photographs and text through machine-learning models. The generated images are new, yet retain echoes of the memories from which they were made. The project creates a dialogue between past experience and its present computational reinterpretation.",
+    },
+    {
+      title: "From personal data to physical print",
+      text: "Photographs from a London study trip form the project’s personal dataset. Machine learning analyses and recombines their visual information before the resulting images are printed and framed. Moving the images from code into a gallery asks whether a photograph must begin with a camera, and how technology changes the way memory is stored and reconstructed.",
+    },
+    {
+      title: "The Unseen Realm",
+      text: "For the SCM Cameraless Photography Exhibition 2024, the works were installed in a repeated grid. The format reflects the echoing and pattern-based logic of both memory and machine learning. The exhibition ran at City University of Hong Kong’s Run Run Shaw Creative Media Centre from 26 August to 5 October 2024.",
+    },
+    {
+      title: "Collect Hong Kong 2025",
+      text: "The series was subsequently presented at Collect Hong Kong Art Fair 2025 at the Hong Kong Arts Centre. This version emphasised that creative machine-learning processes can be directed by artists without a conventional programming background, opening technical systems to experimentation and personal expression.",
+    },
+    {
+      title: "Project evolution",
+      text: "Digital Echoes developed from MindPixel, an earlier project combining textual knowledge from lecture notes with personal visual memories. The later work translates that research into physical prints and extends its questions about authorship, authenticity and machine-mediated recollection.",
+    },
+  ],
+  MemoryGrid: [
+    {
+      title: "Artist’s statement",
+      text: "MemoryGrid reflects a journey through London. Six hundred photographs document places, emotions and thoughts from a summer study trip, then become an AI-generated digital tapestry. By looking at art and technology outside Hong Kong, the work presents a wider perspective on creative practice and innovation.",
+    },
+    {
+      title: "Concept and inspiration",
+      text: "The project merges personal experience with technological transformation. It is not a chronological travel diary; it explores how memories can be reorganised by computational systems into new forms of expression.",
+    },
+    {
+      title: "Process and techniques",
+      text: "Six hundred images were selected from a much larger travel archive, ranging from landmarks to ordinary moments. Image recognition, clustering and generative techniques were used to find relationships across the collection. Smooth transitions and a carefully chosen colour language evoke the fluid atmosphere of recollection.",
+    },
+    {
+      title: "Viewing context",
+      text: "The five-minute silent video is displayed on a 65-inch 4K UHD television. Its interactive dimension comes from the viewer’s active reading of transitions and visual connections, prompting reflection on personal experience and technology’s role in shaping memory.",
+    },
+  ],
+  TechCore: [
+    {
+      title: "Artist’s statement",
+      text: "TechCore represents the technical heart of four years of artistic exploration. The hardware that powered earlier projects is brought forward as visible material, making the hours of experimentation, learning and building tangible.",
+    },
+    {
+      title: "Concept and materials",
+      text: "Microcontrollers, sensors, electronic components, cables and computing devices form a sculptural archive of the artist’s education. A wooden vessel and white plinth support the arrangement, while their exposed structure highlights both the functional and aesthetic character of the equipment.",
+    },
+    {
+      title: "Interactive display",
+      text: "A small monitor connected to a Raspberry Pi cycles through images and videos of projects made with the displayed components. Visitors can connect each physical tool to the artworks it enabled and follow the evolution of the practice.",
+    },
+    {
+      title: "Exhibition context",
+      text: "Presented on a different floor from the other ArtSense works, TechCore foregrounds technical learning as a distinct part of the wider series. Its placement underlines how artistic growth can be distributed across many media, skills and spaces.",
+    },
+  ],
+  WordView: [
+    {
+      title: "Artist’s statement",
+      text: "WordView bridges technology, health and education. It transforms lecture notes and Apple Watch ECG records into a dynamic visual narrative, projecting the relationship between academic life and personal well-being back onto the architecture of the school.",
+    },
+    {
+      title: "Concept and data",
+      text: "The project begins with two parts of everyday life that are rarely viewed together: what the artist learned and how the artist’s body responded through time. Their convergence asks what personal data can reveal, and how data systems influence the way people understand themselves.",
+    },
+    {
+      title: "Process and techniques",
+      text: "Lecture notes were digitised and prepared for language analysis while ECG readings were collected through an Apple Watch. TF-IDF and word2vec methods reveal patterns and associations in the text. Custom software maps the processed language and health data into a projection that can update dynamically.",
+    },
+    {
+      title: "Interaction and display",
+      text: "The approximately two-by-two-metre projection allows viewers to explore connections between lecture topics and health metrics. Installed on a separate floor within ArtSense, it represents the embodied and educational dimension of the series.",
+    },
+  ],
+  ArtSense: [
+    {
+      title: "Series overview",
+      text: "ArtSense brings together MemoryGrid, TechCore and WordView as three perspectives on a four-year journey through art and technology. Travel photographs, lecture notes, physiological data and accumulated hardware become a connected archive of learning.",
+    },
+    {
+      title: "Exhibition structure",
+      text: "The works were intentionally distributed across different floors during the CityU School of Creative Media Annual Show 2024. Moving between them allowed visitors to encounter the visual, embodied and technical dimensions of the artist’s education as separate but related experiences.",
+    },
+  ],
+  "Aware (Exhibition)": [
+    {
+      title: "Exhibition version",
+      text: "Visitors engage with a large-scale digital projection exploring awareness through interactive technology. Graphical content evolves in response to sequences entered on a number pad, unlocking visual and textual narratives that blend art and digital media.",
+    },
+    {
+      title: "Collective interaction",
+      text: "Every input changes the projection and becomes part of a larger, continually evolving digital tapestry. The installation shifts attention between individual choice and collective experience, asking participants to reflect on how they interact with both digital and physical worlds.",
+    },
+  ],
+  Aware: [
+    {
+      title: "Interactive system",
+      text: "Aware uses a deliberately familiar number-pad interface to control an immersive projection. Different sequences reveal changing graphic and textual states, making each visitor an active contributor to the work.",
+    },
+    {
+      title: "Perception and participation",
+      text: "The project examines awareness through the intersection of technology, art and human perception. Its evolving image field records successive actions, turning a private gesture into part of a shared spatial encounter.",
+    },
+  ],
+  "The Blue Countdown": [
+    {
+      title: "Original statement",
+      text: "The Blue Countdown represents the effects of rising temperatures on the Arctic. Wax polar bears slowly lose their form while the glacier beneath them melts into water, visualising an ecosystem warming at roughly twice the global average.",
+    },
+    {
+      title: "Material behaviour",
+      text: "The base is coated with thermochromic pigment that changes from white to blue when the ceramic heater is activated. As the wax melts, the sound of dripping water resembles a countdown timer. The work asks how much time remains—and what action is still possible before the process becomes irreversible.",
+    },
+  ],
+  CAR: [
+    {
+      title: "Project idea",
+      text: "CAR creates a playful interactive model car park. Six infrared sensors detect whether parking spaces are occupied and the display recommends the closest available position, beginning at P2 and continuing through P7 before displaying “All full.”",
+    },
+    {
+      title: "Information design",
+      text: "Because drivers have very little time to read a sign, the system does not present every sensor state equally. Its logic prioritises one clear recommendation, translating multiple live signals into the fastest useful instruction.",
+    },
+    {
+      title: "Automated lift",
+      text: "The original lift rotated continuously from a simple on/off control. Connecting its motor and infrared sensor to an Arduino allowed it to run only when a car crosses the detection point, adding responsive automation to the physical model.",
+    },
+  ],
+  Digitdeath: [
+    {
+      title: "Memorial purpose",
+      text: "Digitdeath is a web memorial for people who died during Hong Kong’s fifth wave of COVID-19. Conceived as a shared digital home, it creates a place for remembrance while asking society to reflect on the public-health crisis and prepare for future emergencies.",
+    },
+    {
+      title: "Background",
+      text: "During the fifth wave, hospitals were overloaded and many patients faced poor conditions without contact with relatives. The project responds to the helplessness visible in contemporary news images by creating a gathering place where those deaths can be acknowledged rather than reduced to statistics.",
+    },
+    {
+      title: "Data and generative process",
+      text: "Government COVID-19 statistics supplied the recorded death count. Layered pixel-art components were combined programmatically to generate more than 10,000 individual profile images, which are arranged into a large cemetery grid.",
+    },
+    {
+      title: "User experience",
+      text: "The website contains a homepage, background information and the cemetery. Its restrained visual language avoids spectacular effects: the mood remains deliberately heavy so visitors can focus on documentation, mourning and reflection.",
+    },
+  ],
+  sweeTabot: [
+    {
+      title: "Project idea",
+      text: "Inspired by a drinks dispenser, sweeTabot brings a small automated candy machine into the home. It is designed to organise snacks, reduce clutter and make a familiar storage object playful and convenient for users of any age.",
+    },
+    {
+      title: "RFID interaction",
+      text: "Each user receives a branded RFID card. An authorised card triggers a green light and commands a servo motor to release candy; an unrecognised card triggers a red light and the machine remains locked. The RFID interface replaces a conventional push button with a personalised interaction.",
+    },
+    {
+      title: "Home automation context",
+      text: "The project considers robotics as part of everyday life. Like washing machines and automated climate systems, the dispenser simplifies a domestic task while also functioning as a compact piece of furniture and a visible technological object.",
+    },
+  ],
+  "60HKG Promotion Campaign": [
+    {
+      title: "Campaign system",
+      text: "A branding and social-media package created for the 60th Hong Kong Scout anniversary. The original project includes the central identity, a YouTube channel banner and fixed-image Facebook and Instagram Story promotions.",
+    },
+  ],
+  "Dictionary of Colour": [
+    {
+      title: "Book-cover concept",
+      text: "The 125 × 170 mm cover uses cyan, magenta, yellow and black—the core colours of print—as its visual system. Their overlap suggests an infinite field of possible combinations, while four linked colour rings connect the CMYK system to the broader world of mixed colour.",
+    },
+    {
+      title: "Locate your identity",
+      text: "The phrase “Locate your identity” positions the book as more than a reference tool. Readers are invited to locate a creative identity within a complex colour field and select a palette that matches the intended tone, mood and meaning of a project.",
+    },
+    {
+      title: "Design research",
+      text: "Colour communicates emotion, atmosphere, function and identity across photography, illustration, installation and branding. The redesign argues for establishing a project name and palette early so later decisions remain coherent, much as a brand identity guides a consistent visual language.",
+    },
+  ],
+  "Who Am I?": [
+    {
+      title: "Poster study",
+      text: "Who Am I? is a typographic poster and identity exercise developed in Adobe Illustrator. The surviving original page presents the finished visual work without an extended written statement.",
+    },
+  ],
+  "正確揀釘 營唔會飛": [
+    {
+      title: "Campaign concept",
+      text: "This Cantonese-language campaign introduces two types of camping pegs sold by TRITON. Two “power-ranger” characters communicate the importance of choosing a peg suited to the ground and show what can happen when the wrong equipment is used.",
+    },
+    {
+      title: "Background and objective",
+      text: "As Hong Kong’s dense urban environment grew, outdoor activity became a way to escape pressure and pursue a healthier work-life balance. With more first-time campers, the project identifies tent safety—and correct peg selection—as a practical communication problem.",
+    },
+    {
+      title: "Campaign outputs",
+      text: "The work includes a 45-second promotional video designed for social media and print advertisements simulated in MTR stations. Together they distinguish the two products while raising general awareness of safe tent setup.",
+    },
+  ],
+  ownvalue: [
+    {
+      title: "Situation and research",
+      text: "ownvalue began with the artist’s experience of different pay levels among restaurant workers performing similar duties. It asks who establishes those differences, whether time and effort are valued consistently, and why salary becomes such a dominant measure of socioeconomic worth.",
+    },
+    {
+      title: "Participatory campaign",
+      text: "Participants answer a direct question: “How much do you think you are valued at in your workplace?” Entering an hourly value forces consideration of age, education, experience and social expectations. The work does not promise a correct number; it makes the standards behind that number visible.",
+    },
+    {
+      title: "Interview outcomes",
+      text: "Responses ranged from HK$55 per hour to more than HK$100. One participant connected HK$60 per hour with being a fresh graduate. These answers reveal that people carry internal standards for valuing themselves, even when the origin of those standards is difficult to explain.",
+    },
+  ],
+  "Capturing Time": [
+    {
+      title: "Creative idea",
+      text: "Capturing Time proposes that time should be quantified and visualised as clearly as money. The project creates “one second of water”—a physical unit captured, stored, compressed, measured or spent through different materials and photographic actions.",
+    },
+    {
+      title: "Production",
+      text: "Wooden sticks, plates and sponge were used to absorb and contain water released over one second. The resulting objects make a duration tangible and form the basis of works titled Time in Wallet, Tower of Time, Compression of Time, Burning Time and Measuring Time.",
+    },
+    {
+      title: "Show Time exhibition proposal",
+      text: "The exhibition was designed for Hysan Place and Lee Theatre in Causeway Bay. A shopping centre connects time and money directly: visitors spend both while moving through the space. Installing the photographs in its busy central lobby would place the project inside that everyday exchange.",
+    },
+  ],
+  "Protect Hongkonger": [
+    {
+      title: "Exhibition proposal",
+      text: "Protect Hongkonger is an art, anthropology and sociology project proposing an exhibition of iconic toys from different stages of Hong Kong’s social development. It treats toys as material culture and collective memory through which the identity and core values of Hongkongers can be maintained.",
+    },
+    {
+      title: "Community collaboration",
+      text: "The proposal invites the Sham Shui Po vintage shop thegoodthebad&thecreative (雅俗共想) to contribute objects and knowledge. The shop’s collections, the artist’s film photographs of its environment and direct interaction with its staff connect museum display to a living local archive.",
+    },
+    {
+      title: "Three-part structure",
+      text: "The exhibition contains a timeline of Hong Kong toys and social change, a photographic portrait of the vintage shop, and a display of objects selected from its collection. Paper, tin, plastic, vehicle, film-related, doll and stuffed toys trace changing design and everyday life.",
+    },
+    {
+      title: "Proposed venue",
+      text: "Designed as a simulation for the Hong Kong Museum of Art, the exhibition combines explanatory boards, chronological displays, a promotional poster and a dedicated shop presentation. Its objective is to protect collective memory by encouraging visitors to recognise, discuss and inherit local material culture.",
+    },
+  ],
+  "Enchanted Landscape": [
+    {
+      title: "Original archive note",
+      text: "A photographic series examining buildings as an enchanted landscape and the city as a concrete forest. The original project page is image-led and records the themes “building,” “photography” and “concrete forest.”",
+    },
+  ],
+  "Indecisive Moment": [
+    {
+      title: "Original archive note",
+      text: "A COVID-era photographic series organised around hesitation and the indecisive moment. The original project page presents the photographs without a longer written statement.",
+    },
+  ],
+  Film: [
+    {
+      title: "Original archive note",
+      text: "An ongoing collection of daily observations made on film between 2020 and 2022. The original project is intentionally image-led.",
+    },
+  ],
+  "Night City": [
+    {
+      title: "Original archive note",
+      text: "A photographic study of artificial light and urban atmosphere at night, originally accompanied by a slideshow video. The archive identifies the themes “night city,” “light city” and “photography.”",
+    },
+  ],
+  "I Am the Son of the Sun": [
+    {
+      title: "Statement",
+      text: "Inspired by “Ode to the Sun,” the work treats the sun as a god and the performer as one of its sons. Repeated physical salutations mirror repeated language in a poem and demonstrate sincerity, mindfulness and loyalty beneath the sun.",
+    },
+    {
+      title: "Three movements",
+      text: "The first movement is a bodily salute. The second internalises devotion through mindful attention beneath the sun. The third extends the address outward, reminding other people to recognise and offer their own ode to the sun.",
+    },
+  ],
+  Spaghetti: [
+    {
+      title: "Production credit",
+      text: "A collaborative video production. Wong Chun Sunny worked as boom operator and production assistant. The original archive page contains the completed moving image and production role rather than an extended artist statement.",
+    },
+  ],
+  "布達佩斯 / Budapest": [
+    {
+      title: "Production credit",
+      text: "A collaborative video production for which Wong Chun Sunny served as production assistant and boom operator, and contributed the draft video edit. The original archive page records these roles alongside the finished work.",
+    },
+  ],
+};
+
 const filters = ["All", "Photography", "Installation", "Creative Coding", "Moving Image", "Graphic", "Other"] as const;
 type Filter = (typeof filters)[number];
 
@@ -535,6 +855,9 @@ export default function Portfolio() {
   const selectedIndex = selected ? projects.findIndex((project) => project.title === selected.title) : -1;
   const selectedGallery = selected
     ? galleryByTitle[selected.title] ?? [selected.image]
+    : [];
+  const selectedArchiveNarrative = selected
+    ? archiveNarrativeByTitle[selected.title] ?? []
     : [];
 
   const openProject = (project: Project) => {
@@ -864,6 +1187,19 @@ export default function Portfolio() {
                 <p className="dialog-section-label">Introduction</p>
                 <p>{selected.statement}</p>
               </section>
+              {selectedArchiveNarrative.length > 0 && (
+                <section className="dialog-section">
+                  <p className="dialog-section-label">From the original archive</p>
+                  <div className="archive-narrative">
+                    {selectedArchiveNarrative.map((section) => (
+                      <article key={section.title}>
+                        <h3>{section.title}</h3>
+                        <p>{section.text}</p>
+                      </article>
+                    ))}
+                  </div>
+                </section>
+              )}
               <section className="dialog-section">
                 <p className="dialog-section-label">Process</p>
                 <div className="process-list">
