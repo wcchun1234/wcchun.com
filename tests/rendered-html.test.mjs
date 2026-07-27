@@ -94,6 +94,8 @@ test("publishes indexable permanent project pages and current professional timin
   assert.match(source, /BreadcrumbList/);
   assert.match(source, /Previous project/);
   assert.match(source, /Next project/);
+  assert.match(source, /Related projects/);
+  assert.match(source, /project-page-\$\{project\.section\}/);
   assert.match(sitemap, /2026-07-26/);
 });
 
@@ -104,6 +106,9 @@ test("uses permanent pages as the primary artwork path and keeps motion restrain
   assert.match(html, /Explore selected art/);
   assert.match(html, /View technology systems/);
   assert.match(html, /Quick view/);
+  assert.match(html, /featured-tool/);
+  assert.match(html, /compact-tool/);
+  assert.match(html, /chapter-indicator/);
   assert.doesNotMatch(source, /handlePointerMove/);
 });
 

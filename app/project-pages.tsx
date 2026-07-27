@@ -272,6 +272,10 @@ export function ProjectDetail({ project }: { project: ProjectPage }) {
   const projectIndex = projectPages.findIndex((item) => item.slug === project.slug);
   const previous = projectPages[(projectIndex - 1 + projectPages.length) % projectPages.length];
   const next = projectPages[(projectIndex + 1) % projectPages.length];
+  const related = projectPages
+    .filter((item) => item.slug !== project.slug)
+    .sort((a, b) => Number(b.section === project.section) - Number(a.section === project.section))
+    .slice(0, 3);
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "CreativeWork",
@@ -296,7 +300,7 @@ export function ProjectDetail({ project }: { project: ProjectPage }) {
   return (
     <>
     <a className="skip-link project-skip-link" href="#project-main">Skip to project content</a>
-    <main className="project-page" id="project-main">
+    <main className={`project-page project-page-${project.section} project-theme-${project.slug}`} id="project-main">
       <header className="project-page-nav">
         <Link href="/" className="project-page-brand">WCCHUN</Link>
         <Link href={project.section === "work" ? "/#work" : "/#technology"}>
@@ -370,9 +374,24 @@ export function ProjectDetail({ project }: { project: ProjectPage }) {
           {project.links.map((link) => <a key={link.href} href={link.href} target="_blank" rel="noreferrer">{link.label}</a>)}
         </nav>
       )}
+      <section className="related-projects" aria-labelledby="related-projects-title">
+        <div>
+          <p className="project-page-kicker">Continue exploring</p>
+          <h2 id="related-projects-title">Related projects</h2>
+        </div>
+        <div>
+          {related.map((item) => (
+            <Link href={projectUrl(item)} key={item.slug}>
+              <Image src={item.image} alt="" width={720} height={480} sizes="(max-width: 700px) 100vw, 33vw" unoptimized />
+              <span>{item.medium} · {item.year}</span>
+              <strong>{item.title}</strong>
+            </Link>
+          ))}
+        </div>
+      </section>
       <nav className="project-pagination" aria-label="Adjacent projects">
-        <Link href={projectUrl(previous)}><span>Previous project</span><strong>{previous.title}</strong></Link>
-        <Link href={projectUrl(next)}><span>Next project</span><strong>{next.title}</strong></Link>
+        <Link href={projectUrl(previous)}><span>Previous project</span><Image src={previous.image} alt="" width={720} height={360} unoptimized /><strong>{previous.title}</strong></Link>
+        <Link href={projectUrl(next)}><span>Next project</span><Image src={next.image} alt="" width={720} height={360} unoptimized /><strong>{next.title}</strong></Link>
       </nav>
 
       <footer className="project-page-footer">

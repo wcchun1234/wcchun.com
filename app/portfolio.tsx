@@ -1045,6 +1045,17 @@ export default function Portfolio() {
     ? archiveNarrativeByTitle[selected.title] ?? []
     : [];
   const selectedVideo = selected ? videoByTitle[selected.title] : undefined;
+  const chapterLabels: Record<string, [string, string]> = {
+    top: ["01", "Introduction"],
+    work: ["03", "Featured Art"],
+    technology: ["04", "Technology & Education"],
+    tools: ["05", "Selected Tools"],
+    practice: ["06", "Practice"],
+    exhibitions: ["07", "Exhibitions"],
+    about: ["08", "About"],
+    contact: ["09", "Contact"],
+  };
+  const activeChapter = chapterLabels[activeSection] ?? chapterLabels.top;
 
   const openProject = (project: Project) => {
     lastTriggerRef.current = document.activeElement as HTMLElement;
@@ -1150,7 +1161,7 @@ export default function Portfolio() {
       if (frame) return;
       frame = window.requestAnimationFrame(() => {
         setIsScrolled(window.scrollY > 34);
-        const sectionIds = ["work", "technology", "practice", "exhibitions", "about", "contact"];
+        const sectionIds = ["work", "technology", "tools", "practice", "exhibitions", "about", "contact"];
         let currentSection = "top";
         for (const id of sectionIds) {
           const section = document.getElementById(id);
@@ -1250,6 +1261,10 @@ export default function Portfolio() {
       <a className="skip-link" href="#work">Skip to selected work</a>
       <div className="scroll-line" aria-hidden="true" />
       <main id="content">
+      <aside className="chapter-indicator" aria-live="polite">
+        <span>{activeChapter[0]} / 09</span>
+        <strong>{activeChapter[1]}</strong>
+      </aside>
       <header className={`site-header ${isScrolled ? "is-scrolled" : ""}`}>
         <a className="wordmark" href="#top" aria-label="WCCHUN home">
           <Image
@@ -1257,7 +1272,6 @@ export default function Portfolio() {
             alt=""
             width={1024}
             height={1024}
-            priority
             unoptimized
           />
           <span>WCCHUN</span>
@@ -1314,7 +1328,7 @@ export default function Portfolio() {
             alt="DT Fabrication Dashboard interface"
             width={1338}
             height={912}
-            priority
+            loading="lazy"
             unoptimized
           />
         </a>
@@ -1401,7 +1415,7 @@ export default function Portfolio() {
                     width={1280}
                     height={1280}
                     sizes="(max-width: 600px) 100vw, (max-width: 900px) 50vw, 42vw"
-                    loading={index > 2 ? "lazy" : undefined}
+                    loading="lazy"
                     unoptimized
                   />
                   <span className="project-index">{String(index + 1).padStart(2, "0")}</span>
@@ -1445,6 +1459,7 @@ export default function Portfolio() {
       </section>
 
       <section className="technology" id="technology">
+        <div className="technology-case-layout">
         <div className="section-heading">
           <div>
             <p className="eyebrow">Systems with real-world consequence</p>
@@ -1543,7 +1558,8 @@ export default function Portfolio() {
             </article>
           ))}
         </div>
-        <div className="tools-heading">
+        </div>
+        <div className="tools-heading" id="tools">
           <div>
             <p className="eyebrow">Open-source practice</p>
             <h3>Selected tools &amp;<br />coding experiments</h3>
@@ -1597,8 +1613,8 @@ export default function Portfolio() {
               status: "Local prototype",
               repository: "https://github.com/wcchun1234/PDFPeak",
             },
-          ].map((project) => (
-            <article className="tool-card" key={project.title}>
+          ].map((project, index) => (
+            <article className={`tool-card ${index < 2 ? "featured-tool" : "compact-tool"}`} key={project.title}>
               <p className="tool-status">{project.status}</p>
               <h4>{project.title}</h4>
               <p className="tool-purpose">{project.purpose}</p>
