@@ -65,27 +65,33 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  const structuredData = {
-    "@context": "https://schema.org",
-    "@type": "Person",
-    name: "Wong Chun (Sunny)",
-    alternateName: ["WCCHUN", "Sunny Wong"],
-    url: siteUrl,
-    image: `${siteUrl}/og.png`,
-    email: "mailto:wcchun1234@gmail.com",
-    jobTitle: "Artist and Creative Technologist",
-    homeLocation: {
-      "@type": "Place",
-      name: "Hong Kong",
+  const structuredData = [
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      name: "Wong Chun (Sunny)",
+      alternateName: ["WCCHUN", "Sunny Wong"],
+      url: siteUrl,
+      image: `${siteUrl}/og.png`,
+      email: "mailto:wcchun1234@gmail.com",
+      jobTitle: "Artist and Creative Technologist",
+      homeLocation: { "@type": "Place", name: "Hong Kong" },
+      sameAs: [
+        "https://www.instagram.com/wongchunsunny/",
+        "https://www.behance.net/wongchun",
+        "https://www.youtube.com/channel/UCK2wPLfi_gLUpipjDqq3pnw",
+        "https://www.linkedin.com/in/wcchun/",
+        "https://github.com/wcchun1234",
+      ],
     },
-    sameAs: [
-      "https://www.instagram.com/wongchunsunny/",
-      "https://www.behance.net/wongchun",
-      "https://www.youtube.com/channel/UCK2wPLfi_gLUpipjDqq3pnw",
-      "https://www.linkedin.com/in/wcchun/",
-      "https://github.com/wcchun1234",
-    ],
-  };
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      name: "WCCHUN",
+      alternateName: ["Wong Chun Portfolio", "Wong Chun (Sunny)"],
+      url: `${siteUrl}/`,
+    },
+  ];
 
   return (
     <html lang="en">

@@ -1347,6 +1347,20 @@ export default function Portfolio() {
         <p className="hero-scroll">Scroll / 01—06</p>
       </section>
 
+      <section className="recognition recognition-top" aria-label="Selected recognition and impact">
+        {[
+          ["Award", "AIREA 2026", "Outstanding Innovation and Creativity Award", "/technology/readyloop"],
+          ["Impact", "1,500+", "Fabrication submissions supported", "/technology/dt-fabrication-dashboard"],
+          ["Exhibitions", "2025—2026", "Collect Hong Kong Art Fair", "#exhibitions"],
+        ].map(([label, value, detail, href]) => (
+          <a href={href} key={label}>
+            <span>{label}</span>
+            <strong>{value}</strong>
+            <p>{detail}</p>
+          </a>
+        ))}
+      </section>
+
       <section className="work-section" id="work">
         <div className="section-heading">
           <div>
@@ -1614,21 +1628,6 @@ export default function Portfolio() {
         </a>
       </section>
 
-      <section className="recognition" aria-label="Selected recognition and impact">
-        {[
-          ["Award", "AIREA 2026", "Outstanding Innovation and Creativity Award"],
-          ["Exhibitions", "2025—2026", "Collect Hong Kong Art Fair"],
-          ["Impact", "1,500+", "Fabrication submissions supported"],
-          ["Education", "CityU SCM", "New Media graduate"],
-        ].map(([label, value, detail]) => (
-          <article key={label}>
-            <span>{label}</span>
-            <strong>{value}</strong>
-            <p>{detail}</p>
-          </article>
-        ))}
-      </section>
-
       <section className="practice" id="practice">
         <p className="section-number">02 — Practice</p>
         <div className="practice-copy">
@@ -1688,7 +1687,7 @@ export default function Portfolio() {
       <section className="about" id="about">
         <div className="about-heading">
           <p className="eyebrow">About / Wong Chun (Sunny)</p>
-          <h2>Artist, technologist<br />and educator.</h2>
+          <h2>Artist, creative technologist<br />and learning-system designer.</h2>
         </div>
         <div className="about-body">
           <p>
