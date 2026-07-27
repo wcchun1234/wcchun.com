@@ -37,10 +37,10 @@ test("renders the finished WCCHUN portfolio", async () => {
   assert.match(html, /Exhibitions/);
   assert.match(html, /Technology &amp; Education/);
   assert.match(html, /ReadyLoop/);
-  assert.match(html, /Open the complete ReadyLoop case study/);
-  assert.match(html, /Open the complete DT Fabrication Dashboard case study/);
-  assert.match(html, /Open the complete Robotics &amp; Physical Computing case study/);
-  assert.match(html, /Open permanent case-study page/);
+  assert.match(html, /Open the permanent ReadyLoop case study/);
+  assert.match(html, /Open the permanent DT Fabrication Dashboard case study/);
+  assert.match(html, /Open the permanent Robotics &amp; Physical Computing case study/);
+  assert.match(html, /View full project/);
   assert.match(html, /\/technology\/readyloop/);
   assert.match(html, /\/technology\/dt-fabrication-dashboard/);
   assert.match(html, /\/technology\/robotics/);
@@ -57,6 +57,13 @@ test("renders the finished WCCHUN portfolio", async () => {
   assert.match(html, /aria-haspopup="dialog"/);
   assert.match(html, /application\/ld\+json/);
   assert.match(html, /Artist and Creative Technologist/);
+  assert.match(html, /Scroll \/ 01—09/);
+  assert.match(html, /id="recognition"/);
+  assert.match(html, /Images × systems × learning/);
+  assert.match(html, /Transforming memory, language and experience into visual form/);
+  assert.match(html, /Designing useful and human-centred systems/);
+  assert.match(html, /Helping learners understand, test and improve ideas/);
+  assert.match(html, /Turning code and concepts into physical outcomes/);
   assert.match(html, /rel="canonical"/);
   assert.match(html, /https:\/\/wcchun\.com/);
   assert.match(html, /site\.webmanifest/);

@@ -1025,6 +1025,7 @@ export default function Portfolio() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("top");
+  const [activeTechnology, setActiveTechnology] = useState("readyloop");
   const dialogRef = useRef<HTMLDivElement>(null);
   const dialogPanelRef = useRef<HTMLDivElement>(null);
   const readyLoopDialogRef = useRef<HTMLDivElement>(null);
@@ -1047,6 +1048,7 @@ export default function Portfolio() {
   const selectedVideo = selected ? videoByTitle[selected.title] : undefined;
   const chapterLabels: Record<string, [string, string]> = {
     top: ["01", "Introduction"],
+    recognition: ["02", "Recognition"],
     work: ["03", "Featured Art"],
     technology: ["04", "Technology & Education"],
     tools: ["05", "Selected Tools"],
@@ -1056,6 +1058,11 @@ export default function Portfolio() {
     contact: ["09", "Contact"],
   };
   const activeChapter = chapterLabels[activeSection] ?? chapterLabels.top;
+  const technologyNarrative: Record<string, [string, string, string]> = {
+    readyloop: ["01", "ReadyLoop", "AI-supported learning before fabrication"],
+    dashboard: ["02", "DT Fabrication Dashboard", "Human-led workshop operations at school scale"],
+    robotics: ["03", "Robotics & Physical Computing", "Build, diagnose, test and reflect"],
+  };
 
   const openProject = (project: Project) => {
     lastTriggerRef.current = document.activeElement as HTMLElement;
@@ -1134,6 +1141,22 @@ export default function Portfolio() {
   };
 
   useEffect(() => {
+    const cards = Array.from(document.querySelectorAll<HTMLElement>("[data-technology-case]"));
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const active = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+        const slug = active?.target.getAttribute("data-technology-case");
+        if (slug) setActiveTechnology(slug);
+      },
+      { rootMargin: "-35% 0px -35% 0px", threshold: [0.05, 0.35, 0.7] },
+    );
+    cards.forEach((card) => observer.observe(card));
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
     document.body.style.overflow = selected || readyLoopOpen || dashboardOpen || roboticsOpen ? "hidden" : "";
     if (selected) {
       window.requestAnimationFrame(() => {
@@ -1161,7 +1184,7 @@ export default function Portfolio() {
       if (frame) return;
       frame = window.requestAnimationFrame(() => {
         setIsScrolled(window.scrollY > 34);
-        const sectionIds = ["work", "technology", "tools", "practice", "exhibitions", "about", "contact"];
+        const sectionIds = ["recognition", "work", "technology", "tools", "practice", "exhibitions", "about", "contact"];
         let currentSection = "top";
         for (const id of sectionIds) {
           const section = document.getElementById(id);
@@ -1261,7 +1284,7 @@ export default function Portfolio() {
       <a className="skip-link" href="#work">Skip to selected work</a>
       <div className="scroll-line" aria-hidden="true" />
       <main id="content">
-      <aside className="chapter-indicator" aria-live="polite">
+      <aside className="chapter-indicator" aria-hidden="true">
         <span>{activeChapter[0]} / 09</span>
         <strong>{activeChapter[1]}</strong>
       </aside>
@@ -1348,7 +1371,7 @@ export default function Portfolio() {
           />
         </Link>
         <div className="hero-intro intro-motion delay-6">
-          <p className="eyebrow">Art × technology × memory</p>
+          <p className="eyebrow">Images × systems × learning</p>
           <p>
             Wong Chun (Sunny) is a Hong Kong artist and creative technologist working across
             computational images, interactive systems and learning technology.
@@ -1358,10 +1381,10 @@ export default function Portfolio() {
             <a className="archive-cta hero-tech-cta" href="#technology">View technology systems <span>↘</span></a>
           </div>
         </div>
-        <p className="hero-scroll">Scroll / 01—06</p>
+        <p className="hero-scroll">Scroll / 01—09</p>
       </section>
 
-      <section className="recognition recognition-top" aria-label="Selected recognition and impact">
+      <section className="recognition recognition-top" id="recognition" aria-label="Selected recognition and impact">
         {[
           ["Award", "AIREA 2026", "Outstanding Innovation and Creativity Award", "/technology/readyloop"],
           ["Impact", "1,500+", "Fabrication submissions supported", "/technology/dt-fabrication-dashboard"],
@@ -1459,13 +1482,18 @@ export default function Portfolio() {
       </section>
 
       <section className="technology" id="technology">
-        <div className="technology-case-layout">
+        <div className={`technology-case-layout technology-active-${activeTechnology}`}>
         <div className="section-heading">
           <div>
             <p className="eyebrow">Systems with real-world consequence</p>
             <h2>Technology &amp;<br />education</h2>
           </div>
           <p>03 applied case studies</p>
+          <div className="technology-active-label" aria-hidden="true">
+            <span>{technologyNarrative[activeTechnology][0]} / 03</span>
+            <strong>{technologyNarrative[activeTechnology][1]}</strong>
+            <p>{technologyNarrative[activeTechnology][2]}</p>
+          </div>
         </div>
         <div className="technology-intro">
           <p>
@@ -1506,18 +1534,20 @@ export default function Portfolio() {
               caseStudy: "robotics",
             },
           ].map((project) => (
-            <article className={`technology-card ${project.caseStudy ? "has-case-study" : ""}`} key={project.title}>
+            <article
+              className={`technology-card ${project.caseStudy ? "has-case-study" : ""} ${activeTechnology === project.caseStudy ? "is-active" : ""}`}
+              data-technology-case={project.caseStudy}
+              key={project.title}
+            >
               <div className="technology-card-top">
                 <span>{project.index}</span>
                 <span>{project.caseStudy ? "Full case study" : "Applied practice"}</span>
               </div>
               {project.caseStudy && (
-                <button
+                <Link
                   className="technology-preview"
-                  type="button"
-                  onClick={project.caseStudy === "readyloop" ? openReadyLoop : project.caseStudy === "dashboard" ? openDashboard : openRobotics}
-                  aria-label={`Open the complete ${project.title} case study`}
-                  aria-haspopup="dialog"
+                  href={`/technology/${project.caseStudy === "dashboard" ? "dt-fabrication-dashboard" : project.caseStudy}`}
+                  aria-label={`Open the permanent ${project.title} case study`}
                 >
                   <Image
                     src={assetPath(
@@ -1537,8 +1567,8 @@ export default function Portfolio() {
                     sizes="(max-width: 900px) 90vw, 31vw"
                     unoptimized
                   />
-                  <span>Open case study ↗</span>
-                </button>
+                  <span>View full project →</span>
+                </Link>
               )}
               <h3>{project.title}</h3>
               <p className="technology-subtitle">{project.subtitle}</p>
@@ -1552,8 +1582,18 @@ export default function Portfolio() {
                   className="technology-case-link"
                   href={`/technology/${project.caseStudy === "dashboard" ? "dt-fabrication-dashboard" : project.caseStudy}`}
                 >
-                  Open permanent case-study page →
+                  View full project →
                 </Link>
+              )}
+              {project.caseStudy && (
+                <button
+                  className="technology-quick-overview"
+                  type="button"
+                  onClick={project.caseStudy === "readyloop" ? openReadyLoop : project.caseStudy === "dashboard" ? openDashboard : openRobotics}
+                  aria-haspopup="dialog"
+                >
+                  Quick overview
+                </button>
               )}
             </article>
           ))}
@@ -1661,6 +1701,16 @@ export default function Portfolio() {
           <div><dt>Recurring ideas</dt><dd>Memory · Attention · Language · Ecology</dd></div>
           <div><dt>Based in</dt><dd>Hong Kong</dd></div>
         </dl>
+        <div className="practice-pillars" aria-label="Four parts of the practice">
+          {[
+            ["Art", "Transforming memory, language and experience into visual form."],
+            ["Technology", "Designing useful and human-centred systems."],
+            ["Teaching", "Helping learners understand, test and improve ideas."],
+            ["Making", "Turning code and concepts into physical outcomes."],
+          ].map(([title, text], index) => (
+            <article key={title}><span>0{index + 1}</span><h3>{title}</h3><p>{text}</p></article>
+          ))}
+        </div>
         <aside className="curator-tools" aria-label="Professional information">
           <p>For curators, galleries and collaborators</p>
           <div>
@@ -1724,6 +1774,18 @@ export default function Portfolio() {
             <div><dt>Capabilities</dt><dd>Creative coding · AI · Robotics · CAD/CAM · Digital fabrication</dd></div>
             <div><dt>Languages</dt><dd>Cantonese · English · Mandarin</dd></div>
           </dl>
+        </div>
+        <div className="about-practice-strip" aria-label="In-practice project evidence">
+          {[
+            ["/art/details/scanned-installation.webp", "Installing and presenting computational artwork"],
+            ["/technology/dashboard/admin.webp", "Developing fabrication workflow systems"],
+            ["/technology/robotics/learning-wall.webp", "Designing robotics learning resources"],
+          ].map(([src, alt], index) => (
+            <figure key={src}>
+              <Image src={assetPath(src)} alt={alt} width={900} height={600} sizes="(max-width: 700px) 100vw, 33vw" loading="lazy" unoptimized />
+              <figcaption>0{index + 1} / {alt}</figcaption>
+            </figure>
+          ))}
         </div>
       </section>
 

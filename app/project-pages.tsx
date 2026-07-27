@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { ProjectSectionNav } from "./project-section-nav";
 
 export type ProjectPage = {
   slug: string;
@@ -20,6 +21,7 @@ export type ProjectPage = {
   process: Array<[string, string]>;
   gallery: Array<{ src: string; alt: string; caption: string }>;
   links?: Array<{ label: string; href: string }>;
+  relatedSlugs?: string[];
 };
 
 export const projectPages: ProjectPage[] = [
@@ -272,10 +274,18 @@ export function ProjectDetail({ project }: { project: ProjectPage }) {
   const projectIndex = projectPages.findIndex((item) => item.slug === project.slug);
   const previous = projectPages[(projectIndex - 1 + projectPages.length) % projectPages.length];
   const next = projectPages[(projectIndex + 1) % projectPages.length];
-  const related = projectPages
-    .filter((item) => item.slug !== project.slug)
-    .sort((a, b) => Number(b.section === project.section) - Number(a.section === project.section))
-    .slice(0, 3);
+  const curatedRelated: Record<string, string[]> = {
+    "scanned-memories": ["digital-echoes", "memorygrid", "wordview"],
+    "digital-echoes": ["scanned-memories", "memorygrid", "wordview"],
+    memorygrid: ["scanned-memories", "digital-echoes", "wordview"],
+    wordview: ["memorygrid", "digital-echoes", "scanned-memories"],
+    readyloop: ["dt-fabrication-dashboard", "robotics", "wordview"],
+    "dt-fabrication-dashboard": ["readyloop", "robotics", "wordview"],
+    robotics: ["readyloop", "dt-fabrication-dashboard", "memorygrid"],
+  };
+  const related = (project.relatedSlugs ?? curatedRelated[project.slug])
+    .map((slug) => projectPages.find((item) => item.slug === slug))
+    .filter((item): item is ProjectPage => Boolean(item));
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "CreativeWork",
@@ -312,9 +322,7 @@ export function ProjectDetail({ project }: { project: ProjectPage }) {
         <Link href={project.section === "work" ? "/#work" : "/#technology"}>{project.section === "work" ? "Work" : "Technology"}</Link>
         <span>/</span><span aria-current="page">{project.title}</span>
       </nav>
-      <nav className="project-section-nav" aria-label="Project sections">
-        <a href="#overview">Overview</a><a href="#role">Role</a><a href="#process">Process</a><a href="#gallery">Gallery</a>
-      </nav>
+      <ProjectSectionNav />
 
       <section className="project-page-hero" id="overview">
         <p>{project.medium} · {project.year}</p>

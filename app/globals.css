@@ -3011,6 +3011,19 @@ main::before {
   margin-top: 30px;
 }
 
+.technology-active-label {
+  display: grid;
+  gap: 10px;
+  margin-top: 56px;
+  padding-top: 18px;
+  border-top: 3px solid #8d63ff;
+}
+.technology-active-dashboard .technology-active-label { border-top-color: #d34a62; }
+.technology-active-robotics .technology-active-label { border-top-color: var(--acid); }
+.technology-active-label span { font-family: var(--font-mono); font-size: 9px; }
+.technology-active-label strong { font-size: clamp(28px, 3vw, 48px); line-height: .92; letter-spacing: -.05em; }
+.technology-active-label p { max-width: 320px; margin: 0; color: rgba(243, 241, 233, .68); font-size: 13px; line-height: 1.45; }
+
 .technology .section-heading {
   border-color: rgba(243, 241, 233, 0.72);
 }
@@ -3069,7 +3082,8 @@ main::before {
 }
 
 .technology-card.has-case-study:hover,
-.technology-card.has-case-study:focus-within { opacity: 1; }
+.technology-card.has-case-study:focus-within,
+.technology-card.has-case-study.is-active { opacity: 1; }
 .technology-card:nth-child(1) { --technology-accent: #8d63ff; }
 .technology-card:nth-child(2) { --technology-accent: #c52e4a; }
 .technology-card:nth-child(3) { --technology-accent: #53a8ff; }
@@ -3130,6 +3144,21 @@ main::before {
   letter-spacing: 0.05em;
   cursor: pointer;
   text-decoration: none;
+}
+
+.technology-quick-overview {
+  width: max-content;
+  margin-top: 12px;
+  padding: 10px 0;
+  border: 0;
+  border-bottom: 1px solid currentColor;
+  background: transparent;
+  color: inherit;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  cursor: pointer;
 }
 
 .technology-card-top {
@@ -3268,6 +3297,15 @@ main::before {
 .project-section-nav a:focus-visible {
   text-decoration: underline;
   text-decoration-thickness: 2px;
+}
+
+.project-section-nav a {
+  padding-bottom: 4px;
+  border-bottom: 2px solid transparent;
+}
+
+.project-section-nav a.is-active {
+  border-bottom-color: var(--project-accent, var(--ink));
 }
 
 #overview,
@@ -3586,6 +3624,42 @@ main::before {
 
 .about-body > p:first-child {
   font-weight: 700;
+}
+
+.practice-pillars {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  margin-top: 76px;
+  border-top: 1px solid var(--ink);
+  border-left: 1px solid var(--line);
+}
+.practice-pillars article { min-height: 240px; padding: 20px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.practice-pillars span { font-family: var(--font-mono); font-size: 9px; }
+.practice-pillars h3 { margin: 56px 0 14px; font-size: clamp(25px, 2.6vw, 42px); text-transform: uppercase; }
+.practice-pillars p { margin: 0; font-size: 13px; line-height: 1.5; }
+
+.about-practice-strip {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-top: 72px;
+}
+.about-practice-strip figure { margin: 0; }
+.about-practice-strip img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; filter: grayscale(.4); }
+.about-practice-strip figcaption { padding-top: 9px; font-family: var(--font-mono); font-size: 8px; text-transform: uppercase; }
+
+@media (max-width: 1180px) {
+  .chapter-indicator { width: auto; }
+  .chapter-indicator strong { display: none; }
+}
+
+@media (max-width: 700px) {
+  .technology-active-label { display: none; }
+  .practice-pillars,
+  .about-practice-strip { grid-template-columns: 1fr; }
+  .practice-pillars article { min-height: 190px; }
 }
 
 .about-body dl {
