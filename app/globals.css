@@ -29,6 +29,8 @@
   font-family: var(--font-mono);
   text-transform: uppercase;
   backdrop-filter: blur(12px);
+  pointer-events: none;
+  user-select: none;
   transform: translateY(-50%);
 }
 
@@ -389,12 +391,18 @@ footer h2 em {
   grid-column: span 6;
 }
 
-.project-card > a {
+.project-primary-action {
   display: block;
   width: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
   color: inherit;
+  font: inherit;
   text-decoration: none;
   text-align: left;
+  cursor: pointer;
 }
 
 .project-image {
@@ -416,7 +424,7 @@ footer h2 em {
 }
 
 .project-card:hover img,
-.project-card > a:focus-visible img {
+.project-primary-action:focus-visible img {
   opacity: 0.82;
   transform: scale(1.025);
 }
@@ -437,7 +445,7 @@ footer h2 em {
 }
 
 .project-card:hover .view-project,
-.project-card > a:focus-visible .view-project {
+.project-primary-action:focus-visible .view-project {
   opacity: 1;
   transform: translateY(0);
 }
@@ -2251,7 +2259,7 @@ main::before {
 }
 
 .project-card:hover .project-image,
-.project-card > a:focus-visible .project-image {
+.project-primary-action:focus-visible .project-image {
   border-color: rgba(18, 18, 18, 0.48);
   box-shadow: 0 24px 48px rgba(18, 18, 18, 0.11);
 }
@@ -2274,7 +2282,7 @@ main::before {
 }
 
 .project-card:hover .project-index,
-.project-card > a:focus-visible .project-index {
+.project-primary-action:focus-visible .project-index {
   background: var(--acid);
 }
 

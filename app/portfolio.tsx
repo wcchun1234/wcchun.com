@@ -1222,7 +1222,7 @@ export default function Portfolio() {
     );
     nodes.forEach((node) => observer.observe(node));
     return () => observer.disconnect();
-  }, [filter]);
+  }, [filter, showArchive]);
 
   useEffect(() => {
     if (lightboxIndex !== null) {
@@ -1422,15 +1422,10 @@ export default function Portfolio() {
         </div>}
 
         <div className="project-grid">
-          {visible.map((project, index) => (
-            <article
-              className={`project-card reveal ${project.featured ? "featured" : ""}`}
-              key={project.title}
-            >
-              <Link
-                href={permanentProjectUrls[project.title] ?? "#work"}
-                aria-label={`View ${project.title}, ${project.medium}, ${project.year}`}
-              >
+          {visible.map((project, index) => {
+            const permanentUrl = permanentProjectUrls[project.title];
+            const cardContent = (
+              <>
                 <span className="project-image">
                   <Image
                     src={assetPath(project.image)}
@@ -1455,12 +1450,41 @@ export default function Portfolio() {
                   <span>{project.medium}</span>
                   <span>{project.year}</span>
                 </span>
-              </Link>
-              <button className="project-quick-view" type="button" onClick={() => openProject(project)} aria-haspopup="dialog">
-                Quick view
-              </button>
-            </article>
-          ))}
+              </>
+            );
+
+            return (
+              <article
+                className={`project-card reveal ${showArchive ? "is-visible" : ""} ${project.featured ? "featured" : ""}`}
+                key={project.title}
+              >
+                {permanentUrl ? (
+                  <Link
+                    className="project-primary-action"
+                    href={permanentUrl}
+                    aria-label={`View ${project.title}, ${project.medium}, ${project.year}`}
+                  >
+                    {cardContent}
+                  </Link>
+                ) : (
+                  <button
+                    className="project-primary-action"
+                    type="button"
+                    onClick={() => openProject(project)}
+                    aria-label={`View ${project.title}, ${project.medium}, ${project.year}`}
+                    aria-haspopup="dialog"
+                  >
+                    {cardContent}
+                  </button>
+                )}
+                {permanentUrl && (
+                  <button className="project-quick-view" type="button" onClick={() => openProject(project)} aria-haspopup="dialog">
+                    Quick view
+                  </button>
+                )}
+              </article>
+            );
+          })}
         </div>
         <div className="archive-switch">
           <p>
