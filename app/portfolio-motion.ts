@@ -9,6 +9,9 @@ import { RefObject, useRef } from "react";
 gsap.registerPlugin(useGSAP, ScrollTrigger, Flip);
 
 const INTRO_SESSION_KEY = "wcchun-cinematic-intro-viewed";
+const CINEMATIC_PACE = 1.32;
+const INTERACTION_PACE = 1.18;
+const paced = (seconds: number, pace = CINEMATIC_PACE) => Number((seconds * pace).toFixed(3));
 
 type PortfolioMotionOptions = {
   scope: RefObject<HTMLElement | null>;
@@ -108,34 +111,34 @@ function initHeroAnimation(root: HTMLElement, conditions: MotionConditions) {
 
   if (playFullIntro) {
     introTimeline
-      .fromTo(header, { autoAlpha: 0, y: -16 }, { autoAlpha: 1, y: 0, duration: 0.65 })
+      .fromTo(header, { autoAlpha: 0, y: -16 }, { autoAlpha: 1, y: 0, duration: paced(0.65) })
       .fromTo(
         titleLines,
         { autoAlpha: 0, yPercent: 112, scale: 0.975 },
-        { autoAlpha: 1, yPercent: 0, scale: 1, duration: conditions.isMobile ? 0.68 : 0.9, stagger: 0.085 },
-        0.12,
+        { autoAlpha: 1, yPercent: 0, scale: 1, duration: paced(conditions.isMobile ? 0.68 : 0.9), stagger: paced(0.085) },
+        paced(0.12),
       )
       .fromTo(
         artwork,
         { autoAlpha: 0, y: conditions.isMobile ? 26 : 48, scale: 0.985, clipPath: "inset(0 0 100% 0)" },
-        { autoAlpha: 1, y: 0, scale: 1, clipPath: "inset(0 0 0% 0)", duration: conditions.isMobile ? 0.82 : 1.05 },
-        0.34,
+        { autoAlpha: 1, y: 0, scale: 1, clipPath: "inset(0 0 0% 0)", duration: paced(conditions.isMobile ? 0.82 : 1.05) },
+        paced(0.34),
       )
       .fromTo(
         [thumbnail, intro].filter(Boolean),
         { autoAlpha: 0, y: 24 },
-        { autoAlpha: 1, y: 0, duration: 0.68, stagger: 0.12 },
-        0.66,
+        { autoAlpha: 1, y: 0, duration: paced(0.68), stagger: paced(0.12) },
+        paced(0.66),
       )
-      .fromTo(scrollNote, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.45 }, 0.94);
+      .fromTo(scrollNote, { autoAlpha: 0 }, { autoAlpha: 1, duration: paced(0.45) }, paced(0.94));
   } else {
     introTimeline
-      .fromTo(titleLines, { autoAlpha: 0, yPercent: 28 }, { autoAlpha: 1, yPercent: 0, duration: 0.42, stagger: 0.045 })
+      .fromTo(titleLines, { autoAlpha: 0, yPercent: 28 }, { autoAlpha: 1, yPercent: 0, duration: paced(0.42), stagger: paced(0.045) })
       .fromTo(
         [header, artwork, thumbnail, intro, scrollNote].filter(Boolean),
         { autoAlpha: 0, y: 12 },
-        { autoAlpha: 1, y: 0, duration: 0.42, stagger: 0.04 },
-        0.05,
+        { autoAlpha: 1, y: 0, duration: paced(0.42), stagger: paced(0.04) },
+        paced(0.05),
       );
   }
 
@@ -146,7 +149,7 @@ function initHeroAnimation(root: HTMLElement, conditions: MotionConditions) {
       trigger: ".figma-hero",
       start: "top top",
       end: "bottom top",
-      scrub: conditions.isDesktop ? 0.8 : 0.45,
+      scrub: paced(conditions.isDesktop ? 0.8 : 0.45),
       invalidateOnRefresh: true,
     },
   });
@@ -158,7 +161,7 @@ function initHeroAnimation(root: HTMLElement, conditions: MotionConditions) {
       { scale: 1, transformOrigin: "50% 50%" },
       0,
     )
-    .to(titleLines, { yPercent: conditions.isMobile ? -2.5 : -7, stagger: 0.018 }, 0)
+    .to(titleLines, { yPercent: conditions.isMobile ? -2.5 : -7, stagger: paced(0.018) }, 0)
     .to(intro, { yPercent: conditions.isMobile ? -3 : -10, autoAlpha: conditions.isMobile ? 0.9 : 0.72 }, 0);
 
   if (thumbnail && !conditions.isMobile) {
@@ -174,9 +177,9 @@ function revealTimeline(trigger: HTMLElement, targets: Element[], distance: numb
     {
       opacity: 1,
       y: 0,
-      duration: 0.78,
+      duration: paced(0.78),
       ease: "power3.out",
-      stagger,
+      stagger: paced(stagger),
       clearProps: "transform,opacity",
       scrollTrigger: {
         trigger,
@@ -212,7 +215,7 @@ function revealMediaGroup(trigger: HTMLElement, figures: HTMLElement[], distance
         x: 0,
         y: 0,
         clipPath: "inset(0 0 0% 0)",
-        duration: 0.82,
+        duration: paced(0.82),
         ease: "power3.out",
         clearProps: "transform,opacity,clipPath",
       },
@@ -221,7 +224,7 @@ function revealMediaGroup(trigger: HTMLElement, figures: HTMLElement[], distance
       timeline.fromTo(
         image,
         { scale: 1.075 },
-        { scale: 1, duration: 1.05, ease: "power3.out", clearProps: "transform" },
+        { scale: 1, duration: paced(1.05), ease: "power3.out", clearProps: "transform" },
         0,
       );
     }
@@ -307,20 +310,20 @@ function initProjectCardInteractions(root: HTMLElement, canHover: boolean) {
 
     const enter = () => {
       image.style.willChange = "transform";
-      gsap.to(image, { scale: 1.045, duration: 0.52, ease: "power3.out", overwrite: "auto" });
-      gsap.to(metadata, { x: 4, duration: 0.38, ease: "power3.out", stagger: 0.025, overwrite: "auto" });
-      if (cue) gsap.to(cue, { autoAlpha: 1, y: 0, duration: 0.3, ease: "power2.out", overwrite: "auto" });
+      gsap.to(image, { scale: 1.045, duration: paced(0.52, INTERACTION_PACE), ease: "power3.out", overwrite: "auto" });
+      gsap.to(metadata, { x: 4, duration: paced(0.38, INTERACTION_PACE), ease: "power3.out", stagger: paced(0.025, INTERACTION_PACE), overwrite: "auto" });
+      if (cue) gsap.to(cue, { autoAlpha: 1, y: 0, duration: paced(0.3, INTERACTION_PACE), ease: "power2.out", overwrite: "auto" });
     };
     const leave = () => {
       gsap.to(image, {
         scale: 1,
-        duration: 0.56,
+        duration: paced(0.56, INTERACTION_PACE),
         ease: "power3.out",
         overwrite: "auto",
         onComplete: () => image.style.removeProperty("will-change"),
       });
-      gsap.to(metadata, { x: 0, duration: 0.38, ease: "power3.out", stagger: 0.02, overwrite: "auto" });
-      if (cue) gsap.to(cue, { autoAlpha: 0, y: 8, duration: 0.24, ease: "power2.out", overwrite: "auto" });
+      gsap.to(metadata, { x: 0, duration: paced(0.38, INTERACTION_PACE), ease: "power3.out", stagger: paced(0.02, INTERACTION_PACE), overwrite: "auto" });
+      if (cue) gsap.to(cue, { autoAlpha: 0, y: 8, duration: paced(0.24, INTERACTION_PACE), ease: "power2.out", overwrite: "auto" });
     };
     const onFocusOut = (event: FocusEvent) => {
       if (!card.contains(event.relatedTarget as Node | null)) leave();
@@ -368,24 +371,24 @@ function initProjectCardReveals(root: HTMLElement, reduceMotion: boolean, isMobi
     timeline.fromTo(
       card,
       { opacity: 0, x: isMobile ? 0 : direction * 18, y: isMobile ? 18 : 34 },
-      { opacity: 1, x: 0, y: 0, duration: 0.72, ease: "power3.out", clearProps: "transform,opacity" },
+      { opacity: 1, x: 0, y: 0, duration: paced(0.72), ease: "power3.out", clearProps: "transform,opacity" },
     );
     if (imageFrame) {
       timeline.fromTo(
         imageFrame,
         { clipPath: index % 2 === 0 ? "inset(0 0 100% 0)" : "inset(0 100% 0 0)" },
-        { clipPath: "inset(0 0 0% 0)", duration: 0.8, ease: "power3.inOut", clearProps: "clipPath" },
+        { clipPath: "inset(0 0 0% 0)", duration: paced(0.8), ease: "power3.inOut", clearProps: "clipPath" },
         0,
       );
     }
     if (image) {
-      timeline.fromTo(image, { scale: isMobile ? 1.045 : 1.085 }, { scale: 1, duration: 0.95, ease: "power3.out", clearProps: "transform" }, 0);
+      timeline.fromTo(image, { scale: isMobile ? 1.045 : 1.085 }, { scale: 1, duration: paced(0.95), ease: "power3.out", clearProps: "transform" }, 0);
     }
     timeline.fromTo(
       metadata,
       { opacity: 0, y: 10 },
-      { opacity: 1, y: 0, duration: 0.42, ease: "power2.out", stagger: 0.04, clearProps: "transform,opacity" },
-      0.38,
+      { opacity: 1, y: 0, duration: paced(0.42), ease: "power2.out", stagger: paced(0.04), clearProps: "transform,opacity" },
+      paced(0.38),
     );
   });
 }
@@ -461,11 +464,11 @@ export function usePortfolioMotion({
       Flip.from(flipState.current, {
         absolute: true,
         simple: true,
-        duration: isMobile ? 0.38 : 0.62,
+        duration: paced(isMobile ? 0.38 : 0.62, INTERACTION_PACE),
         ease: "power3.inOut",
         prune: true,
-        onEnter: (elements) => gsap.fromTo(elements, { autoAlpha: 0, scale: 0.98 }, { autoAlpha: 1, scale: 1, duration: 0.42 }),
-        onLeave: (elements) => gsap.to(elements, { autoAlpha: 0, scale: 0.98, duration: 0.24 }),
+        onEnter: (elements) => gsap.fromTo(elements, { autoAlpha: 0, scale: 0.98 }, { autoAlpha: 1, scale: 1, duration: paced(0.42, INTERACTION_PACE) }),
+        onLeave: (elements) => gsap.to(elements, { autoAlpha: 0, scale: 0.98, duration: paced(0.24, INTERACTION_PACE) }),
         onComplete: () => ScrollTrigger.refresh(),
       });
       flipState.current = null;
@@ -487,7 +490,7 @@ export function usePortfolioMotion({
       return;
     }
     if (menuOpen) {
-      gsap.fromTo(links, { autoAlpha: 0, x: -12 }, { autoAlpha: 1, x: 0, duration: 0.36, stagger: 0.045, ease: "power3.out", clearProps: "transform,opacity,visibility" });
+      gsap.fromTo(links, { autoAlpha: 0, x: -12 }, { autoAlpha: 1, x: 0, duration: paced(0.36, INTERACTION_PACE), stagger: paced(0.045, INTERACTION_PACE), ease: "power3.out", clearProps: "transform,opacity,visibility" });
     } else {
       gsap.set(links, { clearProps: "transform,opacity,visibility" });
     }
@@ -502,8 +505,8 @@ export function usePortfolioMotion({
     const backdrop = select<HTMLElement>(dialog, ".dialog-backdrop, .technology-dialog-backdrop, .lightbox-backdrop");
     const panel = select<HTMLElement>(dialog, ".dialog-panel, .technology-dialog-panel, .lightbox-stage");
     const timeline = gsap.timeline({ defaults: { ease: "power3.out" } });
-    if (backdrop) timeline.fromTo(backdrop, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.32 });
-    if (panel) timeline.fromTo(panel, { autoAlpha: 0, y: 24, scale: 0.992 }, { autoAlpha: 1, y: 0, scale: 1, duration: 0.58 }, 0.06);
+    if (backdrop) timeline.fromTo(backdrop, { autoAlpha: 0 }, { autoAlpha: 1, duration: paced(0.32, INTERACTION_PACE) });
+    if (panel) timeline.fromTo(panel, { autoAlpha: 0, y: 24, scale: 0.992 }, { autoAlpha: 1, y: 0, scale: 1, duration: paced(0.58, INTERACTION_PACE) }, paced(0.06, INTERACTION_PACE));
   }, { dependencies: [dialogKey], scope, revertOnUpdate: true });
 
   return { captureProjectGrid };

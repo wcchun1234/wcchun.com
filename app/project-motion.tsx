@@ -7,6 +7,9 @@ import { ReactNode, useRef } from "react";
 
 gsap.registerPlugin(useGSAP, ScrollTrigger);
 
+const PROJECT_PACE = 1.3;
+const paced = (seconds: number) => Number((seconds * PROJECT_PACE).toFixed(3));
+
 export default function ProjectMotion({ children }: { children: ReactNode }) {
   const rootRef = useRef<HTMLDivElement>(null);
 
@@ -41,13 +44,13 @@ export default function ProjectMotion({ children }: { children: ReactNode }) {
 
         const timeline = gsap.timeline({ defaults: { ease: "power3.out" } });
         timeline
-          .fromTo(entrance.slice(0, 3), { autoAlpha: 0, y: -10 }, { autoAlpha: 1, y: 0, duration: 0.55, stagger: 0.07 })
-          .fromTo(entrance.slice(3, 6), { autoAlpha: 0, y: isDesktop ? 42 : 22 }, { autoAlpha: 1, y: 0, duration: 0.78, stagger: 0.08 }, 0.12)
+          .fromTo(entrance.slice(0, 3), { autoAlpha: 0, y: -10 }, { autoAlpha: 1, y: 0, duration: paced(0.55), stagger: paced(0.07) })
+          .fromTo(entrance.slice(3, 6), { autoAlpha: 0, y: isDesktop ? 42 : 22 }, { autoAlpha: 1, y: 0, duration: paced(0.78), stagger: paced(0.08) }, paced(0.12))
           .fromTo(
             entrance[6],
             { autoAlpha: 0, y: 28, clipPath: "inset(0 0 100% 0)" },
-            { autoAlpha: 1, y: 0, clipPath: "inset(0 0 0% 0)", duration: 0.92 },
-            0.34,
+            { autoAlpha: 1, y: 0, clipPath: "inset(0 0 0% 0)", duration: paced(0.92) },
+            paced(0.34),
           );
 
         if (hero && heroImage) {
@@ -61,7 +64,7 @@ export default function ProjectMotion({ children }: { children: ReactNode }) {
                 trigger: hero,
                 start: "top top",
                 end: "bottom top",
-                scrub: isDesktop ? 0.75 : 0.4,
+                scrub: paced(isDesktop ? 0.75 : 0.4),
                 invalidateOnRefresh: true,
               },
             },
@@ -79,8 +82,8 @@ export default function ProjectMotion({ children }: { children: ReactNode }) {
             {
               opacity: 1,
               y: 0,
-              duration: 0.72,
-              stagger: 0.07,
+              duration: paced(0.72),
+              stagger: paced(0.07),
               ease: "power3.out",
               clearProps: "transform,opacity",
               scrollTrigger: { trigger: section, start: "clamp(top 88%)", once: true },
@@ -97,9 +100,9 @@ export default function ProjectMotion({ children }: { children: ReactNode }) {
           itemTimeline.fromTo(
             figure,
             { opacity: 0, y: isDesktop ? 38 : 18, clipPath: index % 2 === 0 ? "inset(0 0 100% 0)" : "inset(0 100% 0 0)" },
-            { opacity: 1, y: 0, clipPath: "inset(0 0 0% 0)", duration: 0.82, ease: "power3.out", clearProps: "transform,opacity,clipPath" },
+            { opacity: 1, y: 0, clipPath: "inset(0 0 0% 0)", duration: paced(0.82), ease: "power3.out", clearProps: "transform,opacity,clipPath" },
           );
-          if (image) itemTimeline.fromTo(image, { scale: isDesktop ? 1.08 : 1.04 }, { scale: 1, duration: 1, ease: "power3.out", clearProps: "transform" }, 0);
+          if (image) itemTimeline.fromTo(image, { scale: isDesktop ? 1.08 : 1.04 }, { scale: 1, duration: paced(1), ease: "power3.out", clearProps: "transform" }, 0);
         });
       },
     );
