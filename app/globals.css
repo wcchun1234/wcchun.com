@@ -4806,3 +4806,120 @@ main::before {
     grid-column: span 1;
   }
 }
+
+/* Cinematic GSAP motion system ------------------------------------------------ */
+html,
+body {
+  overflow-x: clip;
+}
+
+.hero-title-line {
+  display: block;
+  overflow: clip;
+  opacity: 1;
+  transform: none;
+  animation: none;
+}
+
+.hero-title-line > span {
+  display: block;
+  opacity: 1;
+  transform: none;
+  animation: none;
+  transform-origin: 0 100%;
+}
+
+.intro-motion,
+.reveal,
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+  animation: none;
+  transition: none;
+}
+
+.project-motion-root {
+  display: contents;
+}
+
+.is-gsap-ready .hero-artwork,
+.is-gsap-ready .hero-thumbnail,
+.is-gsap-ready .project-image,
+.is-gsap-ready .technology-preview,
+.is-gsap-ready .about-practice-strip figure,
+.is-gsap-ready .project-page-image,
+.is-gsap-ready .project-page-gallery figure {
+  overflow: clip;
+  contain: paint;
+}
+
+.is-gsap-ready .hero-artwork img,
+.is-gsap-ready .hero-thumbnail img,
+.is-gsap-ready .project-card img,
+.is-gsap-ready .view-project,
+.is-gsap-ready .project-meta > span,
+.is-gsap-ready .project-page-image img,
+.is-gsap-ready .project-page-gallery img {
+  backface-visibility: hidden;
+  transition: none;
+}
+
+.is-gsap-ready .view-project {
+  opacity: 0;
+  transform: translateY(8px);
+}
+
+.is-gsap-ready .project-primary-action:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 5px;
+}
+
+.technology-card,
+.tool-card,
+.about-practice-strip figure,
+.project-page-gallery figure {
+  transform-origin: 50% 50%;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .is-gsap-ready .project-card:hover img,
+  .is-gsap-ready .project-primary-action:focus-visible img {
+    opacity: 1;
+    transform: none;
+  }
+
+  .is-gsap-ready .project-card:hover .view-project,
+  .is-gsap-ready .project-primary-action:focus-visible .view-project {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+@media (max-width: 600px) {
+  .hero-title-line {
+    overflow: hidden;
+  }
+
+  .is-gsap-ready .site-header nav a {
+    transition: none;
+  }
+
+  .site-header nav.is-open {
+    max-height: calc(100dvh - 60px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-title-line,
+  .hero-title-line > span,
+  .intro-motion,
+  .reveal,
+  .is-gsap-ready .view-project,
+  .project-motion-root * {
+    opacity: 1 !important;
+    transform: none !important;
+    clip-path: none !important;
+  }
+}

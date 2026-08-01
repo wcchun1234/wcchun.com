@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import ProjectMotion from "./project-motion";
 import { ProjectSectionNav } from "./project-section-nav";
 
 export type ProjectPage = {
@@ -308,7 +309,7 @@ export function ProjectDetail({ project }: { project: ProjectPage }) {
   };
 
   return (
-    <>
+    <ProjectMotion>
     <a className="skip-link project-skip-link" href="#project-main">Skip to project content</a>
     <main className={`project-page project-page-${project.section} project-theme-${project.slug}`} id="project-main">
       <header className="project-page-nav">
@@ -409,6 +410,6 @@ export function ProjectDetail({ project }: { project: ProjectPage }) {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbData) }} />
     </main>
-    </>
+    </ProjectMotion>
   );
 }

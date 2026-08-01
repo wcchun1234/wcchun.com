@@ -109,6 +109,7 @@ test("publishes indexable permanent project pages and current professional timin
 test("uses permanent pages as the primary artwork path and keeps motion restrained", async () => {
   const html = await (await render()).text();
   const source = await readFile(path.join(process.cwd(), "app", "portfolio.tsx"), "utf8");
+  const motion = await readFile(path.join(process.cwd(), "app", "portfolio-motion.ts"), "utf8");
   const styles = await readFile(path.join(process.cwd(), "app", "globals.css"), "utf8");
   assert.match(html, /href="\/work\/scanned-memories"/);
   assert.match(html, /Explore selected art/);
@@ -118,7 +119,9 @@ test("uses permanent pages as the primary artwork path and keeps motion restrain
   assert.match(html, /compact-tool/);
   assert.match(html, /chapter-indicator/);
   assert.match(source, /showArchive \? "is-visible" : ""/);
-  assert.match(source, /\[filter, showArchive\]/);
+  assert.match(motion, /dependencies: \[filterKey, showArchive\]/);
+  assert.match(motion, /prefers-reduced-motion: reduce/);
+  assert.match(motion, /gsap\.matchMedia/);
   assert.match(source, /className="project-primary-action"/);
   assert.doesNotMatch(source, /permanentProjectUrls\[project\.title\] \?\? "#work"/);
   assert.match(styles, /\.chapter-indicator\s*\{[\s\S]*?pointer-events:\s*none/);

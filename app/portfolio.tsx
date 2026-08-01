@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { usePortfolioMotion } from "./portfolio-motion";
 
 const assetPath = (path: string) =>
   `${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}${path}`;
@@ -1026,6 +1027,7 @@ export default function Portfolio() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("top");
   const [activeTechnology, setActiveTechnology] = useState("readyloop");
+  const portfolioRef = useRef<HTMLElement>(null);
   const dialogRef = useRef<HTMLDivElement>(null);
   const dialogPanelRef = useRef<HTMLDivElement>(null);
   const readyLoopDialogRef = useRef<HTMLDivElement>(null);
@@ -1063,6 +1065,27 @@ export default function Portfolio() {
     dashboard: ["02", "DT Fabrication Dashboard", "Human-led workshop operations at school scale"],
     robotics: ["03", "Robotics & Physical Computing", "Build, diagnose, test and reflect"],
   };
+  const dialogKey = lightboxIndex !== null
+    ? `lightbox-${lightboxIndex}`
+    : selected
+      ? `project-${selected.title}`
+      : readyLoopOpen
+        ? "readyloop"
+        : dashboardOpen
+          ? "dashboard"
+          : roboticsOpen
+            ? "robotics"
+            : "";
+  const { captureProjectGrid } = usePortfolioMotion({
+    scope: portfolioRef,
+    filterKey: filter,
+    showArchive,
+    menuOpen,
+    dialogKey,
+    onScrolledChange: setIsScrolled,
+    onSectionChange: setActiveSection,
+    onTechnologyChange: setActiveTechnology,
+  });
 
   const openProject = (project: Project) => {
     lastTriggerRef.current = document.activeElement as HTMLElement;
@@ -1141,23 +1164,16 @@ export default function Portfolio() {
   };
 
   useEffect(() => {
-    const cards = Array.from(document.querySelectorAll<HTMLElement>("[data-technology-case]"));
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const active = entries
-          .filter((entry) => entry.isIntersecting)
-          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
-        const slug = active?.target.getAttribute("data-technology-case");
-        if (slug) setActiveTechnology(slug);
-      },
-      { rootMargin: "-35% 0px -35% 0px", threshold: [0.05, 0.35, 0.7] },
-    );
-    cards.forEach((card) => observer.observe(card));
-    return () => observer.disconnect();
-  }, []);
-
-  useEffect(() => {
-    document.body.style.overflow = selected || readyLoopOpen || dashboardOpen || roboticsOpen ? "hidden" : "";
+    document.body.style.overflow = selected || readyLoopOpen || dashboardOpen || roboticsOpen || menuOpen ? "hidden" : "";
+    if (menuOpen) {
+      const focusNavigation = window.setTimeout(() => {
+        document.querySelector<HTMLElement>("#main-navigation a")?.focus({ preventScroll: true });
+      }, 80);
+      return () => {
+        window.clearTimeout(focusNavigation);
+        document.body.style.overflow = "";
+      };
+    }
     if (selected) {
       window.requestAnimationFrame(() => {
         dialogPanelRef.current?.scrollTo({ top: 0 });
@@ -1176,53 +1192,7 @@ export default function Portfolio() {
     return () => {
       document.body.style.overflow = "";
     };
-  }, [dashboardOpen, readyLoopOpen, roboticsOpen, selected]);
-
-  useEffect(() => {
-    let frame = 0;
-    const onScroll = () => {
-      if (frame) return;
-      frame = window.requestAnimationFrame(() => {
-        setIsScrolled(window.scrollY > 34);
-        const sectionIds = ["recognition", "work", "technology", "tools", "practice", "exhibitions", "about", "contact"];
-        let currentSection = "top";
-        for (const id of sectionIds) {
-          const section = document.getElementById(id);
-          if (section && section.getBoundingClientRect().top <= window.innerHeight * 0.42) {
-            currentSection = id;
-          }
-        }
-        setActiveSection(currentSection);
-        const scrollable = document.documentElement.scrollHeight - window.innerHeight;
-        const progress = scrollable > 0 ? window.scrollY / scrollable : 0;
-        document.documentElement.style.setProperty("--page-progress", String(progress));
-        frame = 0;
-      });
-    };
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => {
-      window.removeEventListener("scroll", onScroll);
-      if (frame) window.cancelAnimationFrame(frame);
-    };
-  }, []);
-
-  useEffect(() => {
-    const nodes = Array.from(document.querySelectorAll<HTMLElement>(".reveal"));
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("is-visible");
-            observer.unobserve(entry.target);
-          }
-        }
-      },
-      { rootMargin: "0px 0px -8% 0px", threshold: 0.08 },
-    );
-    nodes.forEach((node) => observer.observe(node));
-    return () => observer.disconnect();
-  }, [filter, showArchive]);
+  }, [dashboardOpen, menuOpen, readyLoopOpen, roboticsOpen, selected]);
 
   useEffect(() => {
     if (lightboxIndex !== null) {
@@ -1253,7 +1223,27 @@ export default function Portfolio() {
         if (["Escape", "ArrowLeft", "ArrowRight"].includes(event.key)) event.preventDefault();
         return;
       }
-      if (event.key === "Escape" && menuOpen) setMenuOpen(false);
+      if (event.key === "Escape" && menuOpen) {
+        setMenuOpen(false);
+        window.requestAnimationFrame(() => {
+          document.querySelector<HTMLElement>(".mobile-menu-toggle")?.focus({ preventScroll: true });
+        });
+      }
+      if (event.key === "Tab" && menuOpen) {
+        const navigation = document.getElementById("main-navigation");
+        const toggle = document.querySelector<HTMLElement>(".mobile-menu-toggle");
+        const links = navigation?.querySelectorAll<HTMLElement>('a[href]') ?? [];
+        const focusable = [toggle, ...Array.from(links)].filter((item): item is HTMLElement => Boolean(item));
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        if (event.shiftKey && document.activeElement === first) {
+          event.preventDefault();
+          last?.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+          event.preventDefault();
+          first?.focus();
+        }
+      }
       if (event.key === "Escape" && roboticsOpen) closeRobotics();
       if (event.key === "Escape" && dashboardOpen) closeDashboard();
       if (event.key === "Escape" && readyLoopOpen) closeReadyLoop();
@@ -1283,7 +1273,7 @@ export default function Portfolio() {
     <>
       <a className="skip-link" href="#work">Skip to selected work</a>
       <div className="scroll-line" aria-hidden="true" />
-      <main id="content">
+      <main id="content" ref={portfolioRef}>
       <aside className="chapter-indicator" aria-hidden="true">
         <span>{activeChapter[0]} / 09</span>
         <strong>{activeChapter[1]}</strong>
@@ -1337,9 +1327,9 @@ export default function Portfolio() {
 
       <section className="figma-hero" id="top">
         <div className="hero-title" aria-label="Memory becomes material">
-          <span>Memory</span>
-          <span>Becomes</span>
-          <span>Material</span>
+          <span className="hero-title-line"><span>Memory</span></span>
+          <span className="hero-title-line"><span>Becomes</span></span>
+          <span className="hero-title-line"><span>Material</span></span>
         </div>
         <a
           className="hero-thumbnail intro-motion delay-4"
@@ -1413,7 +1403,10 @@ export default function Portfolio() {
               type="button"
               key={item}
               className={filter === item ? "active" : ""}
-              onClick={() => setFilter(item)}
+              onClick={() => {
+                captureProjectGrid();
+                setFilter(item);
+              }}
               aria-pressed={filter === item}
             >
               {item}
@@ -1495,6 +1488,7 @@ export default function Portfolio() {
           <button
             type="button"
             onClick={() => {
+              captureProjectGrid();
               setFilter("All");
               setShowArchive((current) => !current);
             }}
