@@ -1262,6 +1262,7 @@ footer h2 em {
   display: flex;
   flex-direction: column;
   width: min(78vw, 1100px);
+  margin: 0;
   font-size: clamp(78px, 10.4vw, 150px);
   font-weight: 900;
   line-height: 0.81;
@@ -1345,13 +1346,13 @@ footer h2 em {
 
 .hero-intro {
   position: absolute;
-  top: 512px;
+  top: 438px;
   right: 6.67vw;
   width: min(28vw, 400px);
 }
 
 .hero-intro > p:not(.eyebrow) {
-  margin: 42px 0 0;
+  margin: 30px 0 0;
   font-size: clamp(18px, 1.75vw, 25px);
   line-height: 1.35;
   letter-spacing: -0.025em;
@@ -1374,7 +1375,7 @@ footer h2 em {
 .hero-actions {
   display: grid;
   gap: 10px;
-  margin-top: 250px;
+  margin-top: 42px;
 }
 
 .hero-tech-cta {
@@ -1579,7 +1580,7 @@ footer h2 em {
 
   .archive-cta {
     width: 100%;
-    margin-top: 180px;
+    margin-top: 0;
   }
 
   .project-grid {
@@ -1652,7 +1653,7 @@ footer h2 em {
   }
 
   .archive-cta {
-    margin-top: 38px;
+    margin-top: 0;
   }
 
   .hero-scroll {
@@ -3422,15 +3423,8 @@ main::before {
 
 @media (max-width: 700px) {
   .chapter-indicator {
-    top: auto;
-    right: 18px;
-    bottom: 14px;
-    width: auto;
-    padding: 7px 9px;
-    border: 1px solid currentColor;
-    transform: none;
+    display: none;
   }
-  .chapter-indicator strong { display: none; }
   .technology-case-layout { display: block; }
   .technology-case-layout > .section-heading { position: static; }
   .technology-card.has-case-study { min-height: 0; opacity: 1; }
@@ -4652,17 +4646,33 @@ main::before {
   }
 
   .recognition {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr 1fr;
   }
 
-  .recognition article {
-    min-height: 150px;
-    border-right: 0;
+  .recognition article,
+  .recognition > a {
+    min-height: 142px;
     border-bottom: 1px solid rgba(18, 18, 18, 0.25);
   }
 
+  .recognition > a:nth-child(2) {
+    border-right: 0;
+  }
+
+  .recognition > a:last-child {
+    grid-column: 1 / -1;
+    min-height: 118px;
+    border-right: 0;
+  }
+
   .recognition strong {
-    margin-top: 30px;
+    margin-top: 22px;
+    font-size: 25px;
+  }
+
+  .recognition p {
+    max-width: 26ch;
+    font-size: 10px;
   }
 
   .about {

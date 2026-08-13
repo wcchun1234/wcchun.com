@@ -1326,11 +1326,11 @@ export default function Portfolio() {
       </header>
 
       <section className="figma-hero" id="top">
-        <div className="hero-title" aria-label="Memory becomes material">
+        <h1 className="hero-title" aria-label="Memory becomes material">
           <span className="hero-title-line"><span>Memory</span></span>
           <span className="hero-title-line"><span>Becomes</span></span>
           <span className="hero-title-line"><span>Material</span></span>
-        </div>
+        </h1>
         <a
           className="hero-thumbnail intro-motion delay-4"
           href="#technology"

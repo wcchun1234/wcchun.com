@@ -23,6 +23,7 @@ test("renders the finished WCCHUN portfolio", async () => {
   const html = await response.text();
   assert.match(html, /<title>Wong Chun \(Sunny\) — Artist &amp; Creative Technologist \| WCCHUN<\/title>/i);
   assert.match(html, /Memory becomes/);
+  assert.match(html, /<h1[^>]*class="hero-title"/);
   assert.match(html, /A focused entry point/);
   assert.match(html, /08<!-- --> works <!-- -->selected/);
   assert.match(html, /View complete archive/);
@@ -125,6 +126,7 @@ test("uses permanent pages as the primary artwork path and keeps motion restrain
   assert.match(source, /className="project-primary-action"/);
   assert.doesNotMatch(source, /permanentProjectUrls\[project\.title\] \?\? "#work"/);
   assert.match(styles, /\.chapter-indicator\s*\{[\s\S]*?pointer-events:\s*none/);
+  assert.match(styles, /@media \(max-width: 700px\)[\s\S]*?\.chapter-indicator\s*\{\s*display:\s*none/);
   assert.doesNotMatch(source, /handlePointerMove/);
 });
 
