@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { ProjectGallery } from "./project-gallery";
 import ProjectMotion from "./project-motion";
 import { ProjectSectionNav } from "./project-section-nav";
 
@@ -369,14 +370,7 @@ export function ProjectDetail({ project }: { project: ProjectPage }) {
         </div>
       </section>
 
-      <section className="project-page-gallery" id="gallery" aria-label={`${project.title} image gallery`}>
-        {project.gallery.map((item) => (
-          <figure key={`${item.src}-${item.caption}`}>
-            <Image src={item.src} alt={item.alt} width={1920} height={1080} sizes="(max-width: 760px) 100vw, 50vw" unoptimized />
-            <figcaption>{item.caption}</figcaption>
-          </figure>
-        ))}
-      </section>
+      <ProjectGallery items={project.gallery} title={project.title} />
 
       {project.links && (
         <nav className="project-page-links" aria-label={`${project.title} external links`}>

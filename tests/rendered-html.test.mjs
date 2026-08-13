@@ -103,6 +103,7 @@ test("publishes indexable permanent project pages and current professional timin
   assert.match(source, /Previous project/);
   assert.match(source, /Next project/);
   assert.match(source, /Related projects/);
+  assert.match(source, /ProjectGallery/);
   assert.match(source, /project-page-\$\{project\.section\}/);
   assert.match(sitemap, /2026-07-26/);
 });
@@ -126,8 +127,23 @@ test("uses permanent pages as the primary artwork path and keeps motion restrain
   assert.match(source, /className="project-primary-action"/);
   assert.doesNotMatch(source, /permanentProjectUrls\[project\.title\] \?\? "#work"/);
   assert.match(styles, /\.chapter-indicator\s*\{[\s\S]*?pointer-events:\s*none/);
-  assert.match(styles, /@media \(max-width: 700px\)[\s\S]*?\.chapter-indicator\s*\{\s*display:\s*none/);
+  assert.match(styles, /@media \(max-width: 1400px\)[\s\S]*?\.chapter-indicator\s*\{\s*display:\s*none/);
   assert.doesNotMatch(source, /handlePointerMove/);
+});
+
+test("offers an accessible full-image viewer on permanent project pages", async () => {
+  const gallery = await readFile(path.join(process.cwd(), "app", "project-gallery.tsx"), "utf8");
+  const styles = await readFile(path.join(process.cwd(), "app", "globals.css"), "utf8");
+
+  assert.match(gallery, /aria-label={`Enlarge image/);
+  assert.match(gallery, /role="dialog"/);
+  assert.match(gallery, /aria-modal="true"/);
+  assert.match(gallery, /event\.key === "Escape"/);
+  assert.match(gallery, /event\.key === "ArrowLeft"/);
+  assert.match(gallery, /event\.key === "ArrowRight"/);
+  assert.match(gallery, /event\.key === "Tab"/);
+  assert.match(styles, /\.project-lightbox\s*\{/);
+  assert.match(styles, /object-fit:\s*contain/);
 });
 
 test("includes accessible navigation and real contact destinations", async () => {
