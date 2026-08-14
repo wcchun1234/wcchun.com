@@ -128,6 +128,7 @@ test("uses permanent pages as the primary artwork path and keeps motion restrain
   assert.doesNotMatch(source, /permanentProjectUrls\[project\.title\] \?\? "#work"/);
   assert.match(styles, /\.chapter-indicator\s*\{[\s\S]*?pointer-events:\s*none/);
   assert.match(styles, /@media \(max-width: 1400px\)[\s\S]*?\.chapter-indicator\s*\{\s*display:\s*none/);
+  assert.match(styles, /@media \(max-width: 760px\)[\s\S]*?\.project-page-hero h1\s*\{[\s\S]*?font-size:\s*clamp\(48px,\s*14vw,\s*66px\)/);
   assert.doesNotMatch(source, /handlePointerMove/);
 });
 

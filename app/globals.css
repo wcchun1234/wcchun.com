@@ -2215,6 +2215,11 @@ body.dialog-open { overflow: hidden; }
     min-height: 70px;
   }
 
+  .project-page-hero h1 {
+    font-size: clamp(48px, 14vw, 66px);
+    letter-spacing: -0.06em;
+  }
+
   .project-page-nav a:last-child {
     max-width: 150px;
     text-align: right;
