@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 
 const sections = [["overview", "Overview"], ["role", "Framework"], ["process", "Process"], ["gallery", "Gallery"]] as const;
 
-export function ProjectSectionNav() {
+export function ProjectSectionNav({ hasProcess = true }: { hasProcess?: boolean }) {
   const [active, setActive] = useState("overview");
   useEffect(() => {
     const nodes = sections.map(([id]) => document.getElementById(id)).filter((node): node is HTMLElement => Boolean(node));
@@ -14,10 +14,10 @@ export function ProjectSectionNav() {
     }, { rootMargin: "-20% 0px -62% 0px", threshold: [0.01, 0.2, 0.5] });
     nodes.forEach((node) => observer.observe(node));
     return () => observer.disconnect();
-  }, []);
+  }, [hasProcess]);
   return (
     <nav className="project-section-nav" aria-label="Project sections">
-      {sections.map(([id, label]) => (
+      {sections.filter(([id]) => hasProcess || id !== "process").map(([id, label]) => (
         <a href={`#${id}`} className={active === id ? "is-active" : ""} aria-current={active === id ? "location" : undefined} key={id}>{label}</a>
       ))}
     </nav>

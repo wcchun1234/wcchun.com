@@ -14,10 +14,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
     robotics: "2026-07-26",
   };
   return [
-    { url: "https://wcchun.com", lastModified: new Date("2026-07-27") },
+    { url: "https://wcchun.com", lastModified: new Date("2026-10-23") },
+    { url: "https://wcchun.com/work", lastModified: new Date("2026-10-23") },
     ...projectPages.map((project) => ({
       url: `https://wcchun.com${projectUrl(project)}`,
-      lastModified: new Date(updated[project.slug]),
+      lastModified: new Date(updated[project.slug] ?? "2026-10-23"),
       images: [`https://wcchun.com${project.image}`],
     })),
   ];

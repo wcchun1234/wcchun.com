@@ -3,13 +3,13 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 import test from "node:test";
 
-async function render() {
+async function render(pathname = "/") {
   const workerUrl = new URL("../dist/server/index.js", import.meta.url);
   workerUrl.searchParams.set("test", `${process.pid}-${Date.now()}`);
   const { default: worker } = await import(workerUrl.href);
 
   return worker.fetch(
-    new Request("http://localhost/", { headers: { accept: "text/html" } }),
+    new Request(`http://localhost${pathname}`, { headers: { accept: "text/html" } }),
     { ASSETS: { fetch: async () => new Response("Not found", { status: 404 }) } },
     { waitUntil() {}, passThroughOnException() {} },
   );
@@ -25,8 +25,8 @@ test("renders the finished WCCHUN portfolio", async () => {
   assert.match(html, /Memory becomes/);
   assert.match(html, /<h1[^>]*class="hero-title"/);
   assert.match(html, /A focused entry point/);
-  assert.match(html, /08<!-- --> works <!-- -->selected/);
-  assert.match(html, /View complete archive/);
+  assert.match(html, /08<!-- --> works selected/);
+  assert.match(html, /Explore all 29 works/);
   assert.match(html, /Scanned Memories/);
   assert.match(html, /Digital Echoes/);
   assert.match(html, /MemoryGrid/);
@@ -36,7 +36,7 @@ test("renders the finished WCCHUN portfolio", async () => {
   assert.match(html, /Aware/);
   assert.match(html, /ArtSense/);
   assert.match(html, /Exhibitions/);
-  assert.match(html, /Technology &amp; Education/);
+  assert.match(html, /Technology &amp;<br\/>education/);
   assert.match(html, /ReadyLoop/);
   assert.match(html, /Open the permanent ReadyLoop case study/);
   assert.match(html, /Open the permanent DT Fabrication Dashboard case study/);
@@ -91,9 +91,9 @@ test("publishes indexable permanent project pages and current professional timin
   ]) {
     assert.match(source, new RegExp(`slug: "${slug}"`));
   }
-  assert.match(portfolio, /Incoming Secondary Robotics ASA Teams Coordinator · From September 2026/);
-  assert.match(portfolio, /appointment effective from September 2026/);
+  assert.doesNotMatch(portfolio, /Incoming Secondary Robotics ASA Teams Coordinator|appointment effective from September 2026/);
   assert.match(sitemap, /projectPages/);
+  assert.match(sitemap, /https:\/\/wcchun\.com\/work/);
   assert.match(source, /Role, tools and collaboration/);
   assert.match(source, /project\.role/);
   assert.match(source, /project\.tools/);
@@ -120,7 +120,7 @@ test("uses permanent pages as the primary artwork path and keeps motion restrain
   assert.match(html, /featured-tool/);
   assert.match(html, /compact-tool/);
   assert.match(html, /chapter-indicator/);
-  assert.match(source, /showArchive \? "is-visible" : ""/);
+  assert.match(html, /href="\/work"[^>]*>Explore all 29 works/);
   assert.match(motion, /dependencies: \[filterKey, showArchive\]/);
   assert.match(motion, /prefers-reduced-motion: reduce/);
   assert.match(motion, /gsap\.matchMedia/);
@@ -130,6 +130,21 @@ test("uses permanent pages as the primary artwork path and keeps motion restrain
   assert.match(styles, /@media \(max-width: 1400px\)[\s\S]*?\.chapter-indicator\s*\{\s*display:\s*none/);
   assert.match(styles, /@media \(max-width: 760px\)[\s\S]*?\.project-page-hero h1\s*\{[\s\S]*?font-size:\s*clamp\(48px,\s*14vw,\s*66px\)/);
   assert.doesNotMatch(source, /handlePointerMove/);
+});
+
+test("offers all 29 works through the archive and a fuller permanent gallery", async () => {
+  const archive = await render("/work");
+  assert.equal(archive.status, 200);
+  const archiveHtml = await archive.text();
+  assert.match(archiveHtml, /Art archive — 29 works/);
+  assert.match(archiveHtml, /Filter artworks by medium/);
+  assert.equal((archiveHtml.match(/href="\/work\/[^\"]+" class="project-primary-action"/g) ?? []).length, 29);
+
+  const project = await render("/work/scanned-memories");
+  assert.equal(project.status, 200);
+  const projectHtml = await project.text();
+  assert.match(projectHtml, /Scanned Memories process/);
+  assert.match(projectHtml, /Enlarge image 1 of 16/);
 });
 
 test("offers an accessible full-image viewer on permanent project pages", async () => {
