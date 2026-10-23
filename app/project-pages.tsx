@@ -41,7 +41,7 @@ const curatedProjectPages: ProjectPage[] = [
       "A scanner-generated photographic series exploring how images—and the memories attached to them—are preserved, transformed and cared for within constantly updating digital systems.",
     statement:
       "A home document scanner becomes both slit camera and brush of light. Dragged across an iPad mirroring a computer-based digital sculpture process, it compresses screen time, hand movement, software processing and print output into a single image. The resulting bands are visible traces of attention and technological mediation.",
-    image: "/art/art-01.webp",
+    image: "/art/archive/scanned-memories/01.webp",
     imageAlt: "Nine framed monochrome generative images installed in a gallery.",
     role: "Artist · Research, image-making and installation",
     tools: ["Document scanner", "iPad", "Machine learning", "Digital print"],
@@ -58,10 +58,10 @@ const curatedProjectPages: ProjectPage[] = [
       ["Visual score", "Image bands are guided by a machine-learning score derived from digitised study notes and ECG traces."],
       ["Material translation", "Screen light, hand movement and processing delay become physical prints and tangible records."],
     ],
-    gallery: galleryByTitle["Scanned Memories"].slice(1).map((src, index) => ({
+    gallery: galleryByTitle["Scanned Memories"].map((src, index) => ({
       src,
       alt: `Scanned Memories documentation image ${index + 1}`,
-      caption: index === 1 ? "Exhibition installation" : `Artwork and process documentation ${String(index + 1).padStart(2, "0")}`,
+      caption: index === 0 ? "Exhibition installation" : `Artwork and process documentation ${String(index + 1).padStart(2, "0")}`,
     })),
     film: videoByTitle["Scanned Memories"],
   },
@@ -76,8 +76,8 @@ const curatedProjectPages: ProjectPage[] = [
       "A cameraless photographic series in which machine-learning models reinterpret personal photographs and text, allowing new images to carry echoes of the memories from which they were generated.",
     statement:
       "Digital Echoes asks what happens when personal recollection becomes training material. Photographs from a London study trip are processed into unfamiliar but recognisable visual forms. Printed and framed, the outputs challenge where photography begins when no camera is used to make the final image.",
-    image: "/art/art-02.webp",
-    imageAlt: "Three framed blue photographic works installed vertically on a gallery wall.",
+    image: "/art/details/art-04.webp",
+    imageAlt: "Blue computational image from Digital Echoes, layered with fragments of remembered places.",
     role: "Artist · Dataset construction, model exploration and print production",
     tools: ["Machine learning", "Personal image archive", "Text processing", "Digital print"],
     status: "Completed work · Exhibited 2024 and 2025",
@@ -93,10 +93,10 @@ const curatedProjectPages: ProjectPage[] = [
       ["Reinterpretation", "The model recombines patterns into images that remain connected to their sources without copying them."],
       ["Physical archive", "Generated images become framed prints arranged in a repeated grid and move from computation into the gallery."],
     ],
-    gallery: galleryByTitle["Digital Echoes"].slice(1).map((src, index) => ({
+    gallery: galleryByTitle["Digital Echoes"].map((src, index) => ({
       src,
       alt: `Digital Echoes documentation image ${index + 1}`,
-      caption: index === 1 ? "The Unseen Realm installation" : `Artwork documentation ${String(index + 1).padStart(2, "0")}`,
+      caption: index === 0 ? "Framed installation view" : `Artwork documentation ${String(index + 1).padStart(2, "0")}`,
     })),
   },
   {

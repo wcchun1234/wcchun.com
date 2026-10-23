@@ -144,7 +144,7 @@ test("offers all 29 works through the archive and a fuller permanent gallery", a
   assert.equal(project.status, 200);
   const projectHtml = await project.text();
   assert.match(projectHtml, /Scanned Memories process/);
-  assert.match(projectHtml, /Enlarge image 1 of 15/);
+  assert.match(projectHtml, /Enlarge image 1 of 16/);
 });
 
 test("offers an accessible full-image viewer on permanent project pages", async () => {

@@ -93,7 +93,7 @@ export const projects: Project[] = [
     zh: "掃描記憶",
     year: "2024",
     medium: "Photography",
-    image: "/art/art-01.webp",
+    image: "/art/archive/scanned-memories/01.webp",
     alt: "Nine framed monochrome generative images installed in a gallery.",
     featured: true,
     description:
@@ -118,8 +118,8 @@ export const projects: Project[] = [
     title: "Digital Echoes",
     year: "2024",
     medium: "Photography",
-    image: "/art/art-02.webp",
-    alt: "Three framed blue photographic works installed vertically on a gallery wall.",
+    image: "/art/details/art-04.webp",
+    alt: "Blue computational image from Digital Echoes, layered with fragments of remembered places.",
     featured: true,
     description:
       "A cameraless photographic series in which machine-learning models reinterpret personal photographs and text, allowing new images to carry echoes of the memories from which they were generated.",

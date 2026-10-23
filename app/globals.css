@@ -1256,7 +1256,7 @@ footer h2 em {
 
 .figma-hero {
   position: relative;
-  min-height: 1300px;
+  min-height: 800px;
   padding: 54px 3.33vw 0;
 }
 
@@ -1265,9 +1265,9 @@ footer h2 em {
   z-index: 2;
   display: flex;
   flex-direction: column;
-  width: min(78vw, 1100px);
+  width: min(54vw, 700px);
   margin: 0;
-  font-size: clamp(78px, 10.4vw, 150px);
+  font-size: clamp(68px, 7.4vw, 112px);
   font-weight: 900;
   line-height: 0.81;
   letter-spacing: -0.075em;
@@ -1310,6 +1310,7 @@ footer h2 em {
 }
 
 .hero-thumbnail {
+  display: none;
   position: absolute;
   z-index: 3;
   top: 60px;
@@ -1320,10 +1321,10 @@ footer h2 em {
 
 .hero-artwork {
   position: absolute;
-  top: 492px;
-  left: 3.33vw;
-  width: 59.72vw;
-  height: 690px;
+  top: 138px;
+  right: 3.33vw;
+  width: 43vw;
+  height: 560px;
 }
 
 .hero-thumbnail img,
@@ -1340,19 +1341,23 @@ footer h2 em {
   transition: transform 700ms cubic-bezier(0.2, 0.8, 0.2, 1), filter 250ms ease;
 }
 
+.hero-artwork img {
+  transform: scale(1.2);
+}
+
 .hero-thumbnail:hover img,
 .hero-artwork:hover img,
 .hero-thumbnail:focus-visible img,
 .hero-artwork:focus-visible img {
   filter: contrast(1.035);
-  transform: scale(1.012);
+  transform: scale(1.23);
 }
 
 .hero-intro {
   position: absolute;
-  top: 438px;
-  right: 6.67vw;
-  width: min(28vw, 400px);
+  top: 450px;
+  left: 3.33vw;
+  width: min(45vw, 580px);
 }
 
 .hero-intro > p:not(.eyebrow) {
@@ -1572,12 +1577,15 @@ footer h2 em {
 
   .hero-artwork {
     top: 390px;
+    right: auto;
+    left: 3.33vw;
     width: 62vw;
     height: 600px;
   }
 
   .hero-intro {
     top: 430px;
+    left: auto;
     right: 3.33vw;
     width: 29vw;
   }
@@ -2344,7 +2352,7 @@ main::before {
 
 .hero-artwork:hover img,
 .hero-artwork:focus-visible img {
-  transform: scale(1.012);
+  transform: scale(1.23);
 }
 
 .archive-cta {
@@ -5086,7 +5094,7 @@ body {
 }
 
 .figma-hero {
-  min-height: 1120px;
+  min-height: 800px;
 }
 
 .hero-byline {
@@ -5102,15 +5110,15 @@ body {
 }
 
 .hero-artwork {
-  top: 420px;
-  width: 55vw;
-  height: 590px;
+  top: 138px;
+  width: 43vw;
+  height: 560px;
 }
 
 .hero-intro {
-  top: 410px;
-  right: 4.3vw;
-  width: min(34vw, 450px);
+  top: 450px;
+  right: auto;
+  width: min(45vw, 580px);
 }
 
 .archive-switch a {
