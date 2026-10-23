@@ -3,6 +3,7 @@ import Link from "next/link";
 import { ProjectGallery } from "./project-gallery";
 import ProjectMotion from "./project-motion";
 import { ProjectSectionNav } from "./project-section-nav";
+import { archiveNarrativeByTitle, galleryByTitle, projectSlug, projects, videoByTitle } from "./portfolio-data";
 
 export type ProjectPage = {
   slug: string;
@@ -18,15 +19,17 @@ export type ProjectPage = {
   role: string;
   tools: string[];
   status: string;
-  collaboration: string;
+  collaboration?: string;
   facts: Array<[string, string]>;
   process: Array<[string, string]>;
+  narrative?: Array<{ title: string; text: string }>;
   gallery: Array<{ src: string; alt: string; caption: string }>;
+  film?: { youtubeId: string; title: string };
   links?: Array<{ label: string; href: string }>;
   relatedSlugs?: string[];
 };
 
-export const projectPages: ProjectPage[] = [
+const curatedProjectPages: ProjectPage[] = [
   {
     slug: "scanned-memories",
     section: "work",
@@ -55,10 +58,12 @@ export const projectPages: ProjectPage[] = [
       ["Visual score", "Image bands are guided by a machine-learning score derived from digitised study notes and ECG traces."],
       ["Material translation", "Screen light, hand movement and processing delay become physical prints and tangible records."],
     ],
-    gallery: [
-      { src: "/art/details/scanned-installation.webp", alt: "Scanned Memories installed as framed works in a gallery.", caption: "Exhibition installation" },
-      { src: "/art/details/scanned-alternate.webp", alt: "Alternate view of a Scanned Memories print.", caption: "Scanner-generated print detail" },
-    ],
+    gallery: galleryByTitle["Scanned Memories"].slice(1).map((src, index) => ({
+      src,
+      alt: `Scanned Memories documentation image ${index + 1}`,
+      caption: index === 1 ? "Exhibition installation" : `Artwork and process documentation ${String(index + 1).padStart(2, "0")}`,
+    })),
+    film: videoByTitle["Scanned Memories"],
   },
   {
     slug: "digital-echoes",
@@ -88,10 +93,11 @@ export const projectPages: ProjectPage[] = [
       ["Reinterpretation", "The model recombines patterns into images that remain connected to their sources without copying them."],
       ["Physical archive", "Generated images become framed prints arranged in a repeated grid and move from computation into the gallery."],
     ],
-    gallery: [
-      { src: "/art/details/digital-installation.webp", alt: "Digital Echoes works displayed in a repeated gallery grid.", caption: "The Unseen Realm installation" },
-      { src: "/art/art-02.webp", alt: "Digital Echoes framed blue prints.", caption: "Framed photographic series" },
-    ],
+    gallery: galleryByTitle["Digital Echoes"].slice(1).map((src, index) => ({
+      src,
+      alt: `Digital Echoes documentation image ${index + 1}`,
+      caption: index === 1 ? "The Unseen Realm installation" : `Artwork documentation ${String(index + 1).padStart(2, "0")}`,
+    })),
   },
   {
     slug: "memorygrid",
@@ -125,6 +131,7 @@ export const projectPages: ProjectPage[] = [
       { src: "/art/art-08.webp", alt: "MemoryGrid presented in an exhibition space.", caption: "Exhibition presentation" },
       { src: "/art/legacy/artsense.webp", alt: "ArtSense exhibition documentation.", caption: "ArtSense context" },
     ],
+    film: videoByTitle.MemoryGrid,
     links: [{ label: "View source archive on GitHub ↗", href: "https://github.com/wcchun1234/ArtSense" }],
   },
   {
@@ -243,13 +250,12 @@ export const projectPages: ProjectPage[] = [
       "The practice connects physical prototyping with visible learning support. Demonstrations, troubleshooting posters and student-friendly reference materials help learners move from a fault to a testable next step while retaining ownership of their solution.",
     image: "/technology/robotics/learning-wall.webp",
     imageAlt: "Robotics classroom learning wall with coding and troubleshooting posters.",
-    role: "Technical educator and programme designer · Incoming team coordinator",
+    role: "Technical educator and programme designer",
     tools: ["VEX Robotics", "micro:bit", "Arduino", "ESP32", "Raspberry Pi"],
-    status: "Ongoing practice · Coordinator appointment effective September 2026",
+    status: "Ongoing practice",
     collaboration: "Developed with students through coached prototyping, testing and competition preparation.",
     facts: [
-      ["Appointment", "Incoming Secondary Robotics ASA Teams Coordinator"],
-      ["Effective", "From September 2026"],
+      ["Practice", "Robotics education and physical computing"],
       ["Platforms", "VEX Robotics, micro:bit, Arduino, ESP32 and Raspberry Pi"],
       ["Focus", "Independent debugging, iteration and competition preparation"],
     ],
@@ -267,15 +273,61 @@ export const projectPages: ProjectPage[] = [
   },
 ];
 
+const curatedSlugs = new Set(curatedProjectPages.map((project) => project.slug));
+
+const archiveProjectPages: ProjectPage[] = projects
+  .filter((project) => !curatedSlugs.has(projectSlug(project.title)))
+  .map((project) => {
+    const narrative = archiveNarrativeByTitle[project.title] ?? [];
+    const legacy = project.details.some((detail) => detail.label === "Status" && detail.value === "Legacy archive entry");
+    const galleryImages = [...new Set(galleryByTitle[project.title] ?? [project.image])].filter((src) => src !== project.image);
+    const role = project.title === "Spaghetti"
+      ? "Boom operator and production assistant"
+      : project.title === "布達佩斯 / Budapest"
+        ? "Production assistant, boom operator and draft video editor"
+        : "Artist / maker";
+    return ({
+    slug: projectSlug(project.title),
+    section: "work",
+    title: project.title,
+    subtitle: project.description,
+    year: project.year,
+    medium: project.medium,
+    description: project.description,
+    statement: legacy && narrative[0] ? narrative[0].text : project.statement,
+    image: project.image,
+    imageAlt: project.alt,
+    role: project.details.find((detail) => detail.label === "Role")?.value ?? role,
+    tools: [project.medium],
+    status: `Documented work · ${project.year}`,
+    facts: project.details.filter(({ label }) => !legacy || !["Artist", "Status"].includes(label)).map(({ label, value }) => [label, value]),
+    process: legacy
+      ? narrative.slice(1).map(({ title, text }) => [title, text])
+      : project.process.map(({ title, text }) => [title, text]),
+    narrative: legacy ? undefined : narrative,
+    gallery: (galleryImages.length ? galleryImages : [project.image])
+      .map((src, index) => ({
+        src,
+        alt: src === project.image ? project.alt : `${project.title} documentation view ${index + 1}`,
+        caption: src === project.image ? "Artwork view" : `Documentation ${String(index + 1).padStart(2, "0")}`,
+      })),
+    film: videoByTitle[project.title],
+    links: project.codeUrl ? [{ label: "View project code ↗", href: project.codeUrl }] : undefined,
+  });
+  });
+
+export const projectPages: ProjectPage[] = [...curatedProjectPages, ...archiveProjectPages];
+
 export function projectUrl(project: ProjectPage) {
   return `/${project.section}/${project.slug}`;
 }
 
 export function ProjectDetail({ project }: { project: ProjectPage }) {
   const url = `https://wcchun.com${projectUrl(project)}`;
-  const projectIndex = projectPages.findIndex((item) => item.slug === project.slug);
-  const previous = projectPages[(projectIndex - 1 + projectPages.length) % projectPages.length];
-  const next = projectPages[(projectIndex + 1) % projectPages.length];
+  const sectionProjects = projectPages.filter((item) => item.section === project.section);
+  const projectIndex = sectionProjects.findIndex((item) => item.slug === project.slug);
+  const previous = sectionProjects[(projectIndex - 1 + sectionProjects.length) % sectionProjects.length];
+  const next = sectionProjects[(projectIndex + 1) % sectionProjects.length];
   const curatedRelated: Record<string, string[]> = {
     "scanned-memories": ["digital-echoes", "memorygrid", "wordview"],
     "digital-echoes": ["scanned-memories", "memorygrid", "wordview"],
@@ -285,7 +337,7 @@ export function ProjectDetail({ project }: { project: ProjectPage }) {
     "dt-fabrication-dashboard": ["readyloop", "robotics", "wordview"],
     robotics: ["readyloop", "dt-fabrication-dashboard", "memorygrid"],
   };
-  const related = (project.relatedSlugs ?? curatedRelated[project.slug])
+  const related = (project.relatedSlugs ?? curatedRelated[project.slug] ?? ["scanned-memories", "digital-echoes", "memorygrid"])
     .map((slug) => projectPages.find((item) => item.slug === slug))
     .filter((item): item is ProjectPage => Boolean(item));
   const structuredData = {
@@ -304,7 +356,7 @@ export function ProjectDetail({ project }: { project: ProjectPage }) {
     "@type": "BreadcrumbList",
     itemListElement: [
       { "@type": "ListItem", position: 1, name: "Home", item: "https://wcchun.com/" },
-      { "@type": "ListItem", position: 2, name: project.section === "work" ? "Work" : "Technology", item: `https://wcchun.com/#${project.section}` },
+      { "@type": "ListItem", position: 2, name: project.section === "work" ? "Work" : "Technology", item: project.section === "work" ? "https://wcchun.com/work" : "https://wcchun.com/#technology" },
       { "@type": "ListItem", position: 3, name: project.title, item: url },
     ],
   };
@@ -315,16 +367,16 @@ export function ProjectDetail({ project }: { project: ProjectPage }) {
     <main className={`project-page project-page-${project.section} project-theme-${project.slug}`} id="project-main">
       <header className="project-page-nav">
         <Link href="/" className="project-page-brand">WCCHUN</Link>
-        <Link href={project.section === "work" ? "/#work" : "/#technology"}>
-          Back to {project.section === "work" ? "selected work" : "technology"} ↙
+        <Link href={project.section === "work" ? "/work" : "/#technology"}>
+          Back to {project.section === "work" ? "art archive" : "technology"} ↙
         </Link>
       </header>
       <nav className="project-breadcrumb" aria-label="Breadcrumb">
         <Link href="/">Home</Link><span>/</span>
-        <Link href={project.section === "work" ? "/#work" : "/#technology"}>{project.section === "work" ? "Work" : "Technology"}</Link>
+        <Link href={project.section === "work" ? "/work" : "/#technology"}>{project.section === "work" ? "Work" : "Technology"}</Link>
         <span>/</span><span aria-current="page">{project.title}</span>
       </nav>
-      <ProjectSectionNav />
+      <ProjectSectionNav hasProcess={project.process.length > 0} />
 
       <section className="project-page-hero" id="overview">
         <p>{project.medium} · {project.year}</p>
@@ -353,11 +405,11 @@ export function ProjectDetail({ project }: { project: ProjectPage }) {
           <div><dt>Role</dt><dd>{project.role}</dd></div>
           <div><dt>Tools</dt><dd><ul>{project.tools.map((tool) => <li key={tool}>{tool}</li>)}</ul></dd></div>
           <div><dt>Status</dt><dd>{project.status}</dd></div>
-          <div><dt>Collaboration</dt><dd>{project.collaboration}</dd></div>
+          {project.collaboration && <div><dt>Collaboration</dt><dd>{project.collaboration}</dd></div>}
         </dl>
       </section>
 
-      <section className="project-page-process" id="process">
+      {project.process.length > 0 && <section className="project-page-process" id="process">
         <p className="project-page-kicker">Process and approach</p>
         <div>
           {project.process.map(([title, text], index) => (
@@ -368,7 +420,34 @@ export function ProjectDetail({ project }: { project: ProjectPage }) {
             </article>
           ))}
         </div>
-      </section>
+      </section>}
+
+      {project.narrative && project.narrative.length > 0 && (
+        <section className="project-page-narrative" aria-label={`${project.title} story`}>
+          {project.narrative.map(({ title, text }) => (
+            <article key={title}>
+              <h2>{title}</h2>
+              <p>{text}</p>
+            </article>
+          ))}
+        </section>
+      )}
+
+      {project.film && (
+        <section className="project-page-film" aria-labelledby="project-film-title">
+          <div>
+            <p className="project-page-kicker">Moving image</p>
+            <h2 id="project-film-title">{project.film.title}</h2>
+          </div>
+          <iframe
+            src={`https://www.youtube-nocookie.com/embed/${project.film.youtubeId}`}
+            title={project.film.title}
+            loading="lazy"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowFullScreen
+          />
+        </section>
+      )}
 
       <ProjectGallery items={project.gallery} title={project.title} />
 
